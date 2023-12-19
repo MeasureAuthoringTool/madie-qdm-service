@@ -16,9 +16,6 @@
     <java.version>17</java.version>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
-
-    <maven.jakarta.xml.bind-api.version>4.0.1</maven.jakarta.xml.bind-api.version>
-
     <maven.pmd.plugin.version>3.21.2</maven.pmd.plugin.version>
     <maven.sortpom.plugin.version>3.0.1</maven.sortpom.plugin.version>
     <mvn.checkstyle.file>madie-checkstyle.xml</mvn.checkstyle.file>
