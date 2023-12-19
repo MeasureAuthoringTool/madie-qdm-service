@@ -16,9 +16,6 @@ management:
 logging:
   level:
     root: ${LOG_LEVEL:INFO}
-    org:
-      springframework:
-        security: DEBUG
 
 okta:
   oauth2:
