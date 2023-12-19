@@ -1,0 +1,23 @@
+server:
+  port: 8086
+  servlet:
+    context-path: /api
+
+madie:
+  allowedApi: http://localhost:9000
+
+management:
+  endpoints:
+    enabled-by-default: false
+  endpoint:
+    health:
+      enabled: true
+
+logging:
+  level:
+    root: ${LOG_LEVEL:INFO}
+
+okta:
+  oauth2:
+    issuer: ${OKTA_ISSUER:https://dev-18092578.okta.com/oauth2/default}
+    audience: ${OKTA_AUDIENCE:api://default}
