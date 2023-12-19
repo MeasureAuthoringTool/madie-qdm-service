@@ -24,7 +24,7 @@
     <mvnsite.version>3.11.0</mvnsite.version>
     <okta.springboot.starter.version>3.0.5</okta.springboot.starter.version>
     <puppycrawl.checkstyle.version>10.1</puppycrawl.checkstyle.version>
-    <theoryinpractise.googleformatter.version>1.7.5</theoryinpractise.googleformatter.version>
+    <spotify.fmt.version>2.21.1</spotify.fmt.version>
   </properties>
 
   <dependencies>
@@ -108,30 +108,21 @@
             </dependency>
           </dependencies>
         </plugin>
-        <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
         <plugin>
-          <groupId>org.eclipse.m2e</groupId>
-          <artifactId>lifecycle-mapping</artifactId>
-          <version>1.0.0</version>
+          <groupId>com.spotify.fmt</groupId>
+          <artifactId>fmt-maven-plugin</artifactId>
+          <version>${spotify.fmt.version}</version>
           <configuration>
-            <lifecycleMappingMetadata>
-              <pluginExecutions>
-                <pluginExecution>
-                  <pluginExecutionFilter>
-                    <groupId>com.theoryinpractise</groupId>
-                    <artifactId>googleformatter-maven-plugin</artifactId>
-                    <versionRange>[1.7.3,)</versionRange>
-                    <goals>
-                      <goal>format</goal>
-                    </goals>
-                  </pluginExecutionFilter>
-                  <action>
-                    <ignore></ignore>
-                  </action>
-                </pluginExecution>
-              </pluginExecutions>
-            </lifecycleMappingMetadata>
+            <skipSortingImports>true</skipSortingImports>
+            <style>google</style>
           </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>format</goal>
+              </goals>
+            </execution>
+          </executions>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -168,26 +159,18 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>com.theoryinpractise</groupId>
-        <artifactId>googleformatter-maven-plugin</artifactId>
-        <version>${theoryinpractise.googleformatter.version}</version>
+        <groupId>com.spotify.fmt</groupId>
+        <artifactId>fmt-maven-plugin</artifactId>
+        <version>${spotify.fmt.version}</version>
+        <configuration>
+          <skipSortingImports>true</skipSortingImports>
+          <style>google</style>
+        </configuration>
         <executions>
           <execution>
-            <id>reformat-sources</id>
             <goals>
               <goal>format</goal>
             </goals>
-            <phase>process-sources</phase>
-            <configuration>
-              <includeStale>false</includeStale>
-              <style>GOOGLE</style>
-              <formatMain>true</formatMain>
-              <formatTest>true</formatTest>
-              <filterModified>false</filterModified>
-              <skip>false</skip>
-              <fixImports>false</fixImports>
-              <maxLineLength>100</maxLineLength>
-            </configuration>
           </execution>
         </executions>
       </plugin>
