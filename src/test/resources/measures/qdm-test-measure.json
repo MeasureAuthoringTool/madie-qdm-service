@@ -22,9 +22,9 @@
       "series": "",
       "description": "",
       "createdAt": "2023-11-27T14:50:31.284Z",
-      "createdBy": "ashok.dongare@semanticbits.com",
+      "createdBy": "john doe",
       "lastModifiedAt": "2023-12-19T23:08:44.365Z",
-      "lastModifiedBy": "ashok.dongare@semanticbits.com",
+      "lastModifiedBy": "John doe",
       "validResource": true,
       "json": "{\"qdmVersion\":\"5.6\",\"dataElements\":[{\"dataElementCodes\":[],\"_id\":\"658222799d67250000a656eb\",\"participant\":[],\"relatedTo\":[],\"qdmTitle\":\"Encounter, Performed\",\"hqmfOid\":\"2.16.840.1.113883.10.20.28.4.5\",\"qdmCategory\":\"encounter\",\"qdmStatus\":\"performed\",\"qdmVersion\":\"5.6\",\"_type\":\"QDM::EncounterPerformed\",\"description\":\"Encounter, Performed: Encounter Inpatient\",\"codeListId\":\"2.16.840.1.113883.3.666.5.307\",\"id\":\"658222799d67250000a656ea\",\"facilityLocations\":[],\"diagnoses\":[]}],\"_id\":\"658222789d67250000a656cd\"}",
       "patientId": "41dd75cc-57fb-456a-9eb9-598798db7817",
@@ -56,9 +56,9 @@
     }
   ],
   "createdAt": "2023-11-27T14:49:46.742Z",
-  "createdBy": "ashok.dongare@semanticbits.com",
+  "createdBy": "John doe",
   "lastModifiedAt": "2023-12-18T16:38:12.125Z",
-  "lastModifiedBy": "ashok.dongare@semanticbits.com",
+  "lastModifiedBy": "John doe",
   "measurementPeriodStart": "2020-01-01T00:00:00.000+00:00",
   "measurementPeriodEnd": "2020-12-31T23:59:59.999+00:00",
   "supplementalData": [],
@@ -93,7 +93,7 @@
   "measureSet": {
     "id": "6564ac8a5159a90bd713bea6",
     "measureSetId": "3abdaa71-3683-4afe-829f-278cadc82950",
-    "owner": "ashok.dongare@semanticbits.com",
+    "owner": "john_doe",
     "acls": null
   },
   "scoring": "Cohort",

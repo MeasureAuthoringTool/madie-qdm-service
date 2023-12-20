@@ -18,9 +18,9 @@
   "groups": [
   ],
   "createdAt": "2023-11-27T14:49:46.742Z",
-  "createdBy": "ashok.dongare@semanticbits.com",
+  "createdBy": "john doe",
   "lastModifiedAt": "2023-12-18T16:38:12.125Z",
-  "lastModifiedBy": "ashok.dongare@semanticbits.com",
+  "lastModifiedBy": "John doe",
   "measurementPeriodStart": "2020-01-01T00:00:00.000+00:00",
   "measurementPeriodEnd": "2020-12-31T23:59:59.999+00:00",
   "supplementalData": [],
@@ -55,7 +55,7 @@
   "measureSet": {
     "id": "6564ac8a5159a90bd713bea6",
     "measureSetId": "3abdaa71-3683-4afe-829f-278cadc82950",
-    "owner": "ashok.dongare@semanticbits.com",
+    "owner": "john_doe",
     "acls": null
   },
   "scoring": "Cohort",
