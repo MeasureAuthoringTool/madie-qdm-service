@@ -1,8 +1,8 @@
 package gov.cms.madie.madieqdmservice.services;
 
 import gov.cms.madie.madieqdmservice.Exceptions.TranslationServiceException;
-import gov.cms.madie.madieqdmservice.dto.TranslatedLibrary;
 import gov.cms.madie.models.common.ModelType;
+import gov.cms.madie.models.dto.TranslatedLibrary;
 import gov.cms.madie.models.measure.Measure;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

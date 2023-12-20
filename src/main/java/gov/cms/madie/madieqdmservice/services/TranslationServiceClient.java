@@ -2,7 +2,7 @@ package gov.cms.madie.madieqdmservice.services;
 
 import gov.cms.madie.madieqdmservice.Exceptions.TranslationServiceException;
 import gov.cms.madie.madieqdmservice.config.CqlElmTranslatorClientConfig;
-import gov.cms.madie.madieqdmservice.dto.TranslatedLibrary;
+import gov.cms.madie.models.dto.TranslatedLibrary;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;

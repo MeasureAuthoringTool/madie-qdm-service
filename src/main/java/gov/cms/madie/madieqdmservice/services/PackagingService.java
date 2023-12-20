@@ -1,6 +1,6 @@
 package gov.cms.madie.madieqdmservice.services;
 
-import gov.cms.madie.madieqdmservice.dto.TranslatedLibrary;
+import gov.cms.madie.models.dto.TranslatedLibrary;
 import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.packaging.utils.ZipUtility;
 import lombok.RequiredArgsConstructor;
