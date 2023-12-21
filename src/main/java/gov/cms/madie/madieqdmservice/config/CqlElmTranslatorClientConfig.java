@@ -13,8 +13,8 @@ public class CqlElmTranslatorClientConfig {
   @Value("${madie.cql-elm.service.base-url}")
   private String baseUrl;
 
-  @Value("${madie.cql-elm.service.cql-elm-Url}")
-  private String cqlElmUri;
+  @Value("${madie.cql-elm.service.cql-elm-urn}")
+  private String cqlElmUrn;
 
   @Bean
   public RestTemplate elmTranslatorRestTemplate() {

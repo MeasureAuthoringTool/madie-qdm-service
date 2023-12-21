@@ -22,7 +22,7 @@ public record TranslationServiceClient(
 
   public List<TranslatedLibrary> getTranslatedLibraries(String cql, String accessToken) {
     URI uri =
-        URI.create(translatorClientConfig.getBaseUrl() + translatorClientConfig.getCqlElmUri());
+        URI.create(translatorClientConfig.getBaseUrl() + translatorClientConfig.getCqlElmUrn());
     HttpHeaders headers = new HttpHeaders();
     headers.set(HttpHeaders.AUTHORIZATION, accessToken);
     headers.set(HttpHeaders.ACCEPT, MediaType.ALL_VALUE);

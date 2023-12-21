@@ -40,7 +40,7 @@ class TranslationServiceClientTest {
     TranslatedLibrary library2 =
         TranslatedLibrary.builder().name("two").cql("cql").elmJson("json").build();
     when(translatorClientConfig.getBaseUrl()).thenReturn("baseurl");
-    when(translatorClientConfig.getCqlElmUri()).thenReturn("/elm/uri");
+    when(translatorClientConfig.getCqlElmUrn()).thenReturn("/elm/uri");
     when(elmTranslatorRestTemplate.exchange(
             any(URI.class),
             eq(HttpMethod.PUT),

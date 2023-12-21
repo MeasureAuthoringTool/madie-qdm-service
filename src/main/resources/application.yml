@@ -8,7 +8,7 @@ madie:
   cql-elm:
     service:
       base-url: ${ELM_TRANSLATOR_SERVICE_URL:http://localhost:8084/api}
-      cql-elm-Url: /cql/elm
+      cql-elm-urn: /cql/elm
 
 management:
   endpoints:
