@@ -1,4 +1,4 @@
-package gov.cms.madie.madieqdmservice.config;
+package gov.cms.madie.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
