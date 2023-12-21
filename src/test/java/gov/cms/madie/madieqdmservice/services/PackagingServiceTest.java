@@ -24,7 +24,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class PackagingServiceTest {
+class PackagingServiceTest {
   @Mock private TranslationServiceClient translationServiceClient;
   @InjectMocks private PackagingService packagingService;
 
@@ -32,7 +32,7 @@ public class PackagingServiceTest {
   private Measure measure;
 
   @BeforeEach
-  public void setUp() throws Exception {
+  void setUp() throws Exception {
     measure =
         Measure.builder()
             .id("1")
@@ -43,7 +43,7 @@ public class PackagingServiceTest {
   }
 
   @Test
-  public void testCreateMeasurePackage() {
+  void testCreateMeasurePackage() {
     TranslatedLibrary library1 =
         TranslatedLibrary.builder()
             .name("Lib one")
@@ -67,7 +67,7 @@ public class PackagingServiceTest {
   }
 
   @Test
-  public void testCreateMeasurePackageWhenNoLibFound() {
+  void testCreateMeasurePackageWhenNoLibFound() {
     when(translationServiceClient.getTranslatedLibraries(measure.getCql(), TOKEN))
         .thenReturn(List.of());
     byte[] packageContents = packagingService.createMeasurePackage(measure, TOKEN);
@@ -75,7 +75,7 @@ public class PackagingServiceTest {
   }
 
   @Test
-  public void testCreateMeasurePackageWhenTranslationFailed() {
+  void testCreateMeasurePackageWhenTranslationFailed() {
     String msg = "An issue occurred while fetching the translated artifacts for measure cql";
     doThrow(new TranslationServiceException(msg, new Exception()))
         .when(translationServiceClient)

@@ -26,7 +26,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest({PackageController.class})
-public class PackageControllerMvcTest implements ResourceFileUtil {
+class PackageControllerMvcTest implements ResourceFileUtil {
 
   @MockBean private PackagingService packagingService;
   @Autowired private MockMvc mockMvc;
@@ -35,7 +35,7 @@ public class PackageControllerMvcTest implements ResourceFileUtil {
   private static final String TOKEN = "test-okta";
 
   @Test
-  public void testGetMeasurePackage() throws Exception {
+  void testGetMeasurePackage() throws Exception {
     String measureJson = getStringFromTestResource("/measures/qdm-test-measure.json");
     Mockito.when(packagingService.createMeasurePackage(new Measure(), TOKEN))
         .thenReturn("measure package".getBytes());
@@ -53,7 +53,7 @@ public class PackageControllerMvcTest implements ResourceFileUtil {
   }
 
   @Test
-  public void testGetMeasurePackageForUnsupportedModel() throws Exception {
+  void testGetMeasurePackageForUnsupportedModel() throws Exception {
     String measureJson = getStringFromTestResource("/measures/qicore-test-measure.json");
     MvcResult mockResult =
         mockMvc

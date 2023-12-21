@@ -18,7 +18,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 @ExtendWith(MockitoExtension.class)
-public class PackageControllerTest {
+class PackageControllerTest {
 
   @Mock private PackagingService packagingService;
   @InjectMocks private PackageController packageController;
@@ -27,7 +27,7 @@ public class PackageControllerTest {
   private Measure measure;
 
   @BeforeEach
-  public void setup() {
+  void setup() {
     measure =
         Measure.builder()
             .id("1")
@@ -37,7 +37,7 @@ public class PackageControllerTest {
   }
 
   @Test
-  public void testGetMeasurePackage() {
+  void testGetMeasurePackage() {
     String measurePackage = "measure package";
     Mockito.when(packagingService.createMeasurePackage(measure, TOKEN))
         .thenReturn(measurePackage.getBytes());
@@ -46,7 +46,19 @@ public class PackageControllerTest {
   }
 
   @Test
-  public void testGetMeasurePackageForUnsupportedModel() {
+  void testGetMeasurePackageIfModelIsNull() {
+    measure.setModel(null);
+    String errorMessage = "Unsupported model type: " + measure.getModel();
+    Exception ex =
+        Assertions.assertThrows(
+            UnsupportedModelException.class,
+            () -> packageController.getMeasurePackage(measure, TOKEN),
+            errorMessage);
+    assertThat(ex.getMessage(), is(equalTo(errorMessage)));
+  }
+
+  @Test
+  void testGetMeasurePackageForUnsupportedModel() {
     measure.setModel(String.valueOf(ModelType.QI_CORE));
     String errorMessage = "Unsupported model type: " + measure.getModel();
     Exception ex =

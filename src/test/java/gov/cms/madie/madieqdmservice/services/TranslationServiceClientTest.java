@@ -27,14 +27,14 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class TranslationServiceClientTest {
+class TranslationServiceClientTest {
 
   @Mock private CqlElmTranslatorClientConfig translatorClientConfig;
   @Mock private RestTemplate elmTranslatorRestTemplate;
   @InjectMocks private TranslationServiceClient translationServiceClient;
 
   @Test
-  public void getTranslatedLibraries() {
+  void getTranslatedLibraries() {
     TranslatedLibrary library1 =
         TranslatedLibrary.builder().name("one").cql("cql").elmJson("json").build();
     TranslatedLibrary library2 =
@@ -55,7 +55,7 @@ public class TranslationServiceClientTest {
   }
 
   @Test
-  public void getTranslatedLibrariesWhenTranslationServiceFailed() {
+  void getTranslatedLibrariesWhenTranslationServiceFailed() {
     String message = "An issue occurred while fetching the translated artifacts for measure cql";
     when(elmTranslatorRestTemplate.exchange(
             any(URI.class),
