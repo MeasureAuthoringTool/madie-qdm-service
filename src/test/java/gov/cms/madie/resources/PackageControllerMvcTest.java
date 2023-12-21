@@ -1,6 +1,6 @@
-package gov.cms.madie.madieqdmservice.resources;
+package gov.cms.madie.resources;
 
-import gov.cms.madie.madieqdmservice.services.PackagingService;
+import gov.cms.madie.services.PackagingService;
 import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.packaging.utils.ResourceFileUtil;
 import org.junit.jupiter.api.Test;

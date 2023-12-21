@@ -1,4 +1,4 @@
-package gov.cms.madie.madieqdmservice.Exceptions;
+package gov.cms.madie.Exceptions;
 
 public class TranslationServiceException extends RuntimeException {
 

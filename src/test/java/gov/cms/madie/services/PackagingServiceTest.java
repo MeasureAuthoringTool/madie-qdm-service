@@ -1,6 +1,6 @@
-package gov.cms.madie.madieqdmservice.services;
+package gov.cms.madie.services;
 
-import gov.cms.madie.madieqdmservice.Exceptions.TranslationServiceException;
+import gov.cms.madie.Exceptions.TranslationServiceException;
 import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.dto.TranslatedLibrary;
 import gov.cms.madie.models.measure.Measure;
@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -20,7 +21,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -77,7 +77,7 @@ class PackagingServiceTest {
   @Test
   void testCreateMeasurePackageWhenTranslationFailed() {
     String msg = "An issue occurred while fetching the translated artifacts for measure cql";
-    doThrow(new TranslationServiceException(msg, new Exception()))
+    Mockito.doThrow(new TranslationServiceException(msg, new Exception()))
         .when(translationServiceClient)
         .getTranslatedLibraries(anyString(), anyString());
     Exception exception =

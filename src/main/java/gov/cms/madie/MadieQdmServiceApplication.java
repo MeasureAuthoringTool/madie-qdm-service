@@ -1,6 +1,6 @@
-package gov.cms.madie.madieqdmservice;
+package gov.cms.madie;
 
-import gov.cms.madie.madieqdmservice.config.LogInterceptor;
+import gov.cms.madie.config.LogInterceptor;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;

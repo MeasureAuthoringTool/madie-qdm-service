@@ -1,7 +1,7 @@
-package gov.cms.madie.madieqdmservice.resources;
+package gov.cms.madie.resources;
 
-import gov.cms.madie.madieqdmservice.Exceptions.TranslationServiceException;
-import gov.cms.madie.madieqdmservice.Exceptions.UnsupportedModelException;
+import gov.cms.madie.Exceptions.TranslationServiceException;
+import gov.cms.madie.Exceptions.UnsupportedModelException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;

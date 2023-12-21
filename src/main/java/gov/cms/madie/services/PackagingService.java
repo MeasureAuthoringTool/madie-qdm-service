@@ -1,4 +1,4 @@
-package gov.cms.madie.madieqdmservice.services;
+package gov.cms.madie.services;
 
 import gov.cms.madie.models.dto.TranslatedLibrary;
 import gov.cms.madie.models.measure.Measure;

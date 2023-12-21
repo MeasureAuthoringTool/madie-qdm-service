@@ -1,7 +1,7 @@
-package gov.cms.madie.madieqdmservice.resources;
+package gov.cms.madie.resources;
 
-import gov.cms.madie.madieqdmservice.Exceptions.UnsupportedModelException;
-import gov.cms.madie.madieqdmservice.services.PackagingService;
+import gov.cms.madie.Exceptions.UnsupportedModelException;
+import gov.cms.madie.services.PackagingService;
 import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.measure.Measure;
 import org.junit.jupiter.api.Assertions;

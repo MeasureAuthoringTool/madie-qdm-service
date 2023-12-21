@@ -1,4 +1,4 @@
-package gov.cms.madie.madieqdmservice.config;
+package gov.cms.madie.config;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;

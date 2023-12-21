@@ -1,4 +1,4 @@
-package gov.cms.madie.madieqdmservice.config;
+package gov.cms.madie.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
