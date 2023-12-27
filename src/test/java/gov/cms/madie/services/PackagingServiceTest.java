@@ -63,12 +63,10 @@ class PackagingServiceTest {
         .thenReturn(List.of(library1, library2));
     byte[] packageContents = packagingService.createMeasurePackage(measure, TOKEN);
     String packageString = new String(packageContents);
-    assertThat(
-        packageString, containsString(library1.getName() + "-" + library1.getVersion() + ".cql"));
-    assertThat(
-        packageString, containsString(library1.getName() + "-" + library1.getVersion() + ".xml"));
-    assertThat(
-        packageString, containsString(library1.getName() + "-" + library1.getVersion() + ".json"));
+    String library1FileName = library1.getName() + "-" + library1.getVersion();
+    assertThat(packageString, containsString(library1FileName + ".cql"));
+    assertThat(packageString, containsString(library1FileName + ".xml"));
+    assertThat(packageString, containsString(library1FileName + ".json"));
   }
 
   @Test
