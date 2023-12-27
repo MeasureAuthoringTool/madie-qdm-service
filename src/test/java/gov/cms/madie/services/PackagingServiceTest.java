@@ -18,7 +18,6 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
@@ -63,7 +62,11 @@ class PackagingServiceTest {
     when(translationServiceClient.getTranslatedLibraries(measure.getCql(), TOKEN))
         .thenReturn(List.of(library1, library2));
     byte[] packageContents = packagingService.createMeasurePackage(measure, TOKEN);
-    assertNotNull(packageContents);
+    String packageString = new String(packageContents);
+    String library1FileName = library1.getName() + "-" + library1.getVersion();
+    assertThat(packageString, containsString(library1FileName + ".cql"));
+    assertThat(packageString, containsString(library1FileName + ".xml"));
+    assertThat(packageString, containsString(library1FileName + ".json"));
   }
 
   @Test
