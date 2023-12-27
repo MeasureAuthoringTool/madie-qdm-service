@@ -31,7 +31,7 @@ public class PackagingService {
     String cqlDir = "cql/";
     Map<String, byte[]> entries = new HashMap<>();
     for (TranslatedLibrary translatedLibrary : translatedLibraries) {
-      String entryName = translatedLibrary.getName() + "-v" + translatedLibrary.getVersion();
+      String entryName = translatedLibrary.getName() + "-" + translatedLibrary.getVersion();
       entries.put(resourcesDir + entryName + ".json", translatedLibrary.getElmJson().getBytes());
       entries.put(resourcesDir + entryName + ".xml", translatedLibrary.getElmXml().getBytes());
       entries.put(cqlDir + entryName + ".cql", translatedLibrary.getCql().getBytes());
