@@ -43,7 +43,7 @@ public record TranslationServiceClient(
     }
   }
 
-  public String getMeasureBundleExport(Measure measure, String accessToken) {
+  public String getHumanReadable(Measure measure, String accessToken) {
     URI uri =
         URI.create(
             translatorClientConfig.getBaseUrl() + translatorClientConfig.getHumanReadableUrl());
@@ -52,14 +52,13 @@ public record TranslationServiceClient(
     headers.set(HttpHeaders.AUTHORIZATION, accessToken);
     HttpEntity<Measure> measureEntity = new HttpEntity<>(measure, headers);
     try {
-      log.info("fetching measure bundle human readable");
+      log.info("fetching human readable");
       return elmTranslatorRestTemplate
           .exchange(uri, HttpMethod.PUT, measureEntity, String.class)
           .getBody();
     } catch (Exception ex) {
       String msg =
-          "An issue occurred while fetching measure bundle human readable for measure id: "
-              + measure.getId();
+          "An issue occurred while fetching human readable for measure id: " + measure.getId();
       log.error(msg, ex);
       throw new TranslationServiceException(msg, ex);
     }

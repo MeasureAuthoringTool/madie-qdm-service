@@ -74,7 +74,7 @@ class TranslationServiceClientTest {
   }
 
   @Test
-  void testGetMeasureBundleExportSuccess() {
+  void testGetHumanReadableSuccess() {
     when(translatorClientConfig.getBaseUrl()).thenReturn("baseurl");
     when(translatorClientConfig.getHumanReadableUrl()).thenReturn("/human-readable");
     when(elmTranslatorRestTemplate.exchange(
@@ -82,14 +82,14 @@ class TranslationServiceClientTest {
         .thenReturn(ResponseEntity.ok("success"));
 
     String humanReadable =
-        translationServiceClient.getMeasureBundleExport(Measure.builder().build(), "token");
+        translationServiceClient.getHumanReadable(Measure.builder().build(), "token");
     assertThat(humanReadable, is(equalTo("success")));
   }
 
   @Test
-  void testGetMeasureBundleExportFailure() {
+  void testGetHumanReadableFailure() {
     String message =
-        "An issue occurred while fetching measure bundle human readable for measure id: testMeasureId";
+        "An issue occurred while fetching human readable for measure id: testMeasureId";
     when(elmTranslatorRestTemplate.exchange(
             any(URI.class), eq(HttpMethod.PUT), any(HttpEntity.class), any(Class.class)))
         .thenThrow(new TranslationServiceException(message, new Exception()));
@@ -97,7 +97,7 @@ class TranslationServiceClientTest {
         assertThrows(
             TranslationServiceException.class,
             () ->
-                translationServiceClient.getMeasureBundleExport(
+                translationServiceClient.getHumanReadable(
                     Measure.builder().id("testMeasureId").build(), "token"),
             message);
     assertThat(ex.getMessage(), containsString(message));

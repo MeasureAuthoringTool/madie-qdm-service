@@ -67,7 +67,7 @@ class PackagingServiceTest {
             .build();
     when(translationServiceClient.getTranslatedLibraries(measure.getCql(), TOKEN))
         .thenReturn(List.of(library1, library2));
-    when(translationServiceClient.getMeasureBundleExport(measure, TOKEN)).thenReturn("success");
+    when(translationServiceClient.getHumanReadable(measure, TOKEN)).thenReturn("success");
     byte[] packageContents = packagingService.createMeasurePackage(measure, TOKEN);
     String packageString = new String(packageContents);
     String library1FileName = library1.getName() + "-" + library1.getVersion();

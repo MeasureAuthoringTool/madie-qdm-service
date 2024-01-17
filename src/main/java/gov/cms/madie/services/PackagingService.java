@@ -36,7 +36,7 @@ public class PackagingService {
       entries.put(resourcesDir + entryName + ".xml", translatedLibrary.getElmXml().getBytes());
       entries.put(cqlDir + entryName + ".cql", translatedLibrary.getCql().getBytes());
     }
-    String humanReadable = translationServiceClient.getMeasureBundleExport(measure, accessToken);
+    String humanReadable = translationServiceClient.getHumanReadable(measure, accessToken);
     if (humanReadable != null) {
       entries.put(
           measure.getEcqmTitle() + "-v" + measure.getVersion() + "-QDM" + ".html",
