@@ -16,6 +16,9 @@ public class CqlElmTranslatorClientConfig {
   @Value("${madie.cql-elm.service.cql-elm-urn}")
   private String cqlElmUrn;
 
+  @Value("${madie.cql-elm.service.human-readable}")
+  private String humanReadableUrl;
+
   @Bean
   public RestTemplate elmTranslatorRestTemplate() {
     return new RestTemplate();

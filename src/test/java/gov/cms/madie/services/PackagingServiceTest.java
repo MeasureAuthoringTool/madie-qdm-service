@@ -36,6 +36,12 @@ class PackagingServiceTest {
         Measure.builder()
             .id("1")
             .ecqmTitle("test")
+            .version(
+                gov.cms.madie.models.common.Version.builder()
+                    .major(1)
+                    .minor(2)
+                    .revisionNumber(3)
+                    .build())
             .cql("fake cql")
             .model(String.valueOf(ModelType.QDM_5_6))
             .build();
@@ -61,12 +67,14 @@ class PackagingServiceTest {
             .build();
     when(translationServiceClient.getTranslatedLibraries(measure.getCql(), TOKEN))
         .thenReturn(List.of(library1, library2));
+    when(translationServiceClient.getHumanReadable(measure, TOKEN)).thenReturn("success");
     byte[] packageContents = packagingService.createMeasurePackage(measure, TOKEN);
     String packageString = new String(packageContents);
     String library1FileName = library1.getName() + "-" + library1.getVersion();
     assertThat(packageString, containsString(library1FileName + ".cql"));
     assertThat(packageString, containsString(library1FileName + ".xml"));
     assertThat(packageString, containsString(library1FileName + ".json"));
+    assertThat(packageString, containsString("test-v1.2.003-QDM.html"));
   }
 
   @Test
