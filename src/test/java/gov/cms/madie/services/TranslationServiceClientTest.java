@@ -3,6 +3,8 @@ package gov.cms.madie.services;
 import gov.cms.madie.Exceptions.TranslationServiceException;
 import gov.cms.madie.config.CqlElmTranslatorClientConfig;
 import gov.cms.madie.models.dto.TranslatedLibrary;
+import gov.cms.madie.models.measure.Measure;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -67,6 +69,36 @@ class TranslationServiceClientTest {
         assertThrows(
             TranslationServiceException.class,
             () -> translationServiceClient.getTranslatedLibraries("cql", "token"),
+            message);
+    assertThat(ex.getMessage(), containsString(message));
+  }
+
+  @Test
+  void testGetMeasureBundleExportSuccess() {
+    when(translatorClientConfig.getBaseUrl()).thenReturn("baseurl");
+    when(translatorClientConfig.getHumanReadableUrl()).thenReturn("/human-readable");
+    when(elmTranslatorRestTemplate.exchange(
+            any(URI.class), eq(HttpMethod.PUT), any(HttpEntity.class), any(Class.class)))
+        .thenReturn(ResponseEntity.ok("success"));
+
+    String humanReadable =
+        translationServiceClient.getMeasureBundleExport(Measure.builder().build(), "token");
+    assertThat(humanReadable, is(equalTo("success")));
+  }
+
+  @Test
+  void testGetMeasureBundleExportFailure() {
+    String message =
+        "An issue occurred while fetching measure bundle human readable for measure id: testMeasureId";
+    when(elmTranslatorRestTemplate.exchange(
+            any(URI.class), eq(HttpMethod.PUT), any(HttpEntity.class), any(Class.class)))
+        .thenThrow(new TranslationServiceException(message, new Exception()));
+    Exception ex =
+        assertThrows(
+            TranslationServiceException.class,
+            () ->
+                translationServiceClient.getMeasureBundleExport(
+                    Measure.builder().id("testMeasureId").build(), "token"),
             message);
     assertThat(ex.getMessage(), containsString(message));
   }
