@@ -1,5 +1,6 @@
 package gov.cms.madie.resources;
 
+import gov.cms.madie.hqmf.HQMFGeneratorFactory;
 import gov.cms.madie.services.PackagingService;
 import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.packaging.utils.ResourceFileUtil;
@@ -29,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PackageControllerMvcTest implements ResourceFileUtil {
 
   @MockBean private PackagingService packagingService;
+  @MockBean private HQMFGeneratorFactory factory;
   @Autowired private MockMvc mockMvc;
 
   private static final String TEST_USER_ID = "john_doe";

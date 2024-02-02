@@ -1,6 +1,10 @@
 package gov.cms.madie.resources;
 
 import gov.cms.madie.Exceptions.UnsupportedModelException;
+import gov.cms.madie.hqmf.Generator;
+import gov.cms.madie.hqmf.HQMFGeneratorFactory;
+import gov.cms.madie.hqmf.XmlProcessor;
+import gov.cms.madie.hqmf.dto.MeasureExport;
 import gov.cms.madie.services.PackagingService;
 import gov.cms.madie.models.measure.Measure;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PackageController {
 
   private final PackagingService packagingService;
+  private final HQMFGeneratorFactory hqmfGeneratorFactory;
 
   @PutMapping(
       value = "/package",
@@ -35,5 +40,21 @@ public class PackageController {
       return packagingService.createMeasurePackage(measure, accessToken);
     }
     throw new UnsupportedModelException("Unsupported model type: " + measure.getModel());
+  }
+
+  @PutMapping(
+      value = "/hqmf",
+      produces = {
+        MediaType.APPLICATION_XML_VALUE,
+      },
+      consumes = {MediaType.APPLICATION_JSON_VALUE})
+  public String generateHqmf(@RequestBody MeasureExport measureExport) throws Exception {
+    // generate HQMF if the model type is QDM
+    Measure measure = measureExport.getMeasure();
+    if (measure != null && measure.getModel() != null && measure.getModel().contains("QDM")) {
+      Generator hqmfGenerator = hqmfGeneratorFactory.getHQMFGenerator();
+      return hqmfGenerator.generate(measureExport);
+    }
+    throw new UnsupportedModelException("Unsupported model type: " + (measure == null ? "NONE" : measure.getModel()));
   }
 }
