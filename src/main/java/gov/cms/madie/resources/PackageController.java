@@ -3,7 +3,6 @@ package gov.cms.madie.resources;
 import gov.cms.madie.Exceptions.UnsupportedModelException;
 import gov.cms.madie.hqmf.Generator;
 import gov.cms.madie.hqmf.HQMFGeneratorFactory;
-import gov.cms.madie.hqmf.XmlProcessor;
 import gov.cms.madie.hqmf.dto.MeasureExport;
 import gov.cms.madie.services.PackagingService;
 import gov.cms.madie.models.measure.Measure;
@@ -55,6 +54,7 @@ public class PackageController {
       Generator hqmfGenerator = hqmfGeneratorFactory.getHQMFGenerator();
       return hqmfGenerator.generate(measureExport);
     }
-    throw new UnsupportedModelException("Unsupported model type: " + (measure == null ? "NONE" : measure.getModel()));
+    throw new UnsupportedModelException(
+        "Unsupported model type: " + (measure == null ? "NONE" : measure.getModel()));
   }
 }

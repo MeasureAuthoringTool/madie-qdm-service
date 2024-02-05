@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -82,10 +81,10 @@ class PackageControllerTest {
     MeasureExport measureExport = MeasureExport.builder().measure(measure).build();
     String errorMessage = "Unsupported model type: " + measure.getModel();
     Exception ex =
-            Assertions.assertThrows(
-                    UnsupportedModelException.class,
-                    () -> packageController.generateHqmf(measureExport),
-                    errorMessage);
+        Assertions.assertThrows(
+            UnsupportedModelException.class,
+            () -> packageController.generateHqmf(measureExport),
+            errorMessage);
     assertThat(ex.getMessage(), is(equalTo(errorMessage)));
   }
 
@@ -94,21 +93,20 @@ class PackageControllerTest {
     MeasureExport measureExport = MeasureExport.builder().build();
     String errorMessage = "Unsupported model type: NONE";
     Exception ex =
-            Assertions.assertThrows(
-                    UnsupportedModelException.class,
-                    () -> packageController.generateHqmf(measureExport),
-                    errorMessage);
+        Assertions.assertThrows(
+            UnsupportedModelException.class,
+            () -> packageController.generateHqmf(measureExport),
+            errorMessage);
     assertThat(ex.getMessage(), is(equalTo(errorMessage)));
   }
 
   @Test
   void testGenerateHqmfReturnsHqmf() throws Exception {
-    MeasureExport measureExport = MeasureExport.builder()
-            .measure(measure)
-            .build();
+    MeasureExport measureExport = MeasureExport.builder().measure(measure).build();
     HQMFGenerator generator = mock(HQMFGenerator.class);
     when(factory.getHQMFGenerator()).thenReturn(generator);
-    when(generator.generate(any(MeasureExport.class))).thenReturn("<QualityMeasureDocument></QualityMeasureDocument>");
+    when(generator.generate(any(MeasureExport.class)))
+        .thenReturn("<QualityMeasureDocument></QualityMeasureDocument>");
     String hqmf = packageController.generateHqmf(measureExport);
     assertThat(hqmf, is(equalTo("<QualityMeasureDocument></QualityMeasureDocument>")));
   }

@@ -10,29 +10,29 @@ import lombok.Data;
 @Builder
 public class MeasureExport {
 
-	private String id;
+  private String id;
 
-	private String simpleXml;
+  private String simpleXml;
 
-	private Measure measure;
+  private Measure measure;
 
-	private String humanReadable;
+  private String humanReadable;
 
-	private String hqmf;
+  private String hqmf;
 
-	private String cql;
+  private String cql;
 
-	private String measureJson;
+  private String measureJson;
 
-	private String elmXml;
+  private String elmXml;
 
-	private String fhirIncludedLibsJson;
+  private String fhirIncludedLibsJson;
 
-	private XmlProcessor hqmfXmlProcessor;
+  private XmlProcessor hqmfXmlProcessor;
 
-	private XmlProcessor simpleXmlProcessor;
+  private XmlProcessor simpleXmlProcessor;
 
-	private XmlProcessor humanReadableProcessor;
+  private XmlProcessor humanReadableProcessor;
 
-	private String releaseVersion;
+  private String releaseVersion;
 }
