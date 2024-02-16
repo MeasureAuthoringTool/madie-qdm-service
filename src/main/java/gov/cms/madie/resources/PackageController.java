@@ -1,8 +1,12 @@
 package gov.cms.madie.resources;
 
 import gov.cms.madie.Exceptions.UnsupportedModelException;
+import gov.cms.madie.models.measure.QdmMeasure;
+import gov.cms.madie.services.MeasureMapper;
 import gov.cms.madie.services.PackagingService;
 import gov.cms.madie.models.measure.Measure;
+import gov.cms.madie.services.SimpleXmlService;
+import jakarta.xml.bind.JAXBException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -20,6 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class PackageController {
 
   private final PackagingService packagingService;
+  private final MeasureMapper measureMapper;
+  private final SimpleXmlService simpleXmlService;
 
   @PutMapping(
       value = "/package",
@@ -35,5 +41,27 @@ public class PackageController {
       return packagingService.createMeasurePackage(measure, accessToken);
     }
     throw new UnsupportedModelException("Unsupported model type: " + measure.getModel());
+  }
+
+  @PutMapping(
+      value = "/simple-xml",
+      produces = {
+        MediaType.APPLICATION_XML_VALUE,
+      },
+      consumes = {MediaType.APPLICATION_JSON_VALUE})
+  public String getMeasureSimpleXml(
+      @RequestBody @Validated(Measure.ValidationSequence.class) QdmMeasure measure)
+      throws JAXBException {
+    //    StringWriter sw = new StringWriter();
+    //    JAXBContext context = JAXBContext.newInstance(MeasureType.class);
+    //    Marshaller mar= context.createMarshaller();
+    //    mar.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+    //
+    //
+    //    MeasureType measureType = measureMapper.measureToMeasureType(measure);
+    //    mar.marshal(measureType, sw);
+    //    log.info("measureType: {}", measureType);
+    //    return Map.of("measure", measureType, "simpleXml", sw.getBuffer().toString());
+    return simpleXmlService.measureToSimpleXml(measure);
   }
 }

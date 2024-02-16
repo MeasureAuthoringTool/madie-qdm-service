@@ -14,8 +14,12 @@
   <description>QDM Service for MADiE</description>
   <properties>
     <java.version>17</java.version>
+
+    <jxbmavenplugin.version>2.5.0</jxbmavenplugin.version>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
+    <maven.jakarta.xml.bind-api.version>4.0.1</maven.jakarta.xml.bind-api.version>
+    <maven.jaxb.xjc.version>3.0.0</maven.jaxb.xjc.version>
     <maven.pmd.plugin.version>3.21.2</maven.pmd.plugin.version>
     <maven.sortpom.plugin.version>3.0.1</maven.sortpom.plugin.version>
     <mvn.checkstyle.file>madie-checkstyle.xml</mvn.checkstyle.file>
@@ -23,6 +27,8 @@
     <mvnreports.version>3.2.2</mvnreports.version>
     <mvnsite.version>3.11.0</mvnsite.version>
     <okta.springboot.starter.version>3.0.5</okta.springboot.starter.version>
+
+    <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
     <puppycrawl.checkstyle.version>10.1</puppycrawl.checkstyle.version>
     <spotify.fmt.version>2.21.1</spotify.fmt.version>
   </properties>
@@ -69,6 +75,18 @@
       <artifactId>packaging-utility</artifactId>
       <version>0.2.2</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>jaxb2-maven-plugin</artifactId>
+      <version>${jxbmavenplugin.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct</artifactId>
+      <version>${org.mapstruct.version}</version>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
@@ -79,6 +97,7 @@
       <artifactId>spring-security-test</artifactId>
       <scope>test</scope>
     </dependency>
+
   </dependencies>
   <repositories>
     <repository>
@@ -247,12 +266,126 @@
           </execution>
         </executions>
       </plugin>
+      <!--            <plugin>-->
+      <!--                <groupId>org.apache.maven.plugins</groupId>-->
+      <!--                <artifactId>maven-compiler-plugin</artifactId>-->
+      <!--                <configuration>-->
+      <!--                    <source>${maven.compiler.source}</source>-->
+      <!--                    <target>${maven.compiler.target}</target>-->
+      <!--                </configuration>-->
+      <!--            </plugin>-->
+
+      <!--      <plugin>-->
+      <!--        <groupId>org.jvnet.jaxb</groupId>-->
+      <!--        <artifactId>jaxb-maven-plugin</artifactId>-->
+      <!--        <version>${jxbmavenplugin.version}</version>-->
+      <!--        <executions>-->
+      <!--          <execution>-->
+      <!--            <goals>-->
+      <!--              <goal>generate</goal>-->
+      <!--            </goals>-->
+      <!--            <configuration>-->
+      <!--              <schemaDirectory>src/main/resources/schema</schemaDirectory>-->
+      <!--              <generateDirectory>${project.basedir}/src/main/java</generateDirectory>-->
+      <!--              <generatePackage>generated.gov.cms.madie.simplexml</generatePackage>-->
+      <!--            </configuration>-->
+      <!--          </execution>-->
+      <!--        </executions>-->
+      <!--      </plugin>-->
+
+      <!--      <plugin>-->
+      <!--        <groupId>org.codehaus.mojo</groupId>-->
+      <!--        <artifactId>jaxb2-maven-plugin</artifactId>-->
+      <!--        <version>${jxbmavenplugin.version}</version>-->
+      <!--        <configuration>-->
+      <!--          <xjbSources>-->
+      <!--            <xjbSource>src/main/resources/schema/binding.xjb</xjbSource>-->
+      <!--          </xjbSources>-->
+      <!--          <sources>-->
+      <!--            <source>src/main/resources/schema</source>-->
+      <!--          </sources>-->
+      <!--          <packageName>generated.gov.cms.madie.simplexml</packageName>-->
+      <!--          <outputDirectory>${project.basedir}/src/main/java</outputDirectory>-->
+      <!--          <clearOutputDir>false</clearOutputDir>-->
+      <!--        </configuration>-->
+      <!--        <dependencies>-->
+      <!--          <dependency>-->
+      <!--            <groupId>org.glassfish.jaxb</groupId>-->
+      <!--            <artifactId>jaxb-xjc</artifactId>-->
+      <!--            <version>${maven.jaxb.xjc.version}</version>-->
+      <!--          </dependency>-->
+      <!--          <dependency>-->
+      <!--            <groupId>jakarta.xml.bind</groupId>-->
+      <!--            <artifactId>jakarta.xml.bind-api</artifactId>-->
+      <!--            <version>${maven.jakarta.xml.bind-api.version}</version>-->
+      <!--          </dependency>-->
+      <!--        </dependencies>-->
+      <!--        <executions>-->
+      <!--          <execution>-->
+      <!--            <id>xjc</id>-->
+      <!--            <goals>-->
+      <!--              <goal>xjc</goal>-->
+      <!--            </goals>-->
+      <!--          </execution>-->
+      <!--        </executions>-->
+      <!--      </plugin>-->
+
+      <plugin>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-xjc-plugin</artifactId>
+        <version>3.3.0</version>
+        <configuration>
+          <extensions>
+            <extension>org.apache.cxf.xjcplugins:cxf-xjc-dv:3.2.3</extension>
+          </extensions>
+          <sourceRoot>${basedir}/src/main/java</sourceRoot>
+          <xsdOptions>
+            <xsdOption>
+              <xsd>${basedir}/src/main/resources/schemas/SimpleXML-QDM-5-6.xsd</xsd>
+              <!--                            <bindingFile>${basedir}/src/main/resources/schemas/binding.xjb</bindingFile>-->
+              <packagename>generated.gov.cms.madie.simplexml</packagename>
+            </xsdOption>
+          </xsdOptions>
+        </configuration>
+        <executions>
+          <execution>
+            <id>xjc</id>
+            <goals>
+              <goal>xsdtojava</goal>
+            </goals>
+            <phase>generate-sources</phase>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
-          <source>${maven.compiler.source}</source>
-          <target>${maven.compiler.target}</target>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.mapstruct</groupId>
+              <artifactId>mapstruct-processor</artifactId>
+              <version>${org.mapstruct.version}</version>
+            </path>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+            <dependency>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok-mapstruct-binding</artifactId>
+              <version>0.2.0</version>
+            </dependency>
+          </annotationProcessorPaths>
+
+          <compilerArgs>
+            <compilerArg>-Amapstruct.defaultComponentModel=spring</compilerArg>
+          </compilerArgs>
+
         </configuration>
       </plugin>
     </plugins>
