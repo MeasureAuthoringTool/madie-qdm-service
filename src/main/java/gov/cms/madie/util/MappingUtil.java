@@ -36,10 +36,10 @@ public final class MappingUtil {
   }
 
   public static boolean isPopulationObservation(PopulationType populationType) {
-    return populationType == PopulationType.NUMERATOR_OBSERVATION ||
-            populationType == PopulationType.DENOMINATOR_OBSERVATION ||
-            populationType == PopulationType.MEASURE_OBSERVATION ||
-            populationType == PopulationType.MEASURE_POPULATION_OBSERVATION;
+    return populationType == PopulationType.NUMERATOR_OBSERVATION
+        || populationType == PopulationType.DENOMINATOR_OBSERVATION
+        || populationType == PopulationType.MEASURE_OBSERVATION
+        || populationType == PopulationType.MEASURE_POPULATION_OBSERVATION;
   }
 
   public static String getPopulationDescription(Measure measure, PopulationType populationType) {
@@ -50,7 +50,8 @@ public final class MappingUtil {
     measure.getGroups().stream()
         .forEach(
             group -> {
-              if (CollectionUtils.isNotEmpty(group.getPopulations()) && !isPopulationObservation(populationType)) {
+              if (CollectionUtils.isNotEmpty(group.getPopulations())
+                  && !isPopulationObservation(populationType)) {
                 group.getPopulations().stream()
                     .forEach(
                         population -> {
@@ -60,15 +61,16 @@ public final class MappingUtil {
                             sb.append(population.getDescription() + "\n");
                           }
                         });
-              } else if (CollectionUtils.isNotEmpty(group.getMeasureObservations()) && isPopulationObservation(populationType)) {
+              } else if (CollectionUtils.isNotEmpty(group.getMeasureObservations())
+                  && isPopulationObservation(populationType)) {
                 group.getMeasureObservations().stream()
-                        .forEach(
-                                observation -> {
-                                  if (StringUtils.isNotBlank(observation.getDefinition())
-                                          && StringUtils.isNotBlank(observation.getDescription())) {
-                                    sb.append(observation.getDescription() + "\n");
-                                  }
-                                });
+                    .forEach(
+                        observation -> {
+                          if (StringUtils.isNotBlank(observation.getDefinition())
+                              && StringUtils.isNotBlank(observation.getDescription())) {
+                            sb.append(observation.getDescription() + "\n");
+                          }
+                        });
               }
             });
     return sb.toString();

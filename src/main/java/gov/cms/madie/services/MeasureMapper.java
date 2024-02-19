@@ -19,7 +19,6 @@ import org.mapstruct.MappingConstants;
 import org.mapstruct.Named;
 import org.springframework.util.CollectionUtils;
 
-import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -63,15 +62,41 @@ public interface MeasureMapper {
   @Mapping(target = "definitions", source = "measure.measureMetaData.definition")
   @Mapping(target = "guidance", source = "measure.measureMetaData.guidance")
   @Mapping(target = "transmissionFormat", source = "measure.measureMetaData.transmissionFormat")
-  @Mapping(target = "initialPopDescription", expression = "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.INITIAL_POPULATION))")
-  @Mapping(target = "denominatorDescription", expression = "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.DENOMINATOR))")
-  @Mapping(target = "denominatorExclusionsDescription", expression = "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.DENOMINATOR_EXCLUSION))")
-  @Mapping(target = "numeratorDescription", expression = "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.NUMERATOR))")
-  @Mapping(target = "numeratorExclusionsDescription", expression = "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.NUMERATOR_EXCLUSION))")
-  @Mapping(target = "denominatorExceptionsDescription", expression = "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.DENOMINATOR_EXCEPTION))")
-  @Mapping(target = "measurePopulationDescription", expression = "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.MEASURE_POPULATION))")
-  @Mapping(target = "measurePopulationExclusionsDescription", expression = "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.MEASURE_POPULATION_OBSERVATION))")
-//  @Mapping(target = "measureObservationsDescription", expression = "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.MEASURE_POPULATION_OBSERVATION))")
+  @Mapping(
+      target = "initialPopDescription",
+      expression =
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.INITIAL_POPULATION))")
+  @Mapping(
+      target = "denominatorDescription",
+      expression =
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.DENOMINATOR))")
+  @Mapping(
+      target = "denominatorExclusionsDescription",
+      expression =
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.DENOMINATOR_EXCLUSION))")
+  @Mapping(
+      target = "numeratorDescription",
+      expression =
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.NUMERATOR))")
+  @Mapping(
+      target = "numeratorExclusionsDescription",
+      expression =
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.NUMERATOR_EXCLUSION))")
+  @Mapping(
+      target = "denominatorExceptionsDescription",
+      expression =
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.DENOMINATOR_EXCEPTION))")
+  @Mapping(
+      target = "measurePopulationDescription",
+      expression =
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.MEASURE_POPULATION))")
+  @Mapping(
+      target = "measurePopulationExclusionsDescription",
+      expression =
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.MEASURE_POPULATION_OBSERVATION))")
+  //  @Mapping(target = "measureObservationsDescription", expression =
+  // "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure,
+  // gov.cms.madie.models.measure.PopulationType.MEASURE_POPULATION_OBSERVATION))")
   @Mapping(target = "supplementalData", source = "supplementalDataDescription")
   @Mapping(target = "finalizedDate", source = "measure")
   MeasureDetailsType measureToMeasureDetailsType(QdmMeasure measure);
@@ -209,8 +234,10 @@ public interface MeasureMapper {
       return null;
     }
     FinalizedDateType finalizedDateType = new FinalizedDateType();
-    finalizedDateType.setValue(DateTimeFormatter.ofPattern(MadieConstants.DATE_FORMAT)
-            .withZone(ZoneId.systemDefault()).format(measure.getLastModifiedAt()));
+    finalizedDateType.setValueAttribute(
+        DateTimeFormatter.ofPattern(MadieConstants.DATE_FORMAT)
+            .withZone(ZoneId.systemDefault())
+            .format(measure.getLastModifiedAt()));
     return finalizedDateType;
   }
 }
