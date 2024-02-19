@@ -76,10 +76,10 @@ class PackageControllerTest {
     measure.setModel(String.valueOf(ModelType.QI_CORE));
     String errorMessage = "Unsupported model type: " + measure.getModel();
     Exception ex =
-            Assertions.assertThrows(
-                    UnsupportedModelException.class,
-                    () -> packageController.getMeasureSimpleXml(measure),
-                    errorMessage);
+        Assertions.assertThrows(
+            UnsupportedModelException.class,
+            () -> packageController.getMeasureSimpleXml(measure),
+            errorMessage);
     assertThat(ex.getMessage(), is(equalTo(errorMessage)));
   }
 
@@ -94,5 +94,4 @@ class PackageControllerTest {
             errorMessage);
     assertThat(ex.getMessage(), is(equalTo(errorMessage)));
   }
-
 }

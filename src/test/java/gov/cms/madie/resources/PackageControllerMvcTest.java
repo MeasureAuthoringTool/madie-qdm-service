@@ -78,17 +78,17 @@ class PackageControllerMvcTest implements ResourceFileUtil {
   void testGetMeasureSimpleXml() throws Exception {
     String measureJson = getStringFromTestResource("/measures/qdm-test-measure.json");
     Mockito.when(packagingService.createMeasurePackage(new Measure(), TOKEN))
-            .thenReturn("measure package".getBytes());
+        .thenReturn("measure package".getBytes());
     mockMvc
-            .perform(
-                    MockMvcRequestBuilders.put("/qdm/measures/simple-xml")
-                            .with(user(TEST_USER_ID))
-                            .with(csrf())
-                            .header(HttpHeaders.AUTHORIZATION, TOKEN)
-                            .content(measureJson)
-                            .contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(status().isOk())
-            .andReturn();
+        .perform(
+            MockMvcRequestBuilders.put("/qdm/measures/simple-xml")
+                .with(user(TEST_USER_ID))
+                .with(csrf())
+                .header(HttpHeaders.AUTHORIZATION, TOKEN)
+                .content(measureJson)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+        .andExpect(status().isOk())
+        .andReturn();
     verify(simpleXmlService, times(1)).measureToSimpleXml(any(QdmMeasure.class));
   }
 
