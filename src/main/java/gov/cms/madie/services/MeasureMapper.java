@@ -94,9 +94,10 @@ public interface MeasureMapper {
       target = "measurePopulationExclusionsDescription",
       expression =
           "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.MEASURE_POPULATION_OBSERVATION))")
-  //  @Mapping(target = "measureObservationsDescription", expression =
-  // "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure,
-  // gov.cms.madie.models.measure.PopulationType.MEASURE_POPULATION_OBSERVATION))")
+  @Mapping(
+      target = "measureObservationsDescription",
+      expression =
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.MEASURE_OBSERVATION))")
   @Mapping(target = "supplementalData", source = "supplementalDataDescription")
   @Mapping(target = "finalizedDate", source = "measure")
   MeasureDetailsType measureToMeasureDetailsType(QdmMeasure measure);

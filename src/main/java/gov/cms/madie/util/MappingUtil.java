@@ -3,9 +3,13 @@ package gov.cms.madie.util;
 import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 import gov.cms.madie.models.measure.BaseConfigurationTypes;
 import gov.cms.madie.models.measure.Measure;
+import gov.cms.madie.models.measure.MeasureObservation;
 import gov.cms.madie.models.measure.MeasureScoring;
+import gov.cms.madie.models.measure.Population;
 import gov.cms.madie.models.measure.PopulationType;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.stream.Collectors;
 
 public final class MappingUtil {
   public static String getScoringAbbr(String scoring) {
@@ -46,33 +50,38 @@ public final class MappingUtil {
     if (CollectionUtils.isEmpty(measure.getGroups())) {
       return null;
     }
-    StringBuilder sb = new StringBuilder();
-    measure.getGroups().stream()
-        .forEach(
-            group -> {
-              if (CollectionUtils.isNotEmpty(group.getPopulations())
-                  && !isPopulationObservation(populationType)) {
-                group.getPopulations().stream()
-                    .forEach(
-                        population -> {
-                          if (StringUtils.isNotBlank(population.getDefinition())
-                              && populationType.name().equalsIgnoreCase(population.getName().name())
-                              && StringUtils.isNotBlank(population.getDescription())) {
-                            sb.append(population.getDescription() + "\n");
-                          }
-                        });
-              } else if (CollectionUtils.isNotEmpty(group.getMeasureObservations())
-                  && isPopulationObservation(populationType)) {
-                group.getMeasureObservations().stream()
-                    .forEach(
-                        observation -> {
-                          if (StringUtils.isNotBlank(observation.getDefinition())
-                              && StringUtils.isNotBlank(observation.getDescription())) {
-                            sb.append(observation.getDescription() + "\n");
-                          }
-                        });
-              }
-            });
-    return sb.toString();
+    final String description =
+        measure.getGroups().stream()
+            .map(
+                group -> {
+                  if (CollectionUtils.isNotEmpty(group.getPopulations())
+                      && !isPopulationObservation(populationType)) {
+                    return group.getPopulations().stream()
+                        .filter(
+                            population ->
+                                StringUtils.isNotBlank(population.getDefinition())
+                                    && populationType
+                                        .name()
+                                        .equalsIgnoreCase(population.getName().name())
+                                    && StringUtils.isNotBlank(population.getDescription()))
+                        .map(Population::getDescription)
+                        .collect(Collectors.joining("\n"));
+                  } else if (CollectionUtils.isNotEmpty(group.getMeasureObservations())
+                      && isPopulationObservation(populationType)) {
+                    // there is only one observation description field, so grab all available
+                    // measure observation descriptions
+                    return group.getMeasureObservations().stream()
+                        .filter(
+                            observation ->
+                                StringUtils.isNotBlank(observation.getDefinition())
+                                    && StringUtils.isNotBlank(observation.getDescription()))
+                        .map(MeasureObservation::getDescription)
+                        .collect(Collectors.joining("\n"));
+                  }
+                  return null;
+                })
+            .filter(StringUtils::isNotBlank)
+            .collect(Collectors.joining("\n"));
+    return StringUtils.isBlank(description) ? null : description;
   }
 }
