@@ -4,6 +4,7 @@ import gov.cms.madie.Exceptions.UnsupportedModelException;
 import gov.cms.madie.services.PackagingService;
 import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.measure.Measure;
+import gov.cms.madie.services.SimpleXmlService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 class PackageControllerTest {
 
   @Mock private PackagingService packagingService;
+  @Mock private SimpleXmlService simpleXmlService;
   @InjectMocks private PackageController packageController;
 
   private static final String TOKEN = "test token";
@@ -68,4 +70,29 @@ class PackageControllerTest {
             errorMessage);
     assertThat(ex.getMessage(), is(equalTo(errorMessage)));
   }
+
+  @Test
+  void testGetMeasureSimpleXmlIfModelIsNull() {
+    measure.setModel(String.valueOf(ModelType.QI_CORE));
+    String errorMessage = "Unsupported model type: " + measure.getModel();
+    Exception ex =
+            Assertions.assertThrows(
+                    UnsupportedModelException.class,
+                    () -> packageController.getMeasureSimpleXml(measure),
+                    errorMessage);
+    assertThat(ex.getMessage(), is(equalTo(errorMessage)));
+  }
+
+  @Test
+  void testGetMeasureSimpleXmlForUnsupportedModel() {
+    measure.setModel(String.valueOf(ModelType.QI_CORE));
+    String errorMessage = "Unsupported model type: " + measure.getModel();
+    Exception ex =
+        Assertions.assertThrows(
+            UnsupportedModelException.class,
+            () -> packageController.getMeasureSimpleXml(measure),
+            errorMessage);
+    assertThat(ex.getMessage(), is(equalTo(errorMessage)));
+  }
+
 }
