@@ -55,10 +55,11 @@ public interface MeasureMapper {
   @Mapping(target = "types", source = "baseConfigurationTypes")
   //    @Mapping(target = "stratification", source = "")
   @Mapping(target = "riskAdjustment", source = "riskAdjustmentDescription")
-  //    @Mapping(target = "aggregation", source = "")
-  @Mapping(target = "rationale", source = "riskAdjustmentDescription")
+  @Mapping(target = "aggregation", source = "rateAggregation")
+  @Mapping(target = "rationale", source = "measure.measureMetaData.rationale")
   @Mapping(target = "recommendations", source = "measure.measureMetaData.clinicalRecommendation")
-  @Mapping(target = "improvementNotations", source = "measure.measureMetaData.rationale")
+  @Mapping(target = "improvementNotations", source = "measure.improvementNotation")
+  @Mapping(target = "references", source = "measure.measureMetaData.references")
   @Mapping(target = "definitions", source = "measure.measureMetaData.definition")
   @Mapping(target = "guidance", source = "measure.measureMetaData.guidance")
   @Mapping(target = "transmissionFormat", source = "measure.measureMetaData.transmissionFormat")
@@ -108,13 +109,6 @@ public interface MeasureMapper {
   @Mapping(target = "value", source = "scoring")
   ScoringType scoringToScoringType(String scoring);
 
-  default String supplementalDataToSupplementalData(List<DefDescPair> supplementalData) {
-    return Optional.ofNullable(supplementalData).orElse(List.of()).stream()
-        .map(DefDescPair::getDescription)
-        .reduce((acc, t) -> acc + "\n" + t)
-        .orElse(null);
-  }
-
   default SupplementalDataElementsType supplementalDataToSupplementalDataElementsType(
       List<DefDescPair> supplementalData) {
     List<CqldefinitionType> defs =
@@ -138,12 +132,13 @@ public interface MeasureMapper {
   }
 
   default String versionToVersion(Version version) {
-    return version.toString();
+    return version == null ? null : version.toString();
   }
 
   @Mapping(target = "calenderYear", constant = "false")
   @Mapping(target = "startDate", source = "measure.measurementPeriodStart", dateFormat = "yyyyMMdd")
   @Mapping(target = "stopDate", source = "measure.measurementPeriodEnd", dateFormat = "yyyyMMdd")
+  @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
   PeriodType measureToPeriodType(Measure measure);
 
   @Mapping(target = "value", source = "organization.name")
@@ -151,7 +146,7 @@ public interface MeasureMapper {
   StewardType organizationToStewardType(Organization organization);
 
   default DevelopersType measureMetaDataToDevelopersType(MeasureMetaData measureMetaData) {
-    if (CollectionUtils.isEmpty(measureMetaData.getDevelopers())) {
+    if (measureMetaData == null || CollectionUtils.isEmpty(measureMetaData.getDevelopers())) {
       return null;
     }
     DevelopersType developersType = new DevelopersType();
@@ -190,8 +185,8 @@ public interface MeasureMapper {
   @Mapping(target = "id", source = "organization.oid")
   DeveloperType organizationToDeveloperType(Organization organization);
 
-  @Mapping(target = "value", source = "description")
   @Mapping(target = "displayName", source = "definition")
+  @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
   CqldefinitionType defDescPairToCqldefinitionType(DefDescPair defDescPair);
 
   default TypesType baseConfigurationTypesToTypesTypes(
@@ -231,7 +226,9 @@ public interface MeasureMapper {
   ReferenceType referenceToReferenceType(Reference reference);
 
   default FinalizedDateType instantToFinalizedDateType(Measure measure) {
-    if (measure.getMeasureMetaData() == null || measure.getMeasureMetaData().isDraft()) {
+    if (measure.getMeasureMetaData() == null
+        || measure.getMeasureMetaData().isDraft()
+        || measure.getLastModifiedAt() == null) {
       return null;
     }
     FinalizedDateType finalizedDateType = new FinalizedDateType();

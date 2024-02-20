@@ -2,12 +2,14 @@ package gov.cms.madie.services;
 
 import generated.gov.cms.madie.simplexml.MeasureType;
 import gov.cms.madie.models.measure.QdmMeasure;
+import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.xml.namespace.QName;
 import java.io.StringWriter;
 
 @Service
@@ -22,9 +24,9 @@ public class SimpleXmlService {
     StringWriter sw = new StringWriter();
     if (measure != null) {
       MeasureType measureType = measureMapper.measureToMeasureType(measure);
-      log.info("calling marshal with measureType: {}", measureType);
-      log.info("calling marshal with stringWriter: {}", sw);
-      simpleXmlMarshaller.marshal(measureType, sw);
+      JAXBElement<MeasureType> jaxbElement =
+          new JAXBElement<>(new QName(null, "measure"), MeasureType.class, measureType);
+      simpleXmlMarshaller.marshal(jaxbElement, sw);
     }
     return sw.toString();
   }
