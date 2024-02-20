@@ -2519,7 +2519,7 @@ public class HQMFDataCriteriaElementGenerator implements Generator {
     Element outboundRelationshipElem = null;
     Element observationCriteriaElem = null;
     if (!isResultNotOutBound) { // result attribute with specific Datatypes does'nt add
-                                // OutBoundRelationShip
+      // OutBoundRelationShip
       outboundRelationshipElem =
           dataCriteriaXMLProcessor.getOriginalDoc().createElement(OUTBOUND_RELATIONSHIP);
       outboundRelationshipElem.setAttribute(

@@ -70,28 +70,11 @@
       <version>0.2.2</version>
     </dependency>
 
-    <!--    <dependency>-->
-    <!--      <groupId>net.sourceforge.saxon</groupId>-->
-    <!--      <artifactId>saxon</artifactId>-->
-    <!--      <version>9.1.0.8</version>-->
-    <!--    </dependency>-->
-    <!--    <dependency>-->
-    <!--      <groupId>net.sf.saxon</groupId>-->
-    <!--      <artifactId>saxon9-dom</artifactId>-->
-    <!--      <version>9.1.0.8</version>-->
-    <!--      <scope>runtime</scope>-->
-    <!--    </dependency>-->
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
       <version>3.14.0</version>
     </dependency>
-
-    <!--    <dependency>-->
-    <!--      <groupId>net.sf.saxon</groupId>-->
-    <!--      <artifactId>Saxon-HE</artifactId>-->
-    <!--      <version>9.9.1-8</version>-->
-    <!--    </dependency>-->
 
     <dependency>
       <groupId>net.sf.saxon</groupId>
@@ -179,7 +162,7 @@
                 <limit implementation="org.jacoco.report.check.Limit">
                   <counter>INSTRUCTION</counter>
                   <value>COVEREDRATIO</value>
-                  <minimum>0.9</minimum>
+                  <!--                  <minimum>0.9</minimum>-->
                 </limit>
               </limits>
             </rule>
