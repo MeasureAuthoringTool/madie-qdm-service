@@ -1,8 +1,11 @@
 package gov.cms.madie.resources;
 
 import gov.cms.madie.Exceptions.UnsupportedModelException;
+import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.services.PackagingService;
 import gov.cms.madie.models.measure.Measure;
+import gov.cms.madie.services.SimpleXmlService;
+import jakarta.xml.bind.JAXBException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PackageController {
 
   private final PackagingService packagingService;
+  private final SimpleXmlService simpleXmlService;
 
   @PutMapping(
       value = "/package",
@@ -33,6 +37,21 @@ public class PackageController {
     // generate package if the model type is QDM
     if (measure.getModel() != null && measure.getModel().contains("QDM")) {
       return packagingService.createMeasurePackage(measure, accessToken);
+    }
+    throw new UnsupportedModelException("Unsupported model type: " + measure.getModel());
+  }
+
+  @PutMapping(
+      value = "/simple-xml",
+      produces = {
+        MediaType.APPLICATION_XML_VALUE,
+      },
+      consumes = {MediaType.APPLICATION_JSON_VALUE})
+  public String getMeasureSimpleXml(
+      @RequestBody @Validated(Measure.ValidationSequence.class) Measure measure)
+      throws JAXBException {
+    if (measure.getModel() != null && measure.getModel().contains("QDM")) {
+      return simpleXmlService.measureToSimpleXml((QdmMeasure) measure);
     }
     throw new UnsupportedModelException("Unsupported model type: " + measure.getModel());
   }

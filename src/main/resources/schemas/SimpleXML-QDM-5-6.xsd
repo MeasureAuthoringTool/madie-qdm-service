@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="https://jakarta.ee/xml/ns/jaxb" jxb:version="3.0">
+  <xs:element name="measure" type="measureType"/>
+  <xs:complexType name="codeSystemType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="codeSystem"/>
+        <xs:attribute type="xs:string" name="codeSystemName"/>
+        <xs:attribute type="xs:string" name="codeSystemVersion"/>
+        <xs:attribute type="xs:string" name="id"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="codeSystemsType">
+    <xs:sequence>
+      <xs:element type="codeSystemType" name="codeSystem" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="valuesetType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="datatype"/>
+        <xs:attribute type="xs:string" name="id"/>
+        <xs:attribute type="xs:string" name="isValidatedWithVsac"/>
+        <xs:attribute type="xs:string" name="name"/>
+        <xs:attribute type="xs:string" name="oid"/>
+        <xs:attribute type="xs:string" name="originalName"/>
+        <xs:attribute type="xs:string" name="program"/>
+        <xs:attribute type="xs:string" name="release"/>
+        <xs:attribute type="xs:string" name="suppDataElement"/>
+        <xs:attribute type="xs:string" name="taxonomy"/>
+        <xs:attribute type="xs:string" name="type"/>
+        <xs:attribute type="xs:string" name="uuid"/>
+        <xs:attribute type="xs:string" name="version"/>
+        <xs:attribute type="xs:string" name="suffix"/>
+        <xs:attribute type="xs:string" name="codeSystemName"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="valuesetsType">
+    <xs:sequence>
+      <xs:element type="valuesetType" name="valueset" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="codeType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="codeIdentifier"/>
+        <xs:attribute type="xs:string" name="codeName"/>
+        <xs:attribute type="xs:string" name="codeOID"/>
+        <xs:attribute type="xs:string" name="codeSystemName"/>
+        <xs:attribute type="xs:string" name="codeSystemOID"/>
+        <xs:attribute type="xs:string" name="codeSystemVersion"/>
+        <xs:attribute type="xs:string" name="displayName"/>
+        <xs:attribute type="xs:string" name="id"/>
+        <xs:attribute type="xs:string" name="isCodeSystemVersionIncluded"/>
+        <xs:attribute type="xs:string" name="isValidatedWithVsac"/>
+        <xs:attribute type="xs:string" name="readOnly"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="codesType">
+    <xs:sequence>
+      <xs:element type="codeType" name="code" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="parameterType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="comment"/>
+      <xs:element type="xs:string" name="logic"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="id"/>
+    <xs:attribute type="xs:string" name="name"/>
+    <xs:attribute type="xs:string" name="readOnly"/>
+  </xs:complexType>
+  <xs:complexType name="parametersType">
+    <xs:sequence>
+      <xs:element type="parameterType" name="parameter"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="definitionType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="logic"/>
+      <xs:element type="xs:string" name="comment"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="context"/>
+    <xs:attribute type="xs:string" name="id"/>
+    <xs:attribute type="xs:string" name="name"/>
+    <xs:attribute type="xs:string" name="popDefinition"/>
+    <xs:attribute type="xs:string" name="supplDataElement"/>
+  </xs:complexType>
+  <xs:complexType name="definitionsType">
+    <xs:sequence>
+      <xs:element type="definitionType" name="definition" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="argumentType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="argumentName"/>
+        <xs:attribute type="xs:string" name="id"/>
+        <xs:attribute type="xs:string" name="qdmDataType"/>
+        <xs:attribute type="xs:string" name="otherType"/>
+        <xs:attribute type="xs:string" name="type"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="argumentsType">
+    <xs:sequence>
+      <xs:element type="argumentType" name="argument"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="functionType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="logic" />
+      <xs:element type="xs:string" name="comment"/>
+      <xs:element type="argumentsType" name="arguments"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="context"/>
+    <xs:attribute type="xs:string" name="id"/>
+    <xs:attribute type="xs:string" name="name"/>
+    <xs:attribute type="xs:string" name="popDefinition"/>
+    <xs:attribute type="xs:string" name="supplDataElement"/>
+  </xs:complexType>
+  <xs:complexType name="functionsType">
+    <xs:sequence>
+      <xs:element type="functionType" name="function" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="includeLibraryType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="cqlLibRefId"/>
+        <xs:attribute type="xs:string" name="cqlLibRefName"/>
+        <xs:attribute type="xs:string" name="cqlVersion"/>
+        <xs:attribute type="xs:string" name="id"/>
+        <xs:attribute type="xs:string" name="name"/>
+        <xs:attribute type="xs:string" name="qdmVersion"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="includeLibrarysType">
+    <xs:sequence>
+      <xs:element type="includeLibraryType" name="includeLibrary"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="cqlLookUpType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="library"/>
+      <xs:element type="xs:string" name="version"/>
+      <xs:element type="xs:string" name="usingModel"/>
+      <xs:element type="xs:string" name="usingModelVersion"/>
+      <xs:element type="xs:string" name="cqlContext"/>
+      <xs:element type="codeSystemsType" name="codeSystems"/>
+      <xs:element type="valuesetsType" name="valuesets"/>
+      <xs:element type="codesType" name="codes"/>
+      <xs:element type="parametersType" name="parameters"/>
+      <xs:element type="definitionsType" name="definitions"/>
+      <xs:element type="functionsType" name="functions"/>
+      <xs:element type="includeLibrarysType" name="includeLibrarys"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="cqldefinitionType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="displayName"/>
+        <xs:attribute type="xs:string" name="uuid"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="supplementalDataElementsType">
+    <xs:sequence>
+      <xs:element type="cqldefinitionType" name="cqldefinition" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="riskAdjustmentVariablesType">
+    <xs:sequence>
+      <xs:element type="cqldefinitionType" name="cqldefinition" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="clauseType" mixed="true">
+    <xs:sequence>
+      <xs:element type="cqldefinitionType" name="cqldefinition" minOccurs="0"/>
+      <xs:element type="cqlaggfunctionType" name="cqlaggfunction" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="displayName"/>
+    <xs:attribute type="xs:string" name="isInGrouping"/>
+    <xs:attribute type="xs:string" name="type"/>
+    <xs:attribute type="xs:string" name="uuid"/>
+  </xs:complexType>
+  <xs:complexType name="cqlfunctionType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="displayName"/>
+        <xs:attribute type="xs:string" name="uuid"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="cqlaggfunctionType">
+    <xs:sequence>
+      <xs:element type="cqlfunctionType" name="cqlfunction"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="displayName"/>
+  </xs:complexType>
+  <xs:complexType name="groupType">
+    <xs:sequence>
+      <xs:element type="clauseType" name="clause" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="sequence"/>
+    <xs:attribute type="xs:string" name="ucum"/>
+  </xs:complexType>
+  <xs:complexType name="measureGroupingType">
+    <xs:sequence>
+      <xs:element type="groupType" name="group" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="qdmType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="code"/>
+        <xs:attribute type="xs:string" name="datatype"/>
+        <xs:attribute type="xs:string" name="id"/>
+        <xs:attribute type="xs:string" name="isValidatedWithVsac"/>
+        <xs:attribute type="xs:string" name="name"/>
+        <xs:attribute type="xs:string" name="oid"/>
+        <xs:attribute type="xs:string" name="originalName"/>
+        <xs:attribute type="xs:string" name="program"/>
+        <xs:attribute type="xs:string" name="release"/>
+        <xs:attribute type="xs:string" name="suffix"/>
+        <xs:attribute type="xs:string" name="suppDataElement"/>
+        <xs:attribute type="xs:string" name="taxonomy"/>
+        <xs:attribute type="xs:string" name="type"/>
+        <xs:attribute type="xs:string" name="uuid"/>
+        <xs:attribute type="xs:string" name="version"/>
+        <xs:attribute type="xs:string" name="codeSystemName"/>
+        <xs:attribute type="xs:string" name="codeIdentifier"/>
+        <xs:attribute type="xs:string" name="codeName"/>
+        <xs:attribute type="xs:string" name="codeSystemOID"/>
+        <xs:attribute type="xs:string" name="codeSystemVersion"/>
+        <xs:attribute type="xs:string" name="displayName"/>
+        <xs:attribute type="xs:string" name="isCodeSystemVersionIncluded"/>
+        <xs:attribute type="xs:string" name="readOnly"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="elementLookUpType">
+    <xs:sequence>
+      <xs:element type="qdmType" name="qdm" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="libType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="alias"/>
+        <xs:attribute type="xs:string" name="id"/>
+        <xs:attribute type="xs:string" name="isComponent"/>
+        <xs:attribute type="xs:string" name="isUnUsedGrandChild"/>
+        <xs:attribute type="xs:string" name="name"/>
+        <xs:attribute type="xs:string" name="setId"/>
+        <xs:attribute type="xs:string" name="version"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="allUsedCQLLibsType">
+    <xs:sequence>
+      <xs:element type="libType" name="lib"/>
+    </xs:sequence>
+  </xs:complexType>
+<!--  <xs:complexType name="nqfidType">-->
+<!--    <xs:simpleContent>-->
+<!--      <xs:extension base="xs:string">-->
+<!--        <xs:attribute type="xs:string" name="extension"/>-->
+<!--        <xs:attribute type="xs:string" name="root"/>-->
+<!--      </xs:extension>-->
+<!--    </xs:simpleContent>-->
+<!--  </xs:complexType>-->
+  <xs:complexType name="periodType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="startDate"/>
+      <xs:element type="xs:string" name="stopDate"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="calenderYear"/>
+    <xs:attribute type="xs:string" name="uuid"/>
+  </xs:complexType>
+  <xs:complexType name="stewardType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="id"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="developerType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="id"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="developersType">
+    <xs:sequence>
+      <xs:element type="developerType" name="developer" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="endorsementType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="id"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="scoringType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="id"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="typeType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="id"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="typesType">
+    <xs:sequence>
+      <xs:element type="typeType" name="type" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="referenceType">
+    <xs:sequence>
+      <xs:element name="reference-type">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="CITATION"/>
+            <xs:enumeration value="DOCUMENTATION"/>
+            <xs:enumeration value="JUSTIFICATION"/>
+            <xs:enumeration value="UNKNOWN"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element type="xs:string" name="reference-text"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="referencesType">
+    <xs:sequence>
+      <xs:element type="referenceType" name="reference" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="qualityMeasureSetType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="uuid"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="finalizedDateType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="value">
+        <!-- rename property generated by JAXB (avoiding "Value" name conflict) -->
+        <xs:annotation>
+          <xs:appinfo>
+            <jxb:property name="valueAttribute"/>
+          </xs:appinfo>
+        </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="measureDetailsType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="uuid"/>
+      <xs:element type="xs:string" name="cqlUUID"/>
+      <xs:element type="xs:string" name="title"/>
+      <xs:element type="xs:string" name="measureModel"/>
+      <xs:element type="xs:string" name="shortTitle"/>
+      <xs:element type="xs:string" name="emeasureid"/>
+      <xs:element type="xs:string" name="guid"/>
+      <xs:element type="xs:string" name="version"/>
+      <xs:element type="xs:string" name="cbeid"/>
+<!--      <xs:element type="nqfidType" name="nqfid"/>-->
+      <xs:element type="periodType" name="period"/>
+      <xs:element type="stewardType" name="steward"/>
+      <xs:element type="xs:string" name="experimental"/>
+      <xs:element type="xs:string" name="populationBasis"/>
+      <xs:element type="developersType" name="developers"/>
+      <xs:element type="endorsementType" name="endorsement"/>
+      <xs:element type="xs:string" name="description"/>
+      <xs:element type="xs:string" name="copyright"/>
+      <xs:element type="xs:string" name="disclaimer"/>
+      <xs:element type="scoringType" name="scoring"/>
+      <xs:element type="xs:string" name="patientBasedIndicator"/>
+      <xs:element type="typesType" name="types"/>
+      <xs:element type="xs:string" name="stratification"/>
+      <xs:element type="xs:string" name="riskAdjustment"/>
+      <xs:element type="xs:string" name="aggregation"/>
+      <xs:element type="xs:string" name="rationale"/>
+      <xs:element type="xs:string" name="recommendations"/>
+      <xs:element type="xs:string" name="improvementNotations"/>
+      <xs:element type="referencesType" name="references"/>
+      <xs:element type="xs:string" name="definitions"/>
+      <xs:element type="xs:string" name="guidance"/>
+      <xs:element type="xs:string" name="transmissionFormat"/>
+      <xs:element type="xs:string" name="initialPopDescription"/>
+      <xs:element type="xs:string" name="denominatorDescription"/>
+      <xs:element type="xs:string" name="denominatorExclusionsDescription"/>
+      <xs:element type="xs:string" name="numeratorDescription"/>
+      <xs:element type="xs:string" name="numeratorExclusionsDescription"/>
+      <xs:element type="xs:string" name="denominatorExceptionsDescription"/>
+      <xs:element type="xs:string" name="measurePopulationDescription"/>
+      <xs:element type="xs:string" name="measurePopulationExclusionsDescription"/>
+      <xs:element type="xs:string" name="measureObservationsDescription"/>
+      <xs:element type="xs:string" name="supplementalData"/>
+      <xs:element type="qualityMeasureSetType" name="qualityMeasureSet"/>
+      <xs:element type="finalizedDateType" name="finalizedDate"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="measureType">
+    <xs:sequence>
+      <xs:element type="cqlLookUpType" name="cqlLookUp"/>
+      <xs:element type="supplementalDataElementsType" name="supplementalDataElements"/>
+      <xs:element type="riskAdjustmentVariablesType" name="riskAdjustmentVariables"/>
+      <xs:element type="measureGroupingType" name="measureGrouping"/>
+      <xs:element type="elementLookUpType" name="elementLookUp"/>
+      <xs:element type="allUsedCQLLibsType" name="allUsedCQLLibs"/>
+      <xs:element type="measureDetailsType" name="measureDetails"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
