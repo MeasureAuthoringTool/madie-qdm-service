@@ -1059,7 +1059,8 @@ public class HQMFClauseLogicGenerator implements Generator {
             }
             // Comment comment =
             // measureExport.getHQMFXmlProcessor().getOriginalDoc().createComment("entry for
-            // "+relOpNode.getParentNode().getAttributes().getNamedItem(DISPLAY_NAME).getNodeValue());
+            // "+relOpNode.getParentNode().getAttributes()
+            //   .getNamedItem(DISPLAY_NAME).getNodeValue());
             // firstNode.appendChild(comment);
             firstNode.appendChild(excerptElement);
           }
@@ -1083,7 +1084,8 @@ public class HQMFClauseLogicGenerator implements Generator {
             }
             // Comment comment =
             // measureExport.getHQMFXmlProcessor().getOriginalDoc().createComment("entry for
-            // "+relOpNode.getParentNode().getAttributes().getNamedItem(DISPLAY_NAME).getNodeValue());
+            // "+relOpNode.getParentNode()
+            //   .getAttributes().getNamedItem(DISPLAY_NAME).getNodeValue());
             // firstNode.appendChild(comment);
             firstNode.appendChild(excerptElement);
           }
@@ -2360,8 +2362,9 @@ public class HQMFClauseLogicGenerator implements Generator {
 
                 // HQMFDataCriteriaElementGenerator hqmfDataCriteriaElementGenerator = new
                 // HQMFDataCriteriaElementGenerator();
-                // hqmfDataCriteriaElementGenerator.generateAttributeTagForFunctionalOp(measureExport,qdmNode,
-                // criteriaElement, attributeNode);
+                // hqmfDataCriteriaElementGenerator
+                // .generateAttributeTagForFunctionalOp(measureExport,qdmNode,
+                //   criteriaElement, attributeNode);
                 HQMFAttributeGenerator attributeGenerator = new HQMFAttributeGenerator();
                 attributeGenerator.generateAttributeTagForFunctionalOp(
                     measureExport, qdmNode, criteriaElement, attributeNode);

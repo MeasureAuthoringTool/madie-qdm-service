@@ -1,9 +1,11 @@
 package gov.cms.madie.resources;
 
 import gov.cms.madie.hqmf.HQMFGeneratorFactory;
+import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.services.PackagingService;
 import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.packaging.utils.ResourceFileUtil;
+import gov.cms.madie.services.SimpleXmlService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PackageControllerMvcTest implements ResourceFileUtil {
 
   @MockBean private PackagingService packagingService;
+  @MockBean private SimpleXmlService simpleXmlService;
   @MockBean private HQMFGeneratorFactory factory;
   @Autowired private MockMvc mockMvc;
 
@@ -61,6 +64,43 @@ class PackageControllerMvcTest implements ResourceFileUtil {
         mockMvc
             .perform(
                 MockMvcRequestBuilders.put("/qdm/measures/package")
+                    .with(user(TEST_USER_ID))
+                    .with(csrf())
+                    .header(HttpHeaders.AUTHORIZATION, TOKEN)
+                    .content(measureJson)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isBadRequest())
+            .andReturn();
+    assertThat(
+        mockResult.getResolvedException().getMessage(),
+        is(equalTo("Unsupported model type: QI-Core v4.1.1")));
+  }
+
+  @Test
+  void testGetMeasureSimpleXml() throws Exception {
+    String measureJson = getStringFromTestResource("/measures/qdm-test-measure.json");
+    Mockito.when(packagingService.createMeasurePackage(new Measure(), TOKEN))
+        .thenReturn("measure package".getBytes());
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.put("/qdm/measures/simple-xml")
+                .with(user(TEST_USER_ID))
+                .with(csrf())
+                .header(HttpHeaders.AUTHORIZATION, TOKEN)
+                .content(measureJson)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+        .andExpect(status().isOk())
+        .andReturn();
+    verify(simpleXmlService, times(1)).measureToSimpleXml(any(QdmMeasure.class));
+  }
+
+  @Test
+  void testGetMeasureSimpleXmlForUnsupportedModel() throws Exception {
+    String measureJson = getStringFromTestResource("/measures/qicore-test-measure.json");
+    MvcResult mockResult =
+        mockMvc
+            .perform(
+                MockMvcRequestBuilders.put("/qdm/measures/simple-xml")
                     .with(user(TEST_USER_ID))
                     .with(csrf())
                     .header(HttpHeaders.AUTHORIZATION, TOKEN)

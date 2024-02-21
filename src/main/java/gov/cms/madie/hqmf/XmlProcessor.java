@@ -68,7 +68,8 @@ public class XmlProcessor {
   private static final String MEASURE_POPULATION_EXCLUSIONS = "measurePopulationExclusions";
   private static final String INITIAL_POPULATIONS = "initialPopulations";
   public static final String XPATH_MEASURE_CLAUSE =
-      "/measure/populations/*/clause | /measure/*/clause | /measure/strata/stratification | /measure/strata/Stratification";
+      "/measure/populations/*/clause | /measure/*/clause "
+          + "| /measure/strata/stratification | /measure/strata/Stratification";
   public static final String XPATH_MEASURE_GROUPING = "/measure/measureGrouping";
   public static final String XPATH_MEASURE_GROUPING_GROUP = "/measure/measureGrouping/group";
   public static final String XPATH_GROUP_SEQ_START = "/measure/measureGrouping/group[@sequence = '";

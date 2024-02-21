@@ -630,7 +630,9 @@ public class HQMFDataCriteriaElementGenerator implements Generator {
       XmlProcessor dataCriteriaXMLProcessor, XmlProcessor simpleXmlprocessor)
       throws XPathExpressionException {
     String xPathForAttributeUse =
-        "/measure/subTreeLookUp/subTree//elementRef/attribute[@mode = 'Check if Present' or @mode='Equal To' or starts-with(@mode,'Less Than') or starts-with(@mode, 'Greater Than')]"
+        "/measure/subTreeLookUp/subTree//elementRef/attribute[@mode "
+            + "= 'Check if Present' or @mode='Equal To' "
+            + "or starts-with(@mode,'Less Than') or starts-with(@mode, 'Greater Than')]"
             + "[@name != 'negation rationale' and @name != '"
             + START_DATETIME
             + "' and @name !='"
@@ -752,7 +754,8 @@ public class HQMFDataCriteriaElementGenerator implements Generator {
             + "or @name ='"
             + RECORDED_DATETIME
             + "']"
-            + "[@mode='Equal To' or starts-with(@mode,'Less Than') or starts-with(@mode, 'Greater Than') or @mode='Check if Present']";
+            + "[@mode='Equal To' or starts-with(@mode,'Less Than') or "
+            + "starts-with(@mode, 'Greater Than') or @mode='Check if Present']";
 
     NodeList usedAttributeNodeList =
         simpleXmlprocessor.findNodeList(simpleXmlprocessor.getOriginalDoc(), xPathForAttributeUse);
@@ -3367,11 +3370,13 @@ public class HQMFDataCriteriaElementGenerator implements Generator {
 
       // find <qdm> for Birthdate QDM element in elementLookUp
       String xPathForBirthdate =
-          "/measure/elementLookUp/qdm[@name='Birthdate'][@datatype='Patient Characteristic Birthdate']";
+          "/measure/elementLookUp/qdm[@name='Birthdate']"
+              + "[@datatype='Patient Characteristic Birthdate']";
       Node birthDateQDM = xmlProcessor.findNode(xmlProcessor.getOriginalDoc(), xPathForBirthdate);
       if (birthDateQDM == null) {
         logger.debug(
-            "**********   Could not find QDM for Birthdate. No changes done for AGE AT. ***************");
+            "**********   Could not find QDM for Birthdate. "
+                + "No changes done for AGE AT. ***************");
         return;
       }
 

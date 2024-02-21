@@ -37,7 +37,8 @@ public class HQMFPopulationLogicGenerator extends HQMFClauseLogicGenerator {
   private Node initialPopulation;
 
   /* (non-Javadoc)
-   * @see mat.server.simplexml.hqmf.HQMFClauseLogicGenerator#generate(mat.model.clause.MeasureExport)
+   * @see
+   * mat.server.simplexml.hqmf.HQMFClauseLogicGenerator#generate(mat.model.clause.MeasureExport)
    */
   @Override
   public String generate(MeasureExport me) throws Exception {
@@ -49,17 +50,23 @@ public class HQMFPopulationLogicGenerator extends HQMFClauseLogicGenerator {
       3.Generate id tag with root and extension as attributes
       4. Generate code tag with code and codesystem as attributes.
       5. Generate title tag with value as attribute.
-      6. Generate text tag with value as attribute defining the populations used in current section.
+      6. Generate text tag with value as attribute
+      defining the populations used in current section.
       7. For each population used :
          1.Generate component tag as child of populationCriteriaSection with typeCode COMP.
-         2.Generate for ex : initialPopulationCriteria tag for IP with classCode="OBS" moodCode="EVN" as attributes.
+         2.Generate for ex : initialPopulationCriteria tag for IP
+         with classCode="OBS" moodCode="EVN" as attributes.
          3.Generate id tag with root and extension as attributes
-         4. Generate code tag with ccodeSystem="2.16.840.1.113883.5.4" codeSystemName="HL7 Observation Value"
+         4. Generate code tag with ccodeSystem="2.16.840.1.113883.5.4"
+         codeSystemName="HL7 Observation Value"
              	    code="IPOP" as attributes.
-                  5.Generate displayName as child tag of code with value = name of population as in Simple Xml.
+                  5.Generate displayName as child tag of code with
+                  value = name of population as in Simple Xml.
                   6. Generate precondition tag typeCode="PRCN".
-                  7. Based on top AND/OR/ANDNOT/ORNOT generate "AllTrue", "AllFalse", "AtLeastOneTrue" tag. Generate id empty tag inside it.
-                  8. Generate precondition tag typeCode="PRCN" for all children inside top Logical Op and add criteriaRef to it with id and extension.
+                  7. Based on top AND/OR/ANDNOT/ORNOT generate "AllTrue", "AllFalse",
+                  "AtLeastOneTrue" tag. Generate id empty tag inside it.
+                  8. Generate precondition tag typeCode="PRCN" for all children inside
+                  top Logical Op and add criteriaRef to it with id and extension.
     */
     measureExport = me;
     getMeasureScoringType(me);

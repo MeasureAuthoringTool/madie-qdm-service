@@ -8,4 +8,44 @@
   <suppress checks="FileLength"
     files="ParameterHandler.java"
   />
+  <suppress checks="FileLength"
+    files="XmlProcessor.java"
+  />
+  <suppress checks="MethodLength"
+            files="XmlProcessor.java"
+  />
+  <suppress checks="FileLength"
+    files="HQMFDataCriteriaElementGenerator.java"
+  />
+  <suppress checks="MethodLength"
+            files="HQMFDataCriteriaElementGenerator.java"
+  />
+  <suppress checks="FileLength"
+    files="HQMFPopulationLogicGenerator.java"
+  />
+  <suppress checks="MethodLength"
+            files="HQMFPopulationLogicGenerator.java"
+  />
+  <suppress checks="FileLength"
+    files="HQMFClauseLogicGenerator.java"
+  />
+  <suppress checks="MethodLength"
+            files="HQMFClauseLogicGenerator.java"
+  />
+  <suppress checks="FileLength"
+    files="HQMFDataCriteriaElementGenerator.java"
+  />
+  <suppress checks="MethodLength"
+            files="HQMFDataCriteriaElementGenerator.java"
+  />
+  <suppress checks="FileLength"
+    files="HQMFMeasureObservationLogicGenerator.java"
+  />
+  <suppress checks="MethodLength"
+            files="HQMFMeasureObservationLogicGenerator.java"
+  />
+  <suppress checks="MethodLength"
+            files="HQMFDataCriteriaElementGeneratorForCodes.java"
+  />
+
 </suppressions>
