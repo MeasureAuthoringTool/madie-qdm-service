@@ -1,9 +1,8 @@
 package gov.cms.madie.resources;
 
 import gov.cms.madie.Exceptions.UnsupportedModelException;
-import gov.cms.madie.hqmf.HQMFGeneratorFactory;
-import gov.cms.madie.hqmf.dto.MeasureExport;
-import gov.cms.madie.hqmf.qdm_5_6.HQMFGenerator;
+import gov.cms.madie.models.measure.QdmMeasure;
+import gov.cms.madie.services.HqmfService;
 import gov.cms.madie.services.PackagingService;
 import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.measure.Measure;
@@ -20,15 +19,14 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class PackageControllerTest {
 
   @Mock private PackagingService packagingService;
-  @Mock private HQMFGeneratorFactory factory;
   @Mock private SimpleXmlService simpleXmlService;
+  @Mock private HqmfService hqmfService;
   @InjectMocks private PackageController packageController;
 
   private static final String TOKEN = "test token";
@@ -104,36 +102,38 @@ class PackageControllerTest {
   @Test
   void testGenerateHqmfForUnsupportedModel() {
     measure.setModel(String.valueOf(ModelType.QI_CORE));
-    MeasureExport measureExport = MeasureExport.builder().measure(measure).build();
     String errorMessage = "Unsupported model type: " + measure.getModel();
     Exception ex =
         Assertions.assertThrows(
             UnsupportedModelException.class,
-            () -> packageController.generateHqmf(measureExport),
+            () -> packageController.generateHqmf(measure),
             errorMessage);
     assertThat(ex.getMessage(), is(equalTo(errorMessage)));
   }
 
   @Test
   void testGenerateHqmfForUnsupportedModelMissingMeasure() {
-    MeasureExport measureExport = MeasureExport.builder().build();
+    measure.setModel(null);
     String errorMessage = "Unsupported model type: NONE";
     Exception ex =
         Assertions.assertThrows(
             UnsupportedModelException.class,
-            () -> packageController.generateHqmf(measureExport),
+            () -> packageController.generateHqmf(measure),
             errorMessage);
     assertThat(ex.getMessage(), is(equalTo(errorMessage)));
   }
 
   @Test
   void testGenerateHqmfReturnsHqmf() throws Exception {
-    MeasureExport measureExport = MeasureExport.builder().measure(measure).build();
-    HQMFGenerator generator = mock(HQMFGenerator.class);
-    when(factory.getHQMFGenerator()).thenReturn(generator);
-    when(generator.generate(any(MeasureExport.class)))
-        .thenReturn("<QualityMeasureDocument></QualityMeasureDocument>");
-    String hqmf = packageController.generateHqmf(measureExport);
+    measure =
+            QdmMeasure.builder()
+                    .id("1")
+                    .ecqmTitle("test")
+                    .model(String.valueOf(ModelType.QDM_5_6))
+                    .build();
+    when(hqmfService.generateHqmf(any(QdmMeasure.class)))
+            .thenReturn("<QualityMeasureDocument></QualityMeasureDocument>");
+    String hqmf = packageController.generateHqmf(measure);
     assertThat(hqmf, is(equalTo("<QualityMeasureDocument></QualityMeasureDocument>")));
   }
 }

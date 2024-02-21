@@ -1,10 +1,8 @@
 package gov.cms.madie.resources;
 
 import gov.cms.madie.Exceptions.UnsupportedModelException;
-import gov.cms.madie.hqmf.Generator;
-import gov.cms.madie.hqmf.HQMFGeneratorFactory;
-import gov.cms.madie.hqmf.dto.MeasureExport;
 import gov.cms.madie.models.measure.QdmMeasure;
+import gov.cms.madie.services.HqmfService;
 import gov.cms.madie.services.PackagingService;
 import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.services.SimpleXmlService;
@@ -27,7 +25,7 @@ public class PackageController {
 
   private final PackagingService packagingService;
   private final SimpleXmlService simpleXmlService;
-  private final HQMFGeneratorFactory hqmfGeneratorFactory;
+  private final HqmfService hqmfService;
 
   @PutMapping(
       value = "/package",
@@ -66,14 +64,13 @@ public class PackageController {
         MediaType.APPLICATION_XML_VALUE,
       },
       consumes = {MediaType.APPLICATION_JSON_VALUE})
-  public String generateHqmf(@RequestBody MeasureExport measureExport) throws Exception {
+  public String generateHqmf(@RequestBody Measure measure) throws Exception {
     // generate HQMF if the model type is QDM
-    Measure measure = measureExport.getMeasure();
     if (measure != null && measure.getModel() != null && measure.getModel().contains("QDM")) {
-      Generator hqmfGenerator = hqmfGeneratorFactory.getHQMFGenerator();
-      return hqmfGenerator.generate(measureExport);
+      return hqmfService.generateHqmf((QdmMeasure) measure);
     }
     throw new UnsupportedModelException(
-        "Unsupported model type: " + (measure == null ? "NONE" : measure.getModel()));
+        "Unsupported model type: " + (measure == null || measure.getModel() == null
+                ? "NONE" : measure.getModel()));
   }
 }
