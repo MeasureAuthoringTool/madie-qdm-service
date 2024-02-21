@@ -26,7 +26,7 @@ public class HQMFGenerator implements Generator {
   private final Logger logger = LoggerFactory.getLogger(HQMFDataCriteriaGenerator.class);
 
   /**
-   * Generate hqmf for CQL Based measures (QDM version 5.5)
+   * Generate hqmf for CQL Based measures (QDM version 5.6)
    *
    * @param me the me
    * @return the string
