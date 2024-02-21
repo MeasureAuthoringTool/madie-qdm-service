@@ -13,17 +13,15 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class HqmfService {
 
-    private final SimpleXmlService simpleXmlService;
-    private final HQMFGeneratorFactory hqmfGeneratorFactory;
+  private final SimpleXmlService simpleXmlService;
+  private final HQMFGeneratorFactory hqmfGeneratorFactory;
 
-    public String generateHqmf(QdmMeasure qdmMeasure) throws Exception {
-        Generator hqmfGenerator = hqmfGeneratorFactory.getHQMFGenerator();
-        String simpleXml = simpleXmlService.measureToSimpleXml(qdmMeasure);
-        MeasureExport measureExport = MeasureExport.builder()
-                .measure(qdmMeasure)
-                .simpleXml(simpleXml)
-                .build();
+  public String generateHqmf(QdmMeasure qdmMeasure) throws Exception {
+    Generator hqmfGenerator = hqmfGeneratorFactory.getHQMFGenerator();
+    String simpleXml = simpleXmlService.measureToSimpleXml(qdmMeasure);
+    MeasureExport measureExport =
+        MeasureExport.builder().measure(qdmMeasure).simpleXml(simpleXml).build();
 
-        return hqmfGenerator.generate(measureExport);
-    }
+    return hqmfGenerator.generate(measureExport);
+  }
 }

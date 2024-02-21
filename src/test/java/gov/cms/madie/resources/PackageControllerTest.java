@@ -126,13 +126,13 @@ class PackageControllerTest {
   @Test
   void testGenerateHqmfReturnsHqmf() throws Exception {
     measure =
-            QdmMeasure.builder()
-                    .id("1")
-                    .ecqmTitle("test")
-                    .model(String.valueOf(ModelType.QDM_5_6))
-                    .build();
+        QdmMeasure.builder()
+            .id("1")
+            .ecqmTitle("test")
+            .model(String.valueOf(ModelType.QDM_5_6))
+            .build();
     when(hqmfService.generateHqmf(any(QdmMeasure.class)))
-            .thenReturn("<QualityMeasureDocument></QualityMeasureDocument>");
+        .thenReturn("<QualityMeasureDocument></QualityMeasureDocument>");
     String hqmf = packageController.generateHqmf(measure);
     assertThat(hqmf, is(equalTo("<QualityMeasureDocument></QualityMeasureDocument>")));
   }

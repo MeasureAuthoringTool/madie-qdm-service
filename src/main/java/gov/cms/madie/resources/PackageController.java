@@ -70,7 +70,7 @@ public class PackageController {
       return hqmfService.generateHqmf((QdmMeasure) measure);
     }
     throw new UnsupportedModelException(
-        "Unsupported model type: " + (measure == null || measure.getModel() == null
-                ? "NONE" : measure.getModel()));
+        "Unsupported model type: "
+            + (measure == null || measure.getModel() == null ? "NONE" : measure.getModel()));
   }
 }

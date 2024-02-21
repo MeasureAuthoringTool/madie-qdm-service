@@ -21,29 +21,29 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class HqmfServiceTest {
 
-    @Mock
-    SimpleXmlService simpleXmlService;
-    @Mock
-    HQMFGeneratorFactory factory;
+  @Mock SimpleXmlService simpleXmlService;
+  @Mock HQMFGeneratorFactory factory;
 
-    @InjectMocks
-    HqmfService hqmfService;
+  @InjectMocks HqmfService hqmfService;
 
-    @Test
-    void generateHqmf() throws Exception {
-        QdmMeasure measure = QdmMeasure.builder()
-                .id("1")
-                .ecqmTitle("test")
-                .model(String.valueOf(ModelType.QDM_5_6))
-                .build();
+  @Test
+  void generateHqmf() throws Exception {
+    QdmMeasure measure =
+        QdmMeasure.builder()
+            .id("1")
+            .ecqmTitle("test")
+            .model(String.valueOf(ModelType.QDM_5_6))
+            .build();
 
-        when(simpleXmlService.measureToSimpleXml(any(QdmMeasure.class))).thenReturn("<measure></measure>");
+    when(simpleXmlService.measureToSimpleXml(any(QdmMeasure.class)))
+        .thenReturn("<measure></measure>");
 
-        HQMFGenerator generator = mock(HQMFGenerator.class);
-        when(factory.getHQMFGenerator()).thenReturn(generator);
-        when(generator.generate(any(MeasureExport.class))).thenReturn("<QualityMeasureDocument></QualityMeasureDocument>");
+    HQMFGenerator generator = mock(HQMFGenerator.class);
+    when(factory.getHQMFGenerator()).thenReturn(generator);
+    when(generator.generate(any(MeasureExport.class)))
+        .thenReturn("<QualityMeasureDocument></QualityMeasureDocument>");
 
-        String output = hqmfService.generateHqmf(measure);
-        assertThat(output, is(equalTo("<QualityMeasureDocument></QualityMeasureDocument>")));
-    }
+    String output = hqmfService.generateHqmf(measure);
+    assertThat(output, is(equalTo("<QualityMeasureDocument></QualityMeasureDocument>")));
+  }
 }

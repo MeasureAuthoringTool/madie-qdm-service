@@ -178,10 +178,12 @@
       <xs:element type="cqldefinitionType" name="cqldefinition" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
-  <xs:complexType name="clauseType" mixed="true">
-    <xs:sequence>
-      <xs:element type="cqldefinitionType" name="cqldefinition" minOccurs="0"/>
-      <xs:element type="cqlaggfunctionType" name="cqlaggfunction" minOccurs="0"/>
+  <xs:complexType name="clauseType">
+    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+      <xs:choice>
+        <xs:element type="cqldefinitionType" name="cqldefinition" minOccurs="0"/>
+        <xs:element type="cqlaggfunctionType" name="cqlaggfunction" minOccurs="0"/>
+      </xs:choice>
     </xs:sequence>
     <xs:attribute type="xs:string" name="displayName"/>
     <xs:attribute type="xs:string" name="isInGrouping"/>
