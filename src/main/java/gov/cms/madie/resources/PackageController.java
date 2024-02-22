@@ -10,7 +10,6 @@ import jakarta.xml.bind.JAXBException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,14 +33,12 @@ public class PackageController {
         MediaType.APPLICATION_OCTET_STREAM_VALUE,
       },
       consumes = {MediaType.APPLICATION_JSON_VALUE})
-  public ResponseEntity<byte[]> getMeasurePackage(
+  public byte[] getMeasurePackage(
       @RequestBody @Validated(Measure.ValidationSequence.class) Measure measure,
       @RequestHeader("Authorization") String accessToken) {
     // generate package if the model type is QDM
     if (measure.getModel() != null && measure.getModel().contains("QDM")) {
-      return ResponseEntity.ok()
-          .contentType(MediaType.APPLICATION_OCTET_STREAM)
-          .body(packagingService.createMeasurePackage(measure, accessToken));
+      return packagingService.createMeasurePackage(measure, accessToken);
     }
     throw new UnsupportedModelException("Unsupported model type: " + measure.getModel());
   }
@@ -52,13 +49,11 @@ public class PackageController {
         MediaType.APPLICATION_XML_VALUE,
       },
       consumes = {MediaType.APPLICATION_JSON_VALUE})
-  public ResponseEntity<String> getMeasureSimpleXml(
+  public String getMeasureSimpleXml(
       @RequestBody @Validated(Measure.ValidationSequence.class) Measure measure)
       throws JAXBException {
     if (measure.getModel() != null && measure.getModel().contains("QDM")) {
-      return ResponseEntity.ok()
-          .contentType(MediaType.APPLICATION_XML)
-          .body(simpleXmlService.measureToSimpleXml((QdmMeasure) measure));
+      return simpleXmlService.measureToSimpleXml((QdmMeasure) measure);
     }
     throw new UnsupportedModelException("Unsupported model type: " + measure.getModel());
   }
@@ -69,13 +64,11 @@ public class PackageController {
         MediaType.APPLICATION_XML_VALUE,
       },
       consumes = {MediaType.APPLICATION_JSON_VALUE})
-  public ResponseEntity<String> generateHqmf(
+  public String generateHqmf(
       @RequestBody @Validated(Measure.ValidationSequence.class) Measure measure) throws Exception {
     // generate HQMF if the model type is QDM
     if (measure != null && measure.getModel() != null && measure.getModel().contains("QDM")) {
-      return ResponseEntity.ok()
-          .contentType(MediaType.APPLICATION_XML)
-          .body(hqmfService.generateHqmf((QdmMeasure) measure));
+      return hqmfService.generateHqmf((QdmMeasure) measure);
     }
     throw new UnsupportedModelException(
         "Unsupported model type: "

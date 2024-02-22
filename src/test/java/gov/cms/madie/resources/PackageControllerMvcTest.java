@@ -44,19 +44,17 @@ class PackageControllerMvcTest implements ResourceFileUtil {
     String measureJson = getStringFromTestResource("/measures/qdm-test-measure.json");
     Mockito.when(packagingService.createMeasurePackage(new Measure(), TOKEN))
         .thenReturn("measure package".getBytes());
-    MvcResult result =
-        mockMvc
-            .perform(
-                MockMvcRequestBuilders.put("/qdm/measures/package")
-                    .with(user(TEST_USER_ID))
-                    .with(csrf())
-                    .header(HttpHeaders.AUTHORIZATION, TOKEN)
-                    .content(measureJson)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(status().isOk())
-            .andReturn();
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.put("/qdm/measures/package")
+                .with(user(TEST_USER_ID))
+                .with(csrf())
+                .header(HttpHeaders.AUTHORIZATION, TOKEN)
+                .content(measureJson)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+        .andExpect(status().isOk())
+        .andReturn();
 
-    assertThat(result.getResponse().getContentType(), is(equalTo("application/octet-stream")));
     verify(packagingService, times(1)).createMeasurePackage(any(Measure.class), anyString());
   }
 
@@ -84,18 +82,16 @@ class PackageControllerMvcTest implements ResourceFileUtil {
     String measureJson = getStringFromTestResource("/measures/qdm-test-measure.json");
     Mockito.when(simpleXmlService.measureToSimpleXml(any(QdmMeasure.class)))
         .thenReturn("<measure></measure>");
-    MvcResult mvcResult =
-        mockMvc
-            .perform(
-                MockMvcRequestBuilders.put("/qdm/measures/simple-xml")
-                    .with(user(TEST_USER_ID))
-                    .with(csrf())
-                    .header(HttpHeaders.AUTHORIZATION, TOKEN)
-                    .content(measureJson)
-                    .contentType(MediaType.APPLICATION_JSON_VALUE))
-            .andExpect(status().isOk())
-            .andReturn();
-    assertThat(mvcResult.getResponse().getContentType(), is(equalTo("application/xml")));
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.put("/qdm/measures/simple-xml")
+                .with(user(TEST_USER_ID))
+                .with(csrf())
+                .header(HttpHeaders.AUTHORIZATION, TOKEN)
+                .content(measureJson)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+        .andExpect(status().isOk())
+        .andReturn();
     verify(simpleXmlService, times(1)).measureToSimpleXml(any(QdmMeasure.class));
   }
 
@@ -134,7 +130,8 @@ class PackageControllerMvcTest implements ResourceFileUtil {
                     .contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
             .andReturn();
-    assertThat(mvcResult.getResponse().getContentType(), is(equalTo("application/xml")));
+    assertThat(
+        mvcResult.getResponse().getContentType(), is(equalTo("application/xml;charset=UTF-8")));
     verify(hqmfService, times(1)).generateHqmf(any(QdmMeasure.class));
   }
 

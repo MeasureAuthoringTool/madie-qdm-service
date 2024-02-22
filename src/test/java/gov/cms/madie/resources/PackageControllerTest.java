@@ -47,7 +47,7 @@ class PackageControllerTest {
     String measurePackage = "measure package";
     when(packagingService.createMeasurePackage(measure, TOKEN))
         .thenReturn(measurePackage.getBytes());
-    byte[] rawPackage = packageController.getMeasurePackage(measure, TOKEN).getBody();
+    byte[] rawPackage = packageController.getMeasurePackage(measure, TOKEN);
     assertThat(new String(rawPackage), is(equalTo(measurePackage)));
   }
 
@@ -133,7 +133,7 @@ class PackageControllerTest {
             .build();
     when(hqmfService.generateHqmf(any(QdmMeasure.class)))
         .thenReturn("<QualityMeasureDocument></QualityMeasureDocument>");
-    String hqmf = packageController.generateHqmf(measure).getBody();
+    String hqmf = packageController.generateHqmf(measure);
     assertThat(hqmf, is(equalTo("<QualityMeasureDocument></QualityMeasureDocument>")));
   }
 }
