@@ -9,6 +9,7 @@ import gov.cms.madie.services.SimpleXmlService;
 import jakarta.xml.bind.JAXBException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -69,7 +70,7 @@ public class PackageController {
       @RequestBody @Validated(Measure.ValidationSequence.class) Measure measure) throws Exception {
     // generate HQMF if the model type is QDM
     if (measure != null && measure.getModel() != null && measure.getModel().contains("QDM")) {
-      return ResponseEntity.ok()
+      return ResponseEntity.status(HttpStatus.OK)
           .contentType(MediaType.APPLICATION_XML)
           .body(hqmfService.generateHqmf((QdmMeasure) measure));
     }
