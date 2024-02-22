@@ -10,6 +10,7 @@ import jakarta.xml.bind.JAXBException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,11 +50,13 @@ public class PackageController {
         MediaType.APPLICATION_XML_VALUE,
       },
       consumes = {MediaType.APPLICATION_JSON_VALUE})
-  public String getMeasureSimpleXml(
+  public ResponseEntity<String> getMeasureSimpleXml(
       @RequestBody @Validated(Measure.ValidationSequence.class) Measure measure)
       throws JAXBException {
     if (measure.getModel() != null && measure.getModel().contains("QDM")) {
-      return simpleXmlService.measureToSimpleXml((QdmMeasure) measure);
+      return ResponseEntity.ok()
+          .contentType(MediaType.APPLICATION_XML)
+          .body(simpleXmlService.measureToSimpleXml((QdmMeasure) measure));
     }
     throw new UnsupportedModelException("Unsupported model type: " + measure.getModel());
   }
@@ -64,10 +67,12 @@ public class PackageController {
         MediaType.APPLICATION_XML_VALUE,
       },
       consumes = {MediaType.APPLICATION_JSON_VALUE})
-  public String generateHqmf(@RequestBody Measure measure) throws Exception {
+  public ResponseEntity<String> generateHqmf(@RequestBody Measure measure) throws Exception {
     // generate HQMF if the model type is QDM
     if (measure != null && measure.getModel() != null && measure.getModel().contains("QDM")) {
-      return hqmfService.generateHqmf((QdmMeasure) measure);
+      return ResponseEntity.ok()
+          .contentType(MediaType.APPLICATION_XML)
+          .body(hqmfService.generateHqmf((QdmMeasure) measure));
     }
     throw new UnsupportedModelException(
         "Unsupported model type: "

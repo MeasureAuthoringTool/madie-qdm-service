@@ -194,7 +194,7 @@ public interface MeasureMapper {
       expression =
           "java(String.valueOf(org.apache.commons.lang3.StringUtils.isNotBlank(observation.getDefinition())))")
   @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
-    // TODO: clause type display name
+  // TODO: clause type display name
   ClauseType observationToClauseType(MeasureObservation observation);
 
   // TODO: map observation to definition/aggregate function
@@ -204,7 +204,7 @@ public interface MeasureMapper {
       expression =
           "java(String.valueOf(org.apache.commons.lang3.StringUtils.isNotBlank(stratification.getCqlDefinition())))")
   @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
-    // TODO: clause type display name
+  // TODO: clause type display name
   ClauseType stratificationToClauseType(Stratification stratification);
 
   // TODO: map stratification to definition/aggregate function

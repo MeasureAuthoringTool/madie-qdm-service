@@ -133,7 +133,7 @@ class PackageControllerTest {
             .build();
     when(hqmfService.generateHqmf(any(QdmMeasure.class)))
         .thenReturn("<QualityMeasureDocument></QualityMeasureDocument>");
-    String hqmf = packageController.generateHqmf(measure);
+    String hqmf = packageController.generateHqmf(measure).getBody();
     assertThat(hqmf, is(equalTo("<QualityMeasureDocument></QualityMeasureDocument>")));
   }
 }
