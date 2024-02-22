@@ -130,8 +130,7 @@ class PackageControllerMvcTest implements ResourceFileUtil {
                     .contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(status().isOk())
             .andReturn();
-    assertThat(
-        mvcResult.getResponse().getContentType(), is(equalTo("application/xml;charset=UTF-8")));
+    assertThat(mvcResult.getResponse().getContentType(), is(equalTo("application/xml")));
     verify(hqmfService, times(1)).generateHqmf(any(QdmMeasure.class));
   }
 
