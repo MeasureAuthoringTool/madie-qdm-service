@@ -70,7 +70,7 @@ public class PackageController {
     // generate HQMF if the model type is QDM
     if (measure != null && measure.getModel() != null && measure.getModel().contains("QDM")) {
       return ResponseEntity.ok()
-          .contentType(MediaType.APPLICATION_XML)
+          .header("Content-Type", MediaType.APPLICATION_XML_VALUE)
           .body(hqmfService.generateHqmf((QdmMeasure) measure));
     }
     throw new UnsupportedModelException(
