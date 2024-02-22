@@ -34,12 +34,14 @@ public class PackageController {
         MediaType.APPLICATION_OCTET_STREAM_VALUE,
       },
       consumes = {MediaType.APPLICATION_JSON_VALUE})
-  public byte[] getMeasurePackage(
+  public ResponseEntity<byte[]> getMeasurePackage(
       @RequestBody @Validated(Measure.ValidationSequence.class) Measure measure,
       @RequestHeader("Authorization") String accessToken) {
     // generate package if the model type is QDM
     if (measure.getModel() != null && measure.getModel().contains("QDM")) {
-      return packagingService.createMeasurePackage(measure, accessToken);
+      return ResponseEntity.ok()
+          .contentType(MediaType.APPLICATION_OCTET_STREAM)
+          .body(packagingService.createMeasurePackage(measure, accessToken));
     }
     throw new UnsupportedModelException("Unsupported model type: " + measure.getModel());
   }

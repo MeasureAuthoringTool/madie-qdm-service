@@ -47,7 +47,7 @@ class PackageControllerTest {
     String measurePackage = "measure package";
     when(packagingService.createMeasurePackage(measure, TOKEN))
         .thenReturn(measurePackage.getBytes());
-    byte[] rawPackage = packageController.getMeasurePackage(measure, TOKEN);
+    byte[] rawPackage = packageController.getMeasurePackage(measure, TOKEN).getBody();
     assertThat(new String(rawPackage), is(equalTo(measurePackage)));
   }
 
