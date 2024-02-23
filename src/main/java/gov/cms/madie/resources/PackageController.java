@@ -68,9 +68,7 @@ public class PackageController {
       @RequestBody @Validated(Measure.ValidationSequence.class) Measure measure) throws Exception {
     // generate HQMF if the model type is QDM
     if (measure != null && measure.getModel() != null && measure.getModel().contains("QDM")) {
-      return ResponseEntity.ok()
-          .contentType(MediaType.APPLICATION_XML)
-          .body(hqmfService.generateHqmf((QdmMeasure) measure));
+      return ResponseEntity.ok().body(hqmfService.generateHqmf((QdmMeasure) measure));
     }
     throw new UnsupportedModelException(
         "Unsupported model type: "
