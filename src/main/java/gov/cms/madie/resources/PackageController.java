@@ -9,7 +9,6 @@ import gov.cms.madie.services.SimpleXmlService;
 import jakarta.xml.bind.JAXBException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -64,13 +63,12 @@ public class PackageController {
       value = "/hqmf",
       produces = {
         MediaType.APPLICATION_XML_VALUE,
-      },
-      consumes = {MediaType.APPLICATION_JSON_VALUE})
+      })
   public ResponseEntity<String> generateHqmf(
       @RequestBody @Validated(Measure.ValidationSequence.class) Measure measure) throws Exception {
     // generate HQMF if the model type is QDM
     if (measure != null && measure.getModel() != null && measure.getModel().contains("QDM")) {
-      return ResponseEntity.status(HttpStatus.OK)
+      return ResponseEntity.ok()
           .contentType(MediaType.APPLICATION_XML)
           .body(hqmfService.generateHqmf((QdmMeasure) measure));
     }
