@@ -63,7 +63,8 @@ public class PackageController {
       value = "/hqmf",
       produces = {
         MediaType.APPLICATION_XML_VALUE,
-      })
+      },
+      consumes = {MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<String> generateHqmf(
       @RequestBody @Validated(Measure.ValidationSequence.class) Measure measure) throws Exception {
     // generate HQMF if the model type is QDM
