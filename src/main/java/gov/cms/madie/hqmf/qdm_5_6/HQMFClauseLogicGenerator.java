@@ -132,8 +132,8 @@ public class HQMFClauseLogicGenerator implements Generator {
   }
 
   @Override
-  public String generate(MeasureExport me) throws Exception {
-    measureExport = me;
+  public String generate(MeasureExport measureExport) throws Exception {
+    this.measureExport = measureExport;
     createUsedSubTreeRefMap();
     generateSubTreeXML();
     return null;

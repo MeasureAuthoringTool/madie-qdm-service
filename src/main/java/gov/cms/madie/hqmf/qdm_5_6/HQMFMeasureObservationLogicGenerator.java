@@ -31,7 +31,7 @@ public class HQMFMeasureObservationLogicGenerator extends HQMFClauseLogicGenerat
 
   private Map<Integer, NodeList> measureGroupingMap = new TreeMap<>();
 
-  private MeasureExport me;
+  private MeasureExport measureExport;
 
   private String scoringType;
 
@@ -64,13 +64,13 @@ public class HQMFMeasureObservationLogicGenerator extends HQMFClauseLogicGenerat
   }
 
   @Override
-  public String generate(MeasureExport me) throws Exception {
-    this.me = me;
-    setMeasureExport(me);
-    getMeasureScoringType(me);
-    generateClauseLogicMap(me);
-    getAllMeasureGroupings(me);
-    generateMeasureObSection(me);
+  public String generate(MeasureExport measureExport) throws Exception {
+    this.measureExport = measureExport;
+    setMeasureExport(measureExport);
+    getMeasureScoringType(measureExport);
+    generateClauseLogicMap(measureExport);
+    getAllMeasureGroupings(measureExport);
+    generateMeasureObSection(measureExport);
     return null;
   }
 
@@ -307,7 +307,8 @@ public class HQMFMeasureObservationLogicGenerator extends HQMFClauseLogicGenerat
         "//measureGrouping/group/clause[@uuid = '" + associatedPopulationUUID + "']";
 
     Node associatedPopulationNode =
-        me.getSimpleXmlProcessor()
+        measureExport
+            .getSimpleXmlProcessor()
             .findNode(measureObservationNode.getOwnerDocument(), associatedClauseXPath);
     return associatedPopulationNode;
   }
@@ -365,7 +366,9 @@ public class HQMFMeasureObservationLogicGenerator extends HQMFClauseLogicGenerat
     try {
 
       Node cqlLibraryNameNode =
-          me.getSimpleXmlProcessor().findNode(item.getOwnerDocument(), cqlLibraryNameXPath);
+          measureExport
+              .getSimpleXmlProcessor()
+              .findNode(item.getOwnerDocument(), cqlLibraryNameXPath);
       String libraryName = "";
       if (cqlLibraryNameNode != null) {
         libraryName = cqlLibraryNameNode.getTextContent();
@@ -1000,7 +1003,9 @@ public class HQMFMeasureObservationLogicGenerator extends HQMFClauseLogicGenerat
       String qdmUUID = node.getAttributes().getNamedItem("id").getNodeValue();
       String xPath = "/measure/elementLookUp/qdm[@uuid ='" + qdmUUID + "']";
       Node qdmNode =
-          me.getSimpleXmlProcessor().findNode(me.getSimpleXmlProcessor().getOriginalDoc(), xPath);
+          measureExport
+              .getSimpleXmlProcessor()
+              .findNode(measureExport.getSimpleXmlProcessor().getOriginalDoc(), xPath);
       String dataType = qdmNode.getAttributes().getNamedItem("datatype").getNodeValue();
       String qdmName = qdmNode.getAttributes().getNamedItem(NAME).getNodeValue();
       String ext = qdmName + "_" + dataType;
@@ -1015,9 +1020,10 @@ public class HQMFMeasureObservationLogicGenerator extends HQMFClauseLogicGenerat
         qdmAttributeName = node.getFirstChild().getAttributes().getNamedItem(NAME).getNodeValue();
       }
       Node idNodeQDM =
-          me.getHqmfXmlProcessor()
+          measureExport
+              .getHqmfXmlProcessor()
               .findNode(
-                  me.getHqmfXmlProcessor().getOriginalDoc(),
+                  measureExport.getHqmfXmlProcessor().getOriginalDoc(),
                   "//entry/*/id[@root='" + root + "'][@extension=\"" + ext + "\"]");
       if (idNodeQDM != null) {
         Node entryNodeForElementRef = idNodeQDM.getParentNode().getParentNode();
@@ -1111,30 +1117,32 @@ public class HQMFMeasureObservationLogicGenerator extends HQMFClauseLogicGenerat
   /**
    * Get Measure Scoring type.
    *
-   * @param me - MeasureExport
+   * @param measureExport - MeasureExport
    * @throws XPathExpressionException - {@link Exception}
    */
-  private void getMeasureScoringType(MeasureExport me) throws XPathExpressionException {
+  private void getMeasureScoringType(MeasureExport measureExport) throws XPathExpressionException {
     String xPathScoringType = "/measure/measureDetails/scoring/text()";
     javax.xml.xpath.XPath xPath = XPathFactory.newInstance().newXPath();
     scoringType =
         (String)
             xPath.evaluate(
                 xPathScoringType,
-                me.getSimpleXmlProcessor().getOriginalDoc(),
+                measureExport.getSimpleXmlProcessor().getOriginalDoc(),
                 XPathConstants.STRING);
   }
 
   /**
    * Method to populate clause UUID and displayName.
    *
-   * @param me - MeasureExport
+   * @param measureExport - MeasureExport
    * @throws XPathExpressionException - {@link Exception}
    */
-  private void generateClauseLogicMap(MeasureExport me) throws XPathExpressionException {
+  private void generateClauseLogicMap(MeasureExport measureExport) throws XPathExpressionException {
     String xPath = "/measure/subTreeLookUp/subTree";
     NodeList subTreeNodeList =
-        me.getSimpleXmlProcessor().findNodeList(me.getSimpleXmlProcessor().getOriginalDoc(), xPath);
+        measureExport
+            .getSimpleXmlProcessor()
+            .findNodeList(measureExport.getSimpleXmlProcessor().getOriginalDoc(), xPath);
     for (int i = 0; i < subTreeNodeList.getLength(); i++) {
       String uuid = subTreeNodeList.item(i).getAttributes().getNamedItem(UUID).getNodeValue();
       Node firstChildNode = subTreeNodeList.item(i).getFirstChild();
@@ -1147,13 +1155,15 @@ public class HQMFMeasureObservationLogicGenerator extends HQMFClauseLogicGenerat
   /**
    * Method to populate all measure groupings in measureGroupingMap.
    *
-   * @param me - MeasureExport
+   * @param measureExport - MeasureExport
    * @throws XPathExpressionException - {@link Exception}
    */
-  private void getAllMeasureGroupings(MeasureExport me) throws XPathExpressionException {
+  private void getAllMeasureGroupings(MeasureExport measureExport) throws XPathExpressionException {
     String xPath = "/measure/measureGrouping/group";
     NodeList measureGroupings =
-        me.getSimpleXmlProcessor().findNodeList(me.getSimpleXmlProcessor().getOriginalDoc(), xPath);
+        measureExport
+            .getSimpleXmlProcessor()
+            .findNodeList(measureExport.getSimpleXmlProcessor().getOriginalDoc(), xPath);
     for (int i = 0; i < measureGroupings.getLength(); i++) {
       String measureGroupingSequence =
           measureGroupings.item(i).getAttributes().getNamedItem("sequence").getNodeValue();

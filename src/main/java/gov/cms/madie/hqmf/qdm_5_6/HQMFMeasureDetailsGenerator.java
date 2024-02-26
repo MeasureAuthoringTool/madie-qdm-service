@@ -21,9 +21,8 @@ public class HQMFMeasureDetailsGenerator implements Generator {
       "xsl/qdm_v5_6_measure_details.xsl";
 
   @Override
-  public String generate(MeasureExport me) {
-    String simpleXML = me.getSimpleXml();
-    String releaseVersion = me.getReleaseVersion();
+  public String generate(MeasureExport measureExport) {
+    String simpleXML = measureExport.getSimpleXml();
 
     simpleXML = addReleaseVersionToSimpleXML(simpleXML);
     String measureDetailsHQMF_XML =

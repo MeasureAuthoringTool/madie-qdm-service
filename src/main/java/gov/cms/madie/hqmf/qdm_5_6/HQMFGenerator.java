@@ -28,26 +28,26 @@ public class HQMFGenerator implements Generator {
   /**
    * Generate hqmf for CQL Based measures (QDM version 5.6)
    *
-   * @param me the me
+   * @param measureExport- an instance of MeasureExport
    * @return the string
    */
   @Override
-  public String generate(MeasureExport me) throws Exception {
+  public String generate(MeasureExport measureExport) throws Exception {
     try {
       // MAT 6911: Export CQL based HQMF w/ Meta Data Section
-      String hqmfXML = hqmfMeasureDetailsGenerator.generate(me);
+      String hqmfXML = hqmfMeasureDetailsGenerator.generate(measureExport);
       // Inline comments are added after the end of last componentOf tag.
       // This is removed in this method
       hqmfXML = replaceInlineCommentFromEnd(hqmfXML);
 
-      String dataCriteriaXML = hqmfDataCriteriaGenerator.generate(me);
+      String dataCriteriaXML = hqmfDataCriteriaGenerator.generate(measureExport);
       hqmfXML = appendToHQMF(dataCriteriaXML, hqmfXML);
 
       XmlProcessor hqmfProcessor = new XmlProcessor(hqmfXML);
-      me.setHqmfXmlProcessor(hqmfProcessor);
+      measureExport.setHqmfXmlProcessor(hqmfProcessor);
 
       // generateNarrative(me);
-      return finalCleanUp(me);
+      return finalCleanUp(measureExport);
     } catch (Exception e) {
       logger.error(
           "Unable to generate HQMF for QDM v5.6. Exception Stack Strace is as followed : ");
@@ -86,13 +86,15 @@ public class HQMFGenerator implements Generator {
   /**
    * Final clean up.
    *
-   * @param me the me
+   * @param measureExport- an instance of MeasureExport
    * @return the string
    */
-  private String finalCleanUp(MeasureExport me) {
-    HQMFFinalCleanUp.clean(me);
+  private String finalCleanUp(MeasureExport measureExport) {
+    HQMFFinalCleanUp.clean(measureExport);
     return removeXmlTagNamespace(
-        me.getHqmfXmlProcessor().transform(me.getHqmfXmlProcessor().getOriginalDoc(), true));
+        measureExport
+            .getHqmfXmlProcessor()
+            .transform(measureExport.getHqmfXmlProcessor().getOriginalDoc(), true));
   }
 
   /**

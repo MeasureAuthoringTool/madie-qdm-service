@@ -12,26 +12,26 @@ public class HQMFDataCriteriaGenerator implements Generator {
   /**
    * Generate hqmf for measure.
    *
-   * @param me the me
+   * @param measureExport- an instance of MeasureExport
    * @return the string
    * @throws Exception the exception
    */
   @Override
-  public String generate(MeasureExport me) throws Exception {
+  public String generate(MeasureExport measureExport) throws Exception {
 
     HQMFDataCriteriaElementGenerator cqlBasedHQMFDataCriteriaElementGenerator =
         new HQMFDataCriteriaElementGenerator();
-    cqlBasedHQMFDataCriteriaElementGenerator.generate(me);
+    cqlBasedHQMFDataCriteriaElementGenerator.generate(measureExport);
 
     HQMFPopulationLogicGenerator cqlBasedHQMFPopulationLogicGenerator =
         new HQMFPopulationLogicGenerator();
-    cqlBasedHQMFPopulationLogicGenerator.generate(me);
+    cqlBasedHQMFPopulationLogicGenerator.generate(measureExport);
 
     HQMFMeasureObservationLogicGenerator cqlBasedHQMFMeasureObservationLogicGenerator =
         new HQMFMeasureObservationLogicGenerator();
-    cqlBasedHQMFMeasureObservationLogicGenerator.generate(me);
+    cqlBasedHQMFMeasureObservationLogicGenerator.generate(measureExport);
 
-    XmlProcessor dataCriteriaXMLProcessor = me.getHqmfXmlProcessor();
+    XmlProcessor dataCriteriaXMLProcessor = measureExport.getHqmfXmlProcessor();
     return removePreambleAndRootTags(
         dataCriteriaXMLProcessor.transform(dataCriteriaXMLProcessor.getOriginalDoc(), true));
   }
