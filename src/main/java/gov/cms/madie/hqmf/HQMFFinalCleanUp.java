@@ -1,18 +1,15 @@
 package gov.cms.madie.hqmf;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import gov.cms.madie.hqmf.dto.MeasureExport;
 import javax.xml.xpath.XPathExpressionException;
 
+@Slf4j
 public class HQMFFinalCleanUp {
-
-  /** The Constant logger. */
-  private static final Logger logger = LoggerFactory.getLogger(HQMFFinalCleanUp.class);
 
   /** The Constant reverseEntryCheckFile. */
   private static final String reverseEntryCheckFile = "xsl/final_hqmf_entry_deletion_check.xsl";
@@ -21,48 +18,43 @@ public class HQMFFinalCleanUp {
   private static final String deleteUnUsedEntryFile = "xsl/hqmf_delete_Unused_entry.xsl";
 
   /**
-   * Clean.
+   * Clean the HQMF for xml entities
    *
-   * @param me the me
+   * @param measureExport- instance of MeasureExport
    */
-  public static void clean(MeasureExport me) {
+  public static void clean(MeasureExport measureExport) {
 
-    XmlProcessor hqmfProcessor = me.getHqmfXmlProcessor();
-    XmlProcessor simpleProcessor = me.getSimpleXmlProcessor();
+    XmlProcessor hqmfProcessor = measureExport.getHqmfXmlProcessor();
+    XmlProcessor simpleProcessor = measureExport.getSimpleXmlProcessor();
 
     if (hqmfProcessor == null) {
-      logger.debug("HQMF document is null. Aborting clean up.");
+      log.debug("HQMF document is null. Aborting clean up.");
       return;
     }
 
     if (simpleProcessor == null) {
-      logger.debug("SimpleXML document is null. Aborting clean up.");
+      log.debug("SimpleXML document is null. Aborting clean up.");
       return;
     }
 
-    cleanExtensions(me);
-    cleanLocalVariableNames(me);
-    // deleteUnusedEntry(me);
-
-  }
-
-  public static void cleanAndDeleteUnused(MeasureExport me) {
-    clean(me);
-    deleteUnusedEntry(me);
+    cleanExtensions(measureExport);
+    cleanLocalVariableNames(measureExport);
   }
 
   /**
    * Clean extensions.
    *
-   * @param me the me
+   * @param measureExport- an instance of MeasureExport
    */
-  private static void cleanExtensions(MeasureExport me) {
+  private static void cleanExtensions(MeasureExport measureExport) {
 
     String xPathForExtensions = "//*/@extension";
     try {
       NodeList extensionsList =
-          me.getHqmfXmlProcessor()
-              .findNodeList(me.getHqmfXmlProcessor().getOriginalDoc(), xPathForExtensions);
+          measureExport
+              .getHqmfXmlProcessor()
+              .findNodeList(
+                  measureExport.getHqmfXmlProcessor().getOriginalDoc(), xPathForExtensions);
       for (int i = 0; i < extensionsList.getLength(); i++) {
         Node extNode = extensionsList.item(i);
         String extValue = extNode.getNodeValue();
@@ -72,7 +64,7 @@ public class HQMFFinalCleanUp {
       }
 
     } catch (XPathExpressionException e) {
-      logger.error("Exception in HQMFFinalCleanUp.cleanExtensions:" + e.getMessage());
+      log.error("Exception in HQMFFinalCleanUp.cleanExtensions:" + e.getMessage());
       e.printStackTrace();
     }
   }
@@ -80,9 +72,9 @@ public class HQMFFinalCleanUp {
   /**
    * Clean local variable names.
    *
-   * @param me the me
+   * @param measureExport- an instance of MeasureExport
    */
-  private static void cleanLocalVariableNames(MeasureExport me) {
+  private static void cleanLocalVariableNames(MeasureExport measureExport) {
 
     String xPathForLocalVars = "//localVariableName/@value";
     String xPathForMeasureObValueExpression = "//measureObservationDefinition//value/expression";
@@ -90,16 +82,22 @@ public class HQMFFinalCleanUp {
 
     try {
       NodeList localVarValuesList =
-          me.getHqmfXmlProcessor()
-              .findNodeList(me.getHqmfXmlProcessor().getOriginalDoc(), xPathForLocalVars);
+          measureExport
+              .getHqmfXmlProcessor()
+              .findNodeList(
+                  measureExport.getHqmfXmlProcessor().getOriginalDoc(), xPathForLocalVars);
       NodeList measureObValueExpList =
-          me.getHqmfXmlProcessor()
+          measureExport
+              .getHqmfXmlProcessor()
               .findNodeList(
-                  me.getHqmfXmlProcessor().getOriginalDoc(), xPathForMeasureObValueExpression);
+                  measureExport.getHqmfXmlProcessor().getOriginalDoc(),
+                  xPathForMeasureObValueExpression);
       NodeList measureObPreConditionValList =
-          me.getHqmfXmlProcessor()
+          measureExport
+              .getHqmfXmlProcessor()
               .findNodeList(
-                  me.getHqmfXmlProcessor().getOriginalDoc(), xPathForMeasureObPreconditionVal);
+                  measureExport.getHqmfXmlProcessor().getOriginalDoc(),
+                  xPathForMeasureObPreconditionVal);
       for (int i = 0; i < localVarValuesList.getLength(); i++) {
         Node extNode = localVarValuesList.item(i);
         String extValue = extNode.getNodeValue();
@@ -131,7 +129,7 @@ public class HQMFFinalCleanUp {
       }
 
     } catch (XPathExpressionException e) {
-      logger.error("Exception in HQMFFinalCleanUp.cleanExtensions:" + e.getMessage());
+      log.error("Exception in HQMFFinalCleanUp.cleanExtensions:" + e.getMessage());
       e.printStackTrace();
     }
   }
@@ -139,13 +137,13 @@ public class HQMFFinalCleanUp {
   /**
    * Reverse entry check.
    *
-   * @param me the me
+   * @param hqmfXML- hqmf string
    */
   private static void reverseEntryCheck(String hqmfXML) {
     String reverseEntryCheckResults =
         XMLUtility.getInstance()
             .applyXSL(hqmfXML, XMLUtility.getInstance().getXMLResource(reverseEntryCheckFile));
-    logger.debug("Reverse Entry Check results: " + reverseEntryCheckResults);
+    log.debug("Reverse Entry Check results: " + reverseEntryCheckResults);
   }
 
   /**
