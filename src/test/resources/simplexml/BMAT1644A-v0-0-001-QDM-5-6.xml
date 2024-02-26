@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<measure>
+    <supplementalDataElements>
+        <cqldefinition displayName="SDE Ethnicity" uuid="3354D292-6F33-42E9-8FC3-A70DCD3F6B57"/>
+        <cqldefinition displayName="SDE Payer" uuid="895E2648-6232-4AE5-86CF-8C1E9A9F5938"/>
+        <cqldefinition displayName="SDE Race" uuid="B2A59480-4F37-452A-820C-A294DBF460B9"/>
+        <cqldefinition displayName="SDE Sex" uuid="6CE1DECE-6ED3-403E-8EFD-E04D906A7E67"/>
+    </supplementalDataElements>
+    <riskAdjustmentVariables/>
+    <measureGrouping>
+        <group sequence="1" ucum="">
+            <clause displayName="Initial Population 1" isInGrouping="true" type="initialPopulation"
+                    uuid="E8D2F354-ED73-44AB-ACBA-CCAB947A94DA">
+                <cqldefinition displayName="Initial Population" uuid="1fc70f64-6e50-4709-9ea3-76f132a84e0e"/>
+            </clause>
+            <clause displayName="Denominator 1" isInGrouping="true" type="denominator"
+                    uuid="A710BFD1-207F-4F4C-869E-C80DD428C6A6">
+                <cqldefinition displayName="Denominator" uuid="8fab8d24-1a99-4ba9-80fa-77e6eeb3345f"/>
+            </clause>
+            <clause displayName="Numerator 1" isInGrouping="true" type="numerator"
+                    uuid="EDBFA914-E580-4A90-AD20-AAED454D0A62">
+                <cqldefinition displayName="Numerator" uuid="ac50c25e-2864-4e85-958d-e0915edf0a0f"/>
+            </clause>
+            <clause displayName="denominatorExclusions" isInGrouping="false" type="denominatorExclusions"
+                    uuid="7532d7a4-ad98-4097-a393-52621c23f498"/>
+            <clause displayName="numeratorExclusions" isInGrouping="false" type="numeratorExclusions"
+                    uuid="808217e7-1fd1-4d3d-a539-251f640e977f"/>
+            <clause displayName="denominatorExceptions" isInGrouping="false" type="denominatorExceptions"
+                    uuid="0d236a71-e21d-4433-87ae-692350e1d51a"/>
+            <clause displayName="stratum" isInGrouping="false" type="stratum"
+                    uuid="df09e03d-170d-45a9-910d-7555f9144718"/>
+        </group>
+    </measureGrouping>
+    <cqlLookUp>
+        <library>BMAT1644A</library>
+        <version>0.0.001</version>
+        <usingModel>QDM</usingModel>
+        <usingModelVersion>5.6</usingModelVersion>
+        <cqlContext>Patient</cqlContext>
+        <codeSystems>
+            <codeSystem codeSystem="2.16.840.1.113883.6.96" codeSystemName="SNOMEDCT" codeSystemVersion="2022-09"
+                        id="b770c0db36824eaba63e385fb02775bd"/>
+        </codeSystems>
+        <valuesets>
+            <valueset id="8ca0cec0c5f74dd382ba2ff1bc4e76f5" isValidatedWithVsac="VALID"
+                      name="Emergency Department Evaluation and Management Visit"
+                      oid="2.16.840.1.113883.3.464.1003.101.12.1010"
+                      originalName="Emergency Department Evaluation and Management Visit" program="" release=""
+                      suppDataElement="false" taxonomy="Grouping" type="Grouping"
+                      uuid="29ca5709-a98a-4372-ad85-a62d2c45a0e4" version=""/>
+            <valueset datatype="Patient Characteristic Ethnicity" id="8faa7748-e03a-437e-9987-145e4664cba8"
+                      isValidatedWithVsac="VALID" name="Ethnicity" oid="2.16.840.1.114222.4.11.837"
+                      originalName="Ethnicity" program="" release="" suppDataElement="true" taxonomy="CDCREC"
+                      type="Extensional" uuid="ead55ed3-bd54-4a7e-b529-321af7360db3" version=""/>
+            <valueset id="1382dca2b8ab46babf55f3feeabaf501" isValidatedWithVsac="VALID"
+                      name="Major Depressive Disorder Active" oid="2.16.840.1.113883.3.526.3.1491"
+                      originalName="Major Depressive Disorder Active" program="" release="" suppDataElement="false"
+                      taxonomy="Grouping" type="Grouping" uuid="54adb061-4921-490c-ba62-0ec7e7ca9d67" version=""/>
+            <valueset id="0ab8eaf668a44e439bb5d45edd581daa" isValidatedWithVsac="VALID" name="Office Visit"
+                      oid="2.16.840.1.113883.3.464.1003.101.12.1001" originalName="Office Visit" program="" release=""
+                      suppDataElement="false" taxonomy="Grouping" type="Grouping"
+                      uuid="d12854cf-5ea9-4f21-9a0c-e1aa867c472b" version=""/>
+            <valueset datatype="Patient Characteristic Sex" id="a350890c-cd90-4e55-ab6f-90089426a555"
+                      isValidatedWithVsac="VALID" name="ONC Administrative Sex" oid="2.16.840.1.113762.1.4.1"
+                      originalName="ONC Administrative Sex" program="" release="" suppDataElement="true"
+                      taxonomy="AdministrativeGender" type="Extensional" uuid="70cb30ce-7448-4746-831d-ed5bddafbe0a"
+                      version=""/>
+            <valueset id="5e6c4b8fe75e477c831bd1b91923ab4a" isValidatedWithVsac="VALID" name="Outpatient Consultation"
+                      oid="2.16.840.1.113883.3.464.1003.101.12.1008" originalName="Outpatient Consultation" program=""
+                      release="" suppDataElement="false" taxonomy="Grouping" type="Grouping"
+                      uuid="b636226f-8661-4641-ac61-478437b9c34b" version=""/>
+            <valueset datatype="Patient Characteristic Payer" id="5b324d2c-bc15-4523-92cb-f9985278c489"
+                      isValidatedWithVsac="VALID" name="Payer Type" oid="2.16.840.1.114222.4.11.3591"
+                      originalName="Payer Type" program="" release="" suppDataElement="true" taxonomy="SOP"
+                      type="Intensional" uuid="2f166f3f-028a-4775-a507-29c9c3e1a992" version=""/>
+            <valueset id="94c2de647a65467e9c630ca6a80126ed" isValidatedWithVsac="VALID"
+                      name="Psych Visit Diagnostic Evaluation" oid="2.16.840.1.113883.3.526.3.1492"
+                      originalName="Psych Visit Diagnostic Evaluation" program="" release="" suppDataElement="false"
+                      taxonomy="Grouping" type="Grouping" uuid="6691a686-aad5-4586-a2af-6828a49fa0df" version=""/>
+            <valueset id="583ecc9c34a245bc9fc3f1931e193b9c" isValidatedWithVsac="VALID" name="Psych Visit Psychotherapy"
+                      oid="2.16.840.1.113883.3.526.3.1496" originalName="Psych Visit Psychotherapy" program=""
+                      release="" suppDataElement="false" taxonomy="Grouping" type="Grouping"
+                      uuid="f39289eb-ed35-4141-8cae-6c21240a9376" version=""/>
+            <valueset id="99bb851c11944d74a93875c36fa73962" isValidatedWithVsac="VALID" name="Psychoanalysis"
+                      oid="2.16.840.1.113883.3.526.3.1141" originalName="Psychoanalysis" program="" release=""
+                      suppDataElement="false" taxonomy="Grouping" type="Grouping"
+                      uuid="4c1242aa-62f0-4e55-819b-c916166117f6" version=""/>
+            <valueset datatype="Patient Characteristic Race" id="01871490-dbeb-4958-82d4-a31340c0face"
+                      isValidatedWithVsac="VALID" name="Race" oid="2.16.840.1.114222.4.11.836" originalName="Race"
+                      program="" release="" suppDataElement="true" taxonomy="CDCREC" type="Extensional"
+                      uuid="73cfdc51-036e-4549-95a0-b607f4615e4f" version=""/>
+            <valueset id="9ac16e62e1554884b914d13ffe047964" isValidatedWithVsac="VALID" name="Telehealth Services"
+                      oid="2.16.840.1.113883.3.464.1003.101.12.1031" originalName="Telehealth Services" program=""
+                      release="" suppDataElement="false" taxonomy="Grouping" type="Grouping"
+                      uuid="30023a1d-4bd5-4894-90ed-5fb5894e2047" version=""/>
+        </valuesets>
+        <codes>
+            <code codeIdentifier="CODE:/CodeSystem/SNOMEDCT/Version/2022-09/Code/225337009/Info"
+                  codeName="Suicide risk assessment (procedure)" codeOID="225337009" codeSystemName="SNOMEDCT"
+                  codeSystemOID="2.16.840.1.113883.6.96" codeSystemVersion="2022-09"
+                  displayName="Suicide risk assessment (procedure)" id="16584aec91d949b7a7a447090bd59f2c"
+                  isCodeSystemVersionIncluded="false" isValidatedWithVsac="VALID" readOnly="false"/>
+        </codes>
+        <parameters>
+            <parameter id="09919af9-8796-4c98-b4cb-1ee8ccb3f236" name="Measurement Period" readOnly="true">
+                <comment/>
+                <logic>Interval&lt;DateTime&gt;</logic>
+            </parameter>
+        </parameters>
+        <definitions>
+            <definition context="Patient" id="3354D292-6F33-42E9-8FC3-A70DCD3F6B57" name="SDE Ethnicity"
+                        popDefinition="false" supplDataElement="true">
+                <logic>["Patient Characteristic Ethnicity": "Ethnicity"]</logic>
+                <comment/>
+            </definition>
+            <definition context="Patient" id="895E2648-6232-4AE5-86CF-8C1E9A9F5938" name="SDE Payer"
+                        popDefinition="false" supplDataElement="true">
+                <logic>["Patient Characteristic Payer": "Payer Type"]</logic>
+                <comment/>
+            </definition>
+            <definition context="Patient" id="B2A59480-4F37-452A-820C-A294DBF460B9" name="SDE Race"
+                        popDefinition="false" supplDataElement="true">
+                <logic>["Patient Characteristic Race": "Race"]</logic>
+                <comment/>
+            </definition>
+            <definition context="Patient" id="6CE1DECE-6ED3-403E-8EFD-E04D906A7E67" name="SDE Sex" popDefinition="false"
+                        supplDataElement="true">
+                <logic>["Patient Characteristic Sex": "ONC Administrative Sex"]</logic>
+                <comment/>
+            </definition>
+            <definition context="Patient" id="8fab8d24-1a99-4ba9-80fa-77e6eeb3345f" name="Denominator"
+                        popDefinition="false" supplDataElement="false">
+                <logic>"Initial Population"</logic>
+                <comment/>
+            </definition>
+            <definition context="Patient" id="ac50c25e-2864-4e85-958d-e0915edf0a0f" name="Numerator"
+                        popDefinition="false" supplDataElement="false">
+                <logic>"New or Recurrent Major Depressive Disorder Encounter" NewOrRecurrentMDDEncounter
+                    with ["Intervention, Performed": "Suicide risk assessment (procedure)"] SuicideRiskAssessment
+                    such that Global."NormalizeInterval" ( SuicideRiskAssessment.relevantDatetime,
+                    SuicideRiskAssessment.relevantPeriod ) during NewOrRecurrentMDDEncounter.relevantPeriod
+                </logic>
+                <comment/>
+            </definition>
+            <definition context="Patient" id="1fc70f64-6e50-4709-9ea3-76f132a84e0e" name="Initial Population"
+                        popDefinition="false" supplDataElement="false">
+                <logic>"New or Recurrent Major Depressive Disorder Encounter" NewOrRecurrentMDDEncounter
+                    where "AgeInYearsAt"(date from start of "Measurement Period") &gt;= 17
+                </logic>
+                <comment/>
+            </definition>
+            <definition context="Patient" id="96d3f200-1e39-4e10-9049-2505710ef1c8"
+                        name="New or Recurrent Major Depressive Disorder Encounter" popDefinition="false"
+                        supplDataElement="false">
+                <logic>"Major Depressive Disorder Encounter" MDDEncounter
+                    without "Major Depressive Disorder Encounter" PriorMDDEpisodeEncounter
+                    such that PriorMDDEpisodeEncounter !~ MDDEncounter
+                    and PriorMDDEpisodeEncounter.relevantPeriod ends 104 days or less before day of start of
+                    MDDEncounter.relevantPeriod
+                    where MDDEncounter.relevantPeriod during "Measurement Period"
+                </logic>
+                <comment/>
+            </definition>
+            <definition context="Patient" id="58517cd4-ee54-4fc3-bea3-a3abdfa10dc7"
+                        name="Major Depressive Disorder Encounter" popDefinition="false" supplDataElement="false">
+                <logic>( ["Encounter, Performed": "Psych Visit Diagnostic Evaluation"]
+                    union ["Encounter, Performed": "Emergency Department Evaluation and Management Visit"]
+                    union ["Encounter, Performed": "Office Visit"]
+                    union ["Encounter, Performed": "Outpatient Consultation"]
+                    union ["Encounter, Performed": "Psych Visit Psychotherapy"]
+                    union ["Encounter, Performed": "Psychoanalysis"]
+                    union ["Encounter, Performed": "Telehealth Services"] ) ValidEncounter
+                    where exists ( ValidEncounter.diagnoses EncounterDiagnosis
+                    where EncounterDiagnosis.code in "Major Depressive Disorder Active"
+                    )
+                </logic>
+                <comment/>
+            </definition>
+        </definitions>
+        <includeLibrarys>
+            <includeLibrary cqlLibRefId="2c92808289bd094d0189e021aa8d05d1" cqlLibRefName="MATGlobalCommonFunctionsQDM"
+                            cqlVersion="7.2.000" id="1f6a7df3-b7b2-4061-9f53-4169eccd8b13" name="Global"
+                            qdmVersion="5.6"/>
+        </includeLibrarys>
+    </cqlLookUp>
+    <elementLookUp>
+        <qdm code="false" datatype="Encounter, Performed" id="f39289eb-ed35-4141-8cae-6c21240a9376"
+             isValidatedWithVsac="VALID" name="Psych Visit Psychotherapy" oid="2.16.840.1.113883.3.526.3.1496"
+             originalName="Psych Visit Psychotherapy" program="" release="" suppDataElement="false" taxonomy="Grouping"
+             type="Grouping" uuid="f39289eb-ed35-4141-8cae-6c21240a9376" version=""/>
+        <qdm code="false" datatype="Patient Characteristic Sex" id="70cb30ce-7448-4746-831d-ed5bddafbe0a"
+             isValidatedWithVsac="VALID" name="ONC Administrative Sex" oid="2.16.840.1.113762.1.4.1"
+             originalName="ONC Administrative Sex" program="" release="" suppDataElement="true"
+             taxonomy="AdministrativeGender" type="Extensional" uuid="70cb30ce-7448-4746-831d-ed5bddafbe0a" version=""/>
+        <qdm code="false" datatype="Patient Characteristic Ethnicity" id="ead55ed3-bd54-4a7e-b529-321af7360db3"
+             isValidatedWithVsac="VALID" name="Ethnicity" oid="2.16.840.1.114222.4.11.837" originalName="Ethnicity"
+             program="" release="" suppDataElement="true" taxonomy="CDCREC" type="Extensional"
+             uuid="ead55ed3-bd54-4a7e-b529-321af7360db3" version=""/>
+        <qdm code="false" datatype="Encounter, Performed" id="b636226f-8661-4641-ac61-478437b9c34b"
+             isValidatedWithVsac="VALID" name="Outpatient Consultation" oid="2.16.840.1.113883.3.464.1003.101.12.1008"
+             originalName="Outpatient Consultation" program="" release="" suppDataElement="false" taxonomy="Grouping"
+             type="Grouping" uuid="b636226f-8661-4641-ac61-478437b9c34b" version=""/>
+        <qdm code="false" datatype="Encounter, Performed" id="30023a1d-4bd5-4894-90ed-5fb5894e2047"
+             isValidatedWithVsac="VALID" name="Telehealth Services" oid="2.16.840.1.113883.3.464.1003.101.12.1031"
+             originalName="Telehealth Services" program="" release="" suppDataElement="false" taxonomy="Grouping"
+             type="Grouping" uuid="30023a1d-4bd5-4894-90ed-5fb5894e2047" version=""/>
+        <qdm code="false" datatype="Encounter, Performed" id="4c1242aa-62f0-4e55-819b-c916166117f6"
+             isValidatedWithVsac="VALID" name="Psychoanalysis" oid="2.16.840.1.113883.3.526.3.1141"
+             originalName="Psychoanalysis" program="" release="" suppDataElement="false" taxonomy="Grouping"
+             type="Grouping" uuid="4c1242aa-62f0-4e55-819b-c916166117f6" version=""/>
+        <qdm code="false" datatype="Patient Characteristic Race" id="73cfdc51-036e-4549-95a0-b607f4615e4f"
+             isValidatedWithVsac="VALID" name="Race" oid="2.16.840.1.114222.4.11.836" originalName="Race" program=""
+             release="" suppDataElement="true" taxonomy="CDCREC" type="Extensional"
+             uuid="73cfdc51-036e-4549-95a0-b607f4615e4f" version=""/>
+        <qdm code="false" datatype="Encounter, Performed" id="29ca5709-a98a-4372-ad85-a62d2c45a0e4"
+             isValidatedWithVsac="VALID" name="Emergency Department Evaluation and Management Visit"
+             oid="2.16.840.1.113883.3.464.1003.101.12.1010"
+             originalName="Emergency Department Evaluation and Management Visit" program="" release=""
+             suppDataElement="false" taxonomy="Grouping" type="Grouping" uuid="29ca5709-a98a-4372-ad85-a62d2c45a0e4"
+             version=""/>
+        <qdm code="false" datatype="Patient Characteristic Payer" id="2f166f3f-028a-4775-a507-29c9c3e1a992"
+             isValidatedWithVsac="VALID" name="Payer Type" oid="2.16.840.1.114222.4.11.3591" originalName="Payer Type"
+             program="" release="" suppDataElement="true" taxonomy="SOP" type="Intensional"
+             uuid="2f166f3f-028a-4775-a507-29c9c3e1a992" version=""/>
+        <qdm code="false" datatype="Encounter, Performed" id="6691a686-aad5-4586-a2af-6828a49fa0df"
+             isValidatedWithVsac="VALID" name="Psych Visit Diagnostic Evaluation" oid="2.16.840.1.113883.3.526.3.1492"
+             originalName="Psych Visit Diagnostic Evaluation" program="" release="" suppDataElement="false"
+             taxonomy="Grouping" type="Grouping" uuid="6691a686-aad5-4586-a2af-6828a49fa0df" version=""/>
+        <qdm code="false" datatype="Encounter, Performed" id="d12854cf-5ea9-4f21-9a0c-e1aa867c472b"
+             isValidatedWithVsac="VALID" name="Office Visit" oid="2.16.840.1.113883.3.464.1003.101.12.1001"
+             originalName="Office Visit" program="" release="" suppDataElement="false" taxonomy="Grouping"
+             type="Grouping" uuid="d12854cf-5ea9-4f21-9a0c-e1aa867c472b" version=""/>
+        <qdm code="false" id="54adb061-4921-490c-ba62-0ec7e7ca9d67" isValidatedWithVsac="VALID"
+             name="Major Depressive Disorder Active" oid="2.16.840.1.113883.3.526.3.1491"
+             originalName="Major Depressive Disorder Active" program="" release="" suppDataElement="false"
+             taxonomy="Grouping" type="Grouping" uuid="54adb061-4921-490c-ba62-0ec7e7ca9d67" version=""/>
+        <qdm code="true" codeIdentifier="CODE:/CodeSystem/SNOMEDCT/Version/2022-09/Code/225337009/Info"
+             codeName="Suicide risk assessment (procedure)" codeSystemOID="2.16.840.1.113883.6.96"
+             codeSystemVersion="2022-09" datatype="Intervention, Performed"
+             displayName="Suicide risk assessment (procedure)" id="A52AFE94-9E1B-499F-B677-7DC6757DA18D"
+             isCodeSystemVersionIncluded="false" isValidatedWithVsac="VALID" name="Suicide risk assessment (procedure)"
+             oid="225337009" readOnly="false" taxonomy="SNOMEDCT" uuid="A52AFE94-9E1B-499F-B677-7DC6757DA18D"/>
+    </elementLookUp>
+    <allUsedCQLLibs>
+        <lib alias="Global" id="2c92808289bd094d0189e021aa8d05d1" isComponent="" isUnUsedGrandChild="false"
+             name="MATGlobalCommonFunctionsQDM" setId="8bdc0a19-b210-4a58-8a07-f5d95a34eca9" version="7.2.000"/>
+    </allUsedCQLLibs>
+    <measureDetails>
+        <uuid>8a6d040f-8b1e-d837-018b-8142636019ea</uuid>
+        <cqlUUID>A3694464-FB8C-4FE0-B80C-7536510A64CB</cqlUUID>
+        <title>BMAT1644A</title>
+        <measureModel>QDM</measureModel>
+        <shortTitle>BMAT1644A</shortTitle>
+        <guid>1117b927-236b-433d-89aa-a03861956a02</guid>
+        <version>0.0.001</version>
+        <cbeid/>
+        <period calenderYear="true" uuid="f1786933-1d78-4b91-9b1c-33302ab0db56">
+            <startDate>00000101</startDate>
+            <stopDate>00001231</stopDate>
+        </period>
+        <steward id="281">ICF</steward>
+        <experimental>false</experimental>
+        <populationBasis/>
+        <developers>
+            <developer id="e96078ba-a69f-11ea-bb37-0242ac130002">ICF</developer>
+        </developers>
+        <description>test measure for help desk ticket BMAT-1644</description>
+        <scoring id="PROPOR">Proportion</scoring>
+        <patientBasedIndicator>false</patientBasedIndicator>
+        <measurePopulationExclusionsDescription/>
+        <qualityMeasureSet uuid="1117b927-236b-433d-89aa-a03861956a02"/>
+    </measureDetails>
+</measure>

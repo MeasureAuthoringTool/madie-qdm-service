@@ -24,8 +24,6 @@ import jakarta.xml.bind.annotation.XmlRegistry;
 public class ObjectFactory {
 
   private static final QName _Measure_QNAME = new QName("", "measure");
-  private static final QName _ClauseTypeCqldefinition_QNAME = new QName("", "cqldefinition");
-  private static final QName _ClauseTypeCqlaggfunction_QNAME = new QName("", "cqlaggfunction");
 
   /**
    * Create a new ObjectFactory that can be used to create new instances of schema derived classes
@@ -429,29 +427,5 @@ public class ObjectFactory {
   @XmlElementDecl(namespace = "", name = "measure")
   public JAXBElement<MeasureType> createMeasure(MeasureType value) {
     return new JAXBElement<>(_Measure_QNAME, MeasureType.class, null, value);
-  }
-
-  /**
-   * Create an instance of {@link JAXBElement }{@code <}{@link CqldefinitionType }{@code >}
-   *
-   * @param value Java instance representing xml element's value.
-   * @return the new instance of {@link JAXBElement }{@code <}{@link CqldefinitionType }{@code >}
-   */
-  @XmlElementDecl(namespace = "", name = "cqldefinition", scope = ClauseType.class)
-  public JAXBElement<CqldefinitionType> createClauseTypeCqldefinition(CqldefinitionType value) {
-    return new JAXBElement<>(
-        _ClauseTypeCqldefinition_QNAME, CqldefinitionType.class, ClauseType.class, value);
-  }
-
-  /**
-   * Create an instance of {@link JAXBElement }{@code <}{@link CqlaggfunctionType }{@code >}
-   *
-   * @param value Java instance representing xml element's value.
-   * @return the new instance of {@link JAXBElement }{@code <}{@link CqlaggfunctionType }{@code >}
-   */
-  @XmlElementDecl(namespace = "", name = "cqlaggfunction", scope = ClauseType.class)
-  public JAXBElement<CqlaggfunctionType> createClauseTypeCqlaggfunction(CqlaggfunctionType value) {
-    return new JAXBElement<>(
-        _ClauseTypeCqlaggfunction_QNAME, CqlaggfunctionType.class, ClauseType.class, value);
   }
 }

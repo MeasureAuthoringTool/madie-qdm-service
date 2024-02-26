@@ -6,16 +6,13 @@
 
 package generated.gov.cms.madie.simplexml;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlElementRef;
-import jakarta.xml.bind.annotation.XmlElementRefs;
-import jakarta.xml.bind.annotation.XmlMixed;
+import jakarta.xml.bind.annotation.XmlElement;
+import jakarta.xml.bind.annotation.XmlElements;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
@@ -27,9 +24,11 @@ import jakarta.xml.bind.annotation.XmlType;
  * <complexType name="clauseType">
  *   <complexContent>
  *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       <sequence>
- *         <element name="cqldefinition" type="{}cqldefinitionType" minOccurs="0"/>
- *         <element name="cqlaggfunction" type="{}cqlaggfunctionType" minOccurs="0"/>
+ *       <sequence maxOccurs="unbounded" minOccurs="0">
+ *         <choice>
+ *           <element name="cqldefinition" type="{}cqldefinitionType" minOccurs="0"/>
+ *           <element name="cqlaggfunction" type="{}cqlaggfunctionType" minOccurs="0"/>
+ *         </choice>
  *       </sequence>
  *       <attribute name="displayName" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       <attribute name="isInGrouping" type="{http://www.w3.org/2001/XMLSchema}string" />
@@ -43,15 +42,14 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(
     name = "clauseType",
-    propOrder = {"content"})
+    propOrder = {"cqldefinitionOrCqlaggfunction"})
 public class ClauseType {
 
-  @XmlElementRefs({
-    @XmlElementRef(name = "cqldefinition", type = JAXBElement.class, required = false),
-    @XmlElementRef(name = "cqlaggfunction", type = JAXBElement.class, required = false)
+  @XmlElements({
+    @XmlElement(name = "cqldefinition", type = CqldefinitionType.class),
+    @XmlElement(name = "cqlaggfunction", type = CqlaggfunctionType.class)
   })
-  @XmlMixed
-  protected List<Serializable> content;
+  protected List<Object> cqldefinitionOrCqlaggfunction;
 
   @XmlAttribute(name = "displayName")
   protected String displayName;
@@ -66,29 +64,28 @@ public class ClauseType {
   protected String uuid;
 
   /**
-   * Gets the value of the content property.
+   * Gets the value of the cqldefinitionOrCqlaggfunction property.
    *
    * <p>This accessor method returns a reference to the live list, not a snapshot. Therefore any
    * modification you make to the returned list will be present inside the JAXB object. This is why
-   * there is not a <CODE>set</CODE> method for the content property.
+   * there is not a <CODE>set</CODE> method for the cqldefinitionOrCqlaggfunction property.
    *
    * <p>For example, to add a new item, do as follows:
    *
    * <pre>
-   * getContent().add(newItem);
+   * getCqldefinitionOrCqlaggfunction().add(newItem);
    * </pre>
    *
-   * <p>Objects of the following type(s) are allowed in the list {@link JAXBElement }{@code <}{@link
-   * CqlaggfunctionType }{@code >} {@link JAXBElement }{@code <}{@link CqldefinitionType }{@code >}
-   * {@link String }
+   * <p>Objects of the following type(s) are allowed in the list {@link CqlaggfunctionType } {@link
+   * CqldefinitionType }
    *
-   * @return The value of the content property.
+   * @return The value of the cqldefinitionOrCqlaggfunction property.
    */
-  public List<Serializable> getContent() {
-    if (content == null) {
-      content = new ArrayList<>();
+  public List<Object> getCqldefinitionOrCqlaggfunction() {
+    if (cqldefinitionOrCqlaggfunction == null) {
+      cqldefinitionOrCqlaggfunction = new ArrayList<>();
     }
-    return this.content;
+    return this.cqldefinitionOrCqlaggfunction;
   }
 
   /**

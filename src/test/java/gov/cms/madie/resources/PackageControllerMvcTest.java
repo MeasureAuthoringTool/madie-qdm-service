@@ -1,6 +1,7 @@
 package gov.cms.madie.resources;
 
 import gov.cms.madie.models.measure.QdmMeasure;
+import gov.cms.madie.services.HqmfService;
 import gov.cms.madie.services.PackagingService;
 import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.packaging.utils.ResourceFileUtil;
@@ -32,6 +33,7 @@ class PackageControllerMvcTest implements ResourceFileUtil {
 
   @MockBean private PackagingService packagingService;
   @MockBean private SimpleXmlService simpleXmlService;
+  @MockBean private HqmfService hqmfService;
   @Autowired private MockMvc mockMvc;
 
   private static final String TEST_USER_ID = "john_doe";
@@ -52,6 +54,7 @@ class PackageControllerMvcTest implements ResourceFileUtil {
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
         .andExpect(status().isOk())
         .andReturn();
+
     verify(packagingService, times(1)).createMeasurePackage(any(Measure.class), anyString());
   }
 
@@ -77,8 +80,8 @@ class PackageControllerMvcTest implements ResourceFileUtil {
   @Test
   void testGetMeasureSimpleXml() throws Exception {
     String measureJson = getStringFromTestResource("/measures/qdm-test-measure.json");
-    Mockito.when(packagingService.createMeasurePackage(new Measure(), TOKEN))
-        .thenReturn("measure package".getBytes());
+    Mockito.when(simpleXmlService.measureToSimpleXml(any(QdmMeasure.class)))
+        .thenReturn("<measure></measure>");
     mockMvc
         .perform(
             MockMvcRequestBuilders.put("/qdm/measures/simple-xml")
@@ -99,6 +102,46 @@ class PackageControllerMvcTest implements ResourceFileUtil {
         mockMvc
             .perform(
                 MockMvcRequestBuilders.put("/qdm/measures/simple-xml")
+                    .with(user(TEST_USER_ID))
+                    .with(csrf())
+                    .header(HttpHeaders.AUTHORIZATION, TOKEN)
+                    .content(measureJson)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isBadRequest())
+            .andReturn();
+    assertThat(
+        mockResult.getResolvedException().getMessage(),
+        is(equalTo("Unsupported model type: QI-Core v4.1.1")));
+  }
+
+  @Test
+  void testGetMeasureHqmf() throws Exception {
+    String measureJson = getStringFromTestResource("/measures/qdm-test-measure.json");
+    Mockito.when(hqmfService.generateHqmf(any(QdmMeasure.class)))
+        .thenReturn("<QualityMeasureDocument></QualityMeasureDocument>");
+    MvcResult mvcResult =
+        mockMvc
+            .perform(
+                MockMvcRequestBuilders.put("/qdm/measures/hqmf")
+                    .with(user(TEST_USER_ID))
+                    .with(csrf())
+                    .header(HttpHeaders.AUTHORIZATION, TOKEN)
+                    .content(measureJson)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isOk())
+            .andReturn();
+    assertThat(
+        mvcResult.getResponse().getContentType(), is(equalTo("application/xml;charset=UTF-8")));
+    verify(hqmfService, times(1)).generateHqmf(any(QdmMeasure.class));
+  }
+
+  @Test
+  void testGetMeasureHqmfForUnsupportedModel() throws Exception {
+    String measureJson = getStringFromTestResource("/measures/qicore-test-measure.json");
+    MvcResult mockResult =
+        mockMvc
+            .perform(
+                MockMvcRequestBuilders.put("/qdm/measures/hqmf")
                     .with(user(TEST_USER_ID))
                     .with(csrf())
                     .header(HttpHeaders.AUTHORIZATION, TOKEN)

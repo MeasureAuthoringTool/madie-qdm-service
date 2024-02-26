@@ -6,10 +6,14 @@ import gov.cms.madie.models.common.Version;
 import gov.cms.madie.models.measure.BaseConfigurationTypes;
 import gov.cms.madie.models.measure.DefDescPair;
 import gov.cms.madie.models.measure.Endorsement;
+import gov.cms.madie.models.measure.Group;
 import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.models.measure.MeasureMetaData;
+import gov.cms.madie.models.measure.MeasureObservation;
+import gov.cms.madie.models.measure.Population;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.models.measure.Reference;
+import gov.cms.madie.models.measure.Stratification;
 import gov.cms.madie.util.MadieConstants;
 import gov.cms.madie.util.MappingUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -21,13 +25,18 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.IntStream;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface MeasureMapper {
 
   @Mapping(target = "measureDetails", source = "measure")
+  @Mapping(target = "measureGrouping", source = "measure")
   @Mapping(target = "supplementalDataElements", source = "supplementalData")
   @Mapping(target = "riskAdjustmentVariables", source = "riskAdjustments")
   MeasureType measureToMeasureType(QdmMeasure measure);
@@ -102,6 +111,118 @@ public interface MeasureMapper {
   @Mapping(target = "supplementalData", source = "supplementalDataDescription")
   @Mapping(target = "finalizedDate", source = "measure")
   MeasureDetailsType measureToMeasureDetailsType(QdmMeasure measure);
+
+  default MeasureGroupingType measureToMeasureGroupingType(QdmMeasure measure) {
+    if (measure == null || CollectionUtils.isEmpty(measure.getGroups())) {
+      return null;
+    }
+
+    MeasureGroupingType measureGroupingType = new MeasureGroupingType();
+    final List<Group> groups = measure.getGroups();
+    measureGroupingType
+        .getGroup()
+        .addAll(
+            IntStream.range(0, groups.size())
+                .mapToObj(
+                    i -> {
+                      Group group = groups.get(i);
+                      return groupToGroupType(group, i + 1);
+                    })
+                .toList());
+
+    measureGroupingType
+        .getGroup()
+        .addAll(
+            measure.getGroups().stream()
+                .map(
+                    group -> {
+                      // todo: fill this in
+                      GroupType gType = new GroupType();
+                      return gType;
+                    })
+                .toList());
+    return measureGroupingType;
+  }
+
+  @Mapping(target = "sequence", source = "sequence")
+  @Mapping(target = "clause", source = "group")
+  @Mapping(target = "ucum", source = "group.scoringUnit", qualifiedByName = "scoringUnitToUcum")
+  GroupType groupToGroupType(Group group, int sequence);
+
+  default List<ClauseType> groupToClauseTypes(Group group) {
+    if (group == null) {
+      return null;
+    }
+
+    // Clauses are listed in the order Populations, Observations, Stratums
+    List<ClauseType> clauses = new ArrayList<>();
+    if (!CollectionUtils.isEmpty(group.getPopulations())) {
+      clauses.addAll(group.getPopulations().stream().map(this::populationToClauseType).toList());
+    }
+    if (!CollectionUtils.isEmpty(group.getMeasureObservations())) {
+      clauses.addAll(
+          group.getMeasureObservations().stream().map(this::observationToClauseType).toList());
+    }
+    if (!CollectionUtils.isEmpty(group.getStratifications())) {
+      clauses.addAll(
+          group.getStratifications().stream().map(this::stratificationToClauseType).toList());
+    }
+    return CollectionUtils.isEmpty(clauses) ? null : clauses;
+  }
+
+  @Mapping(
+      target = "isInGrouping",
+      expression =
+          "java(String.valueOf(org.apache.commons.lang3.StringUtils.isNotBlank(population.getDefinition())))")
+  @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
+  @Mapping(target = "cqldefinitionOrCqlaggfunction", source = "population")
+  // TODO: clause type display name
+  ClauseType populationToClauseType(Population population);
+
+  default List<Object> populationToDefOrAgg(Population population) {
+    if (population == null || StringUtils.isBlank(population.getDefinition())) {
+      return null;
+    }
+    CqldefinitionType cqldefinitionType = new CqldefinitionType();
+    cqldefinitionType.setUuid(UUID.randomUUID().toString());
+    cqldefinitionType.setDisplayName(population.getDefinition());
+    return List.of(cqldefinitionType);
+  }
+
+  @Mapping(
+      target = "isInGrouping",
+      expression =
+          "java(String.valueOf(org.apache.commons.lang3.StringUtils.isNotBlank(observation.getDefinition())))")
+  @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
+  // TODO: clause type display name
+  ClauseType observationToClauseType(MeasureObservation observation);
+
+  // TODO: map observation to definition/aggregate function
+
+  @Mapping(
+      target = "isInGrouping",
+      expression =
+          "java(String.valueOf(org.apache.commons.lang3.StringUtils.isNotBlank(stratification.getCqlDefinition())))")
+  @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
+  // TODO: clause type display name
+  ClauseType stratificationToClauseType(Stratification stratification);
+
+  // TODO: map stratification to definition/aggregate function
+
+  @Named("scoringUnitToUcum")
+  default String scoringUnitToUcum(Object scoringUnit) {
+    if (scoringUnit == null) {
+      return null;
+    }
+
+    Map<String, Object> scoringUnitMap = (Map<String, Object>) scoringUnit;
+    if (!scoringUnitMap.containsKey("value")) {
+      return null;
+    }
+
+    Map<String, String> values = (Map<String, String>) scoringUnitMap.get("value");
+    return values.get("code");
+  }
 
   @Mapping(
       target = "id",

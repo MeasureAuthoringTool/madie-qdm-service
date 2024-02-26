@@ -27,7 +27,6 @@
     <mvnreports.version>3.2.2</mvnreports.version>
     <mvnsite.version>3.11.0</mvnsite.version>
     <okta.springboot.starter.version>3.0.5</okta.springboot.starter.version>
-
     <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
     <puppycrawl.checkstyle.version>10.1</puppycrawl.checkstyle.version>
     <spotify.fmt.version>2.21.1</spotify.fmt.version>
@@ -75,7 +74,17 @@
       <artifactId>packaging-utility</artifactId>
       <version>0.2.2</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.14.0</version>
+    </dependency>
 
+    <dependency>
+      <groupId>net.sf.saxon</groupId>
+      <artifactId>Saxon-HE</artifactId>
+      <version>12.4</version>
+    </dependency>
     <dependency>
       <groupId>org.codehaus.mojo</groupId>
       <artifactId>jaxb2-maven-plugin</artifactId>
@@ -87,6 +96,7 @@
       <artifactId>mapstruct</artifactId>
       <version>${org.mapstruct.version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
@@ -97,7 +107,6 @@
       <artifactId>spring-security-test</artifactId>
       <scope>test</scope>
     </dependency>
-
   </dependencies>
   <repositories>
     <repository>
@@ -233,9 +242,11 @@
           <targetJdk>${java.version}</targetJdk>
           <excludes>
             <exclude>**/generated/**/*</exclude>
+            <exclude>**/madie/hqmf/**/*</exclude>
           </excludes>
           <excludeRoots>
             <excludeRoot>${project.basedir}/src/main/java/generated</excludeRoot>
+            <excludeRoot>${project.basedir}/src/main/java/gov/cms/madie/hqmf</excludeRoot>
           </excludeRoots>
         </configuration>
         <executions>
