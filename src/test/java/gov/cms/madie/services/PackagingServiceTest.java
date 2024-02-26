@@ -3,7 +3,7 @@ package gov.cms.madie.services;
 import gov.cms.madie.Exceptions.TranslationServiceException;
 import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.dto.TranslatedLibrary;
-import gov.cms.madie.models.measure.Measure;
+import gov.cms.madie.models.measure.QdmMeasure;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,15 +25,16 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class PackagingServiceTest {
   @Mock private TranslationServiceClient translationServiceClient;
+  @Mock private HqmfService hqmfService;
   @InjectMocks private PackagingService packagingService;
 
   private static final String TOKEN = "test token";
-  private Measure measure;
+  private QdmMeasure measure;
 
   @BeforeEach
   void setUp() throws Exception {
     measure =
-        Measure.builder()
+        QdmMeasure.builder()
             .id("1")
             .ecqmTitle("test")
             .version(
@@ -67,6 +68,7 @@ class PackagingServiceTest {
             .build();
     when(translationServiceClient.getTranslatedLibraries(measure.getCql(), TOKEN))
         .thenReturn(List.of(library1, library2));
+    when(hqmfService.generateHqmf(measure)).thenReturn("<hqmf>this is a test hqmf</hqmf>");
     when(translationServiceClient.getHumanReadable(measure, TOKEN)).thenReturn("success");
     byte[] packageContents = packagingService.createMeasurePackage(measure, TOKEN);
     String packageString = new String(packageContents);
@@ -75,6 +77,7 @@ class PackagingServiceTest {
     assertThat(packageString, containsString(library1FileName + ".xml"));
     assertThat(packageString, containsString(library1FileName + ".json"));
     assertThat(packageString, containsString("test-v1.2.003-QDM.html"));
+    assertThat(packageString, containsString("test-v1.2.003-QDM.xml"));
   }
 
   @Test

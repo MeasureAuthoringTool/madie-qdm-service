@@ -1,9 +1,11 @@
 package gov.cms.madie.services;
 
+import gov.cms.madie.Exceptions.PackagingException;
 import gov.cms.madie.hqmf.Generator;
 import gov.cms.madie.hqmf.HQMFGeneratorFactory;
 import gov.cms.madie.hqmf.dto.MeasureExport;
 import gov.cms.madie.models.measure.QdmMeasure;
+import jakarta.xml.bind.JAXBException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,12 +18,27 @@ public class HqmfService {
   private final SimpleXmlService simpleXmlService;
   private final HQMFGeneratorFactory hqmfGeneratorFactory;
 
-  public String generateHqmf(QdmMeasure qdmMeasure) throws Exception {
-    Generator hqmfGenerator = hqmfGeneratorFactory.getHQMFGenerator();
-    String simpleXml = simpleXmlService.measureToSimpleXml(qdmMeasure);
-    MeasureExport measureExport =
-        MeasureExport.builder().measure(qdmMeasure).simpleXml(simpleXml).build();
+  public String generateHqmf(QdmMeasure qdmMeasure) {
+    String simpleXml;
+    try {
+      simpleXml = simpleXmlService.measureToSimpleXml(qdmMeasure);
+    } catch (JAXBException ex) {
+      String message =
+          "An issue occurred while generating the simple xml for measure: " + qdmMeasure.getId();
+      log.error(message, ex);
+      throw new PackagingException(message, ex);
+    }
 
-    return hqmfGenerator.generate(measureExport);
+    Generator hqmfGenerator = hqmfGeneratorFactory.getHQMFGenerator();
+    try {
+      MeasureExport measureExport =
+          MeasureExport.builder().measure(qdmMeasure).simpleXml(simpleXml).build();
+      return hqmfGenerator.generate(measureExport);
+    } catch (Exception ex) {
+      String message =
+          "An issue occurred while generating the HQMF for measure: " + qdmMeasure.getId();
+      log.error(message, ex);
+      throw new PackagingException(message, ex);
+    }
   }
 }
