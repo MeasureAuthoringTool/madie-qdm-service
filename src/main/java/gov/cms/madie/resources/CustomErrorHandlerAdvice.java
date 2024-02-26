@@ -1,5 +1,6 @@
 package gov.cms.madie.resources;
 
+import gov.cms.madie.Exceptions.PackagingException;
 import gov.cms.madie.Exceptions.TranslationServiceException;
 import gov.cms.madie.Exceptions.UnsupportedModelException;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,11 @@ import java.util.Map;
 public class CustomErrorHandlerAdvice {
   private final ErrorAttributes errorAttributes;
 
-  @ExceptionHandler({TranslationServiceException.class, UnsupportedModelException.class})
+  @ExceptionHandler({
+    TranslationServiceException.class,
+    UnsupportedModelException.class,
+    PackagingException.class
+  })
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ResponseBody
   Map<String, Object> handleCustomException(WebRequest request) {
