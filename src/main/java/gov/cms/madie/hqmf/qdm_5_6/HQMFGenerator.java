@@ -40,8 +40,9 @@ public class HQMFGenerator implements Generator {
       // This is removed in this method
       hqmfXML = replaceInlineCommentFromEnd(hqmfXML);
 
-      String dataCriteriaXML = hqmfDataCriteriaGenerator.generate(measureExport);
-      hqmfXML = appendToHQMF(dataCriteriaXML, hqmfXML);
+      // TODO: would be handled by MAT-6785
+      // String dataCriteriaXML = hqmfDataCriteriaGenerator.generate(measureExport);
+      // hqmfXML = appendToHQMF(dataCriteriaXML, hqmfXML);
 
       XmlProcessor hqmfProcessor = new XmlProcessor(hqmfXML);
       measureExport.setHqmfXmlProcessor(hqmfProcessor);
