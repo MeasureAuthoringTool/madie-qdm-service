@@ -11,7 +11,7 @@ public class HQMFAttributeGenerator extends HQMFDataCriteriaElementGenerator {
   private MeasureExport measureExport;
 
   @Override
-  public String generate(MeasureExport me) throws Exception {
+  public String generate(MeasureExport measureExport) throws Exception {
     return null;
   }
 

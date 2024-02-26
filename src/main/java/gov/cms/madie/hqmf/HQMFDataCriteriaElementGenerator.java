@@ -25,7 +25,7 @@ import java.util.Map;
 public class HQMFDataCriteriaElementGenerator implements Generator {
 
   /** The occurrence map. */
-  private Map<String, Node> occurrenceMap = new HashMap<String, Node>();
+  private final Map<String, Node> occurrenceMap = new HashMap<String, Node>();
 
   protected String extensionValue = null;
 
@@ -36,15 +36,15 @@ public class HQMFDataCriteriaElementGenerator implements Generator {
   /**
    * Generate hqm for measure.
    *
-   * @param me the me
+   * @param measureExport- instance of MeasureExport
    * @return the string
    * @throws Exception the exception
    */
   @Override
-  public String generate(MeasureExport me) throws Exception {
+  public String generate(MeasureExport measureExport) throws Exception {
     String dataCriteria = "";
-    getExtensionValueBasedOnVersion(me);
-    dataCriteria = getHQMFXmlString(me);
+    getExtensionValueBasedOnVersion(measureExport);
+    dataCriteria = getHQMFXmlString(measureExport);
     return dataCriteria;
   }
 
@@ -64,20 +64,20 @@ public class HQMFDataCriteriaElementGenerator implements Generator {
   /**
    * Gets the HQMF xml string.
    *
-   * @param me the me
+   * @param measureExport- an instance of MeasureExport
    * @return the HQMF xml string
    */
-  private String getHQMFXmlString(MeasureExport me) {
-    XmlProcessor dataCriteriaXMLProcessor = createDateCriteriaTemplate(me);
-    me.setHqmfXmlProcessor(dataCriteriaXMLProcessor);
+  private String getHQMFXmlString(MeasureExport measureExport) {
+    XmlProcessor dataCriteriaXMLProcessor = createDateCriteriaTemplate(measureExport);
+    measureExport.setHqmfXmlProcessor(dataCriteriaXMLProcessor);
 
-    String simpleXMLStr = me.getSimpleXml();
+    String simpleXMLStr = measureExport.getSimpleXml();
     XmlProcessor simpleXmlprocessor = new XmlProcessor(simpleXMLStr);
-    me.setSimpleXmlProcessor(simpleXmlprocessor);
+    measureExport.setSimpleXmlProcessor(simpleXmlprocessor);
 
-    prepHQMF(me);
+    prepHQMF(measureExport);
 
-    createDataCriteriaForQDMELements(me, dataCriteriaXMLProcessor, simpleXmlprocessor);
+    createDataCriteriaForQDMELements(measureExport, dataCriteriaXMLProcessor, simpleXmlprocessor);
     addDataCriteriaComment(dataCriteriaXMLProcessor);
     return dataCriteriaXMLProcessor.transform(dataCriteriaXMLProcessor.getOriginalDoc(), true);
   }
@@ -85,10 +85,10 @@ public class HQMFDataCriteriaElementGenerator implements Generator {
   /**
    * Creates the date criteria template.
    *
-   * @param me the me
+   * @param measureExport- an instance of MeasureExport
    * @return the string
    */
-  private XmlProcessor createDateCriteriaTemplate(MeasureExport me) {
+  private XmlProcessor createDateCriteriaTemplate(MeasureExport measureExport) {
     XmlProcessor outputProcessor =
         new XmlProcessor(
             "<root><component><dataCriteriaSection></dataCriteriaSection></component></root>");

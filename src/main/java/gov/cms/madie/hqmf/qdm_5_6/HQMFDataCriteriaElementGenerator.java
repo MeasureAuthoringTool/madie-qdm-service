@@ -137,8 +137,8 @@ public class HQMFDataCriteriaElementGenerator implements Generator {
     }
   }
 
-  protected void getExtensionValueBasedOnVersion(MeasureExport me) {
-    if (me != null) {
+  protected void getExtensionValueBasedOnVersion(MeasureExport measureExport) {
+    if (measureExport != null) {
       extensionValue = getDataCriteriaExtValueBasedOnVersion();
     }
   }
@@ -146,13 +146,13 @@ public class HQMFDataCriteriaElementGenerator implements Generator {
   /**
    * Generate measure grp item count qdm entries.
    *
-   * @param me the me
+   * @param measureExport - an instance of MeasureExport
    * @param dataCriteriaXMLProcessor the data criteria xml processor
    * @param measureGroupingItemCountList the measure grouping item count list
    * @throws XPathExpressionException the x path expression exception
    */
   private void generateMeasureGrpnItemCountQDMEntries(
-      MeasureExport me,
+      MeasureExport measureExport,
       XmlProcessor dataCriteriaXMLProcessor,
       NodeList measureGroupingItemCountList)
       throws XPathExpressionException {
@@ -170,22 +170,27 @@ public class HQMFDataCriteriaElementGenerator implements Generator {
         "/measure/elementLookUp/qdm[" + getUUIDString(itemCountIDList) + "]";
 
     NodeList measureGroupingElementRefNodeList =
-        me.getSimpleXmlProcessor()
+        measureExport
+            .getSimpleXmlProcessor()
             .findNodeList(
-                me.getSimpleXmlProcessor().getOriginalDoc(), xpathforElementLookUpElements);
-    generateItemCountQDMEntries(me, dataCriteriaXMLProcessor, measureGroupingElementRefNodeList);
+                measureExport.getSimpleXmlProcessor().getOriginalDoc(),
+                xpathforElementLookUpElements);
+    generateItemCountQDMEntries(
+        measureExport, dataCriteriaXMLProcessor, measureGroupingElementRefNodeList);
   }
 
   /**
    * Generate supplemental data qdm entries.
    *
-   * @param me the me
+   * @param measureExport - an instance of MeasureExport
    * @param dataCriteriaXMLProcessor the data criteria xml processor
    * @param supplementalDataElements the supplemental data elements
    * @throws XPathExpressionException the x path expression exception
    */
   private void generateOtherSupplementalDataQDMEntries(
-      MeasureExport me, XmlProcessor dataCriteriaXMLProcessor, NodeList supplementalDataElements)
+      MeasureExport measureExport,
+      XmlProcessor dataCriteriaXMLProcessor,
+      NodeList supplementalDataElements)
       throws XPathExpressionException {
     if (supplementalDataElements == null || supplementalDataElements.getLength() < 1) {
       return;
@@ -200,23 +205,26 @@ public class HQMFDataCriteriaElementGenerator implements Generator {
             + getUUIDString(supplementalElemenRefIds)
             + "][@suppDataElement != 'true']";
     NodeList otherSupplementalQDMNodeList =
-        me.getSimpleXmlProcessor()
+        measureExport
+            .getSimpleXmlProcessor()
             .findNodeList(
-                me.getSimpleXmlProcessor().getOriginalDoc(), xpathforOtherSupplementalDataElements);
+                measureExport.getSimpleXmlProcessor().getOriginalDoc(),
+                xpathforOtherSupplementalDataElements);
 
-    generateSupplementalDataQDMEntries(me, dataCriteriaXMLProcessor, otherSupplementalQDMNodeList);
+    generateSupplementalDataQDMEntries(
+        measureExport, dataCriteriaXMLProcessor, otherSupplementalQDMNodeList);
   }
 
   /**
    * Generate supplemental data qdm entries.
    *
-   * @param me the me
+   * @param measureExport - an instance of MeasureExport
    * @param dataCriteriaXMLProcessor the data criteria xml processor
    * @param qdmNodeList the qdm node list
    * @throws XPathExpressionException the x path expression exception
    */
   private void generateSupplementalDataQDMEntries(
-      MeasureExport me, XmlProcessor dataCriteriaXMLProcessor, NodeList qdmNodeList)
+      MeasureExport measureExport, XmlProcessor dataCriteriaXMLProcessor, NodeList qdmNodeList)
       throws XPathExpressionException {
     for (int j = 0; j < qdmNodeList.getLength(); j++) {
       Node qdmNode = qdmNodeList.item(j);
@@ -234,7 +242,8 @@ public class HQMFDataCriteriaElementGenerator implements Generator {
           dataCriteriaXMLProcessor.findNode(
               dataCriteriaXMLProcessor.getOriginalDoc(), xpathForQDMEntry);
       if (qmdEntryIDNode == null) {
-        createXmlForDataCriteria(qdmNode, dataCriteriaXMLProcessor, me.getSimpleXmlProcessor());
+        createXmlForDataCriteria(
+            qdmNode, dataCriteriaXMLProcessor, measureExport.getSimpleXmlProcessor());
       }
     }
   }
@@ -242,13 +251,13 @@ public class HQMFDataCriteriaElementGenerator implements Generator {
   /**
    * Generate Item Count qdm entries.
    *
-   * @param me the me
+   * @param measureExport - an instance of MeasureExport
    * @param dataCriteriaXMLProcessor the data criteria xml processor
    * @param qdmNodeList the qdm node list
    * @throws XPathExpressionException the x path expression exception
    */
   private void generateItemCountQDMEntries(
-      MeasureExport me, XmlProcessor dataCriteriaXMLProcessor, NodeList qdmNodeList)
+      MeasureExport measureExport, XmlProcessor dataCriteriaXMLProcessor, NodeList qdmNodeList)
       throws XPathExpressionException {
     for (int j = 0; j < qdmNodeList.getLength(); j++) {
       Node qdmNode = qdmNodeList.item(j);
@@ -271,7 +280,8 @@ public class HQMFDataCriteriaElementGenerator implements Generator {
           dataCriteriaXMLProcessor.findNode(
               dataCriteriaXMLProcessor.getOriginalDoc(), xpathForQDMEntry);
       if (qmdEntryIDNode == null) {
-        createXmlForDataCriteria(qdmNode, dataCriteriaXMLProcessor, me.getSimpleXmlProcessor());
+        createXmlForDataCriteria(
+            qdmNode, dataCriteriaXMLProcessor, measureExport.getSimpleXmlProcessor());
       }
     }
   }

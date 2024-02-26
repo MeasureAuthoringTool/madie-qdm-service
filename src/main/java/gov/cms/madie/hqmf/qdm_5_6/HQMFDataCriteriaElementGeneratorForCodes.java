@@ -20,16 +20,17 @@ public class HQMFDataCriteriaElementGeneratorForCodes implements Generator {
   /**
    * Generate hqm for measure.
    *
-   * @param me the me
+   * @param measureExport- an instance of MeasureExport
    * @return the string
    */
   @Override
-  public String generate(MeasureExport me) {
+  public String generate(MeasureExport measureExport) {
     // This was previously determined by MAT version number, now directly using constant
     extensionValue = VERSION_5_0_ID;
-    XmlProcessor dataCriteriaXMLProcessor = me.getHqmfXmlProcessor();
+    XmlProcessor dataCriteriaXMLProcessor = measureExport.getHqmfXmlProcessor();
 
-    createDataCriteriaForQDMELements(dataCriteriaXMLProcessor, me.getSimpleXmlProcessor());
+    createDataCriteriaForQDMELements(
+        dataCriteriaXMLProcessor, measureExport.getSimpleXmlProcessor());
     return dataCriteriaXMLProcessor.transform(dataCriteriaXMLProcessor.getOriginalDoc(), true);
   }
 
