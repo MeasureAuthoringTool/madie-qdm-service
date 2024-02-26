@@ -7,7 +7,6 @@ import gov.cms.madie.hqmf.qdm_5_6.HQMFGenerator;
 import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.measure.QdmMeasure;
 import jakarta.xml.bind.JAXBException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +18,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -64,7 +64,7 @@ class HqmfServiceTest {
         .when(simpleXmlService)
         .measureToSimpleXml(any(QdmMeasure.class));
     Exception ex =
-        Assertions.assertThrows(
+        assertThrows(
             PackagingException.class,
             () -> hqmfService.generateHqmf(measure),
             "Exception occurred");
@@ -80,7 +80,7 @@ class HqmfServiceTest {
     when(factory.getHQMFGenerator()).thenReturn(generator);
     doThrow(new Exception(message)).when(generator).generate(any(MeasureExport.class));
     Exception ex =
-        Assertions.assertThrows(
+        assertThrows(
             PackagingException.class,
             () -> hqmfService.generateHqmf(measure),
             "Exception occurred");
