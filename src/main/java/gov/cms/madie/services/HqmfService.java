@@ -21,10 +21,9 @@ public class HqmfService {
   private final TranslationServiceClient translationServiceClient;
 
   public String generateHqmf(QdmMeasure qdmMeasure, String accessToken) {
-    String simpleXml;
     CqlLookups cqlLookups = translationServiceClient.getCqlLookups(qdmMeasure, accessToken);
     try {
-      simpleXml = simpleXmlService.measureToSimpleXml(qdmMeasure);
+      String simpleXml = simpleXmlService.measureToSimpleXml(qdmMeasure);
       Generator hqmfGenerator = hqmfGeneratorFactory.getHQMFGenerator();
       MeasureExport measureExport =
           MeasureExport.builder().measure(qdmMeasure).simpleXml(simpleXml).build();
