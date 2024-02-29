@@ -2,6 +2,7 @@ package gov.cms.madie.services;
 
 import gov.cms.madie.models.dto.TranslatedLibrary;
 import gov.cms.madie.models.measure.Measure;
+import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.packaging.utils.ZipUtility;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class PackagingService {
   private final TranslationServiceClient translationServiceClient;
+  private final HqmfService hqmfService;
 
   public byte[] createMeasurePackage(Measure measure, String accessToken) {
     log.info("Creating the measure package for measure [{}]", measure.getId());
@@ -42,6 +44,9 @@ public class PackagingService {
           measure.getEcqmTitle() + "-v" + measure.getVersion() + "-QDM" + ".html",
           humanReadable.getBytes());
     }
+    String hqmf = hqmfService.generateHqmf((QdmMeasure) measure);
+    entries.put(
+        measure.getEcqmTitle() + "-v" + measure.getVersion() + "-QDM" + ".xml", hqmf.getBytes());
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     return new ZipUtility().zipEntries(entries, outputStream);
   }

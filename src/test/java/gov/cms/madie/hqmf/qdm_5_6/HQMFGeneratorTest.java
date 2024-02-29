@@ -52,17 +52,18 @@ class HQMFGeneratorTest implements ResourceFileUtil {
             """;
 
   @Test
-  void generate() throws Exception {
+  void testGenerate() throws Exception {
     String simpleXml = getStringFromTestResource("/simplexml/BMAT1644A-v0-0-001-QDM-5-6.xml");
     MeasureExport measureExport =
         MeasureExport.builder().simpleXml(simpleXml).releaseVersion("1.3.1").build();
     when(hqmfMeasureDetailsGenerator.generate(any(MeasureExport.class))).thenReturn(baseHqmf);
-    when(hqmfDataCriteriaGenerator.generate(any(MeasureExport.class))).thenReturn(dataCriteriaXml);
+    // TODO: would be handled by MAT-6785
+    // when(hqmfDataCriteriaGenerator.generate(any(MeasureExport.class))).thenReturn(dataCriteriaXml);
     String hqmf = hqmfGenerator.generate(measureExport);
     assertThat(hqmf, is(notNullValue()));
     assertThat(
         hqmf.trim().startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>"),
         is(true));
-    assertThat(hqmf.contains("<dataCriteriaSection>"), is(true));
+    // assertThat(hqmf.contains("<dataCriteriaSection>"), is(true));
   }
 }

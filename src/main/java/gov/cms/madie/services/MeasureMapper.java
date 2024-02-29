@@ -211,7 +211,7 @@ public interface MeasureMapper {
 
   @Named("scoringUnitToUcum")
   default String scoringUnitToUcum(Object scoringUnit) {
-    if (scoringUnit == null) {
+    if (scoringUnit == null || "".equals(scoringUnit)) {
       return null;
     }
 
