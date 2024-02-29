@@ -1,6 +1,7 @@
 package gov.cms.madie.services;
 
 import gov.cms.madie.Exceptions.PackagingException;
+import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.hqmf.Generator;
 import gov.cms.madie.hqmf.HQMFGeneratorFactory;
 import gov.cms.madie.hqmf.dto.MeasureExport;
@@ -21,7 +22,7 @@ public class HqmfService {
 
   public String generateHqmf(QdmMeasure qdmMeasure, String accessToken) {
     String simpleXml;
-    // CqlLookups cqlLookups = translationServiceClient.getCqlLookups(qdmMeasure, accessToken);
+    CqlLookups cqlLookups = translationServiceClient.getCqlLookups(qdmMeasure, accessToken);
     try {
       simpleXml = simpleXmlService.measureToSimpleXml(qdmMeasure);
       Generator hqmfGenerator = hqmfGeneratorFactory.getHQMFGenerator();

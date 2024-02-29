@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class MeasureUtils {
   public static Set<String> getMeasureDefinitions(Measure measure) {
-    if (measure == null) {
+    if (measure == null || CollectionUtils.isEmpty(measure.getGroups())) {
       return Set.of();
     }
     Set<String> usedDefinitions = new HashSet<>();
