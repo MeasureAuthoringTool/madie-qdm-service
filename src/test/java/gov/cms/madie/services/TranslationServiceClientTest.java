@@ -126,18 +126,17 @@ class TranslationServiceClientTest {
 
   @Test
   void testGetCqlLookupsFailure() {
-    String message =
-      "An issue occurred while fetching CQL Lookups for measure: testMeasureId";
+    String message = "An issue occurred while fetching CQL Lookups for measure: testMeasureId";
     when(elmTranslatorRestTemplate.exchange(
-      any(URI.class), eq(HttpMethod.PUT), any(HttpEntity.class), any(Class.class)))
-      .thenThrow(new TranslationServiceException(message, new Exception()));
+            any(URI.class), eq(HttpMethod.PUT), any(HttpEntity.class), any(Class.class)))
+        .thenThrow(new TranslationServiceException(message, new Exception()));
     Exception ex =
-      assertThrows(
-        TranslationServiceException.class,
-        () ->
-          translationServiceClient.getCqlLookups(
-            QdmMeasure.builder().id("testMeasureId").build(), "token"),
-        message);
+        assertThrows(
+            TranslationServiceException.class,
+            () ->
+                translationServiceClient.getCqlLookups(
+                    QdmMeasure.builder().id("testMeasureId").build(), "token"),
+            message);
     assertThat(ex.getMessage(), containsString(message));
   }
 }

@@ -1,6 +1,7 @@
 package gov.cms.madie.util;
 
 import gov.cms.madie.models.measure.Measure;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.util.HashSet;
@@ -11,7 +12,7 @@ public class MeasureUtils {
     if (measure == null || CollectionUtils.isEmpty(measure.getGroups())) {
       return Set.of();
     }
-    Set<String> usedDefinitions = new HashSet<>();
+    Set<String> measureDefinitions = new HashSet<>();
     measure
         .getGroups()
         .forEach(
@@ -20,8 +21,8 @@ public class MeasureUtils {
                   .getPopulations()
                   .forEach(
                       population -> {
-                        if (!population.getDefinition().isEmpty()) {
-                          usedDefinitions.add(population.getDefinition());
+                        if (StringUtils.isNotBlank(population.getDefinition())) {
+                          measureDefinitions.add(population.getDefinition());
                         }
                       });
               if (!CollectionUtils.isEmpty(group.getMeasureObservations())) {
@@ -29,8 +30,8 @@ public class MeasureUtils {
                     .getMeasureObservations()
                     .forEach(
                         measureObservation -> {
-                          if (!measureObservation.getDefinition().isEmpty()) {
-                            usedDefinitions.add(measureObservation.getDefinition());
+                          if (StringUtils.isNotBlank(measureObservation.getDefinition())) {
+                            measureDefinitions.add(measureObservation.getDefinition());
                           }
                         });
               }
@@ -39,18 +40,18 @@ public class MeasureUtils {
                     .getStratifications()
                     .forEach(
                         stratification -> {
-                          if (!stratification.getCqlDefinition().isEmpty()) {
-                            usedDefinitions.add(stratification.getCqlDefinition());
+                          if (StringUtils.isNotBlank(stratification.getCqlDefinition())) {
+                            measureDefinitions.add(stratification.getCqlDefinition());
                           }
                         });
               }
             });
     measure
         .getSupplementalData()
-        .forEach(defDescPair -> usedDefinitions.add(defDescPair.getDefinition()));
+        .forEach(defDescPair -> measureDefinitions.add(defDescPair.getDefinition()));
     measure
         .getRiskAdjustments()
-        .forEach(defDescPair -> usedDefinitions.add(defDescPair.getDefinition()));
-    return usedDefinitions;
+        .forEach(defDescPair -> measureDefinitions.add(defDescPair.getDefinition()));
+    return measureDefinitions;
   }
 }
