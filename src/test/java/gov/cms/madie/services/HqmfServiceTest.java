@@ -6,6 +6,7 @@ import gov.cms.madie.hqmf.dto.MeasureExport;
 import gov.cms.madie.hqmf.qdm_5_6.HQMFGenerator;
 import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.measure.QdmMeasure;
+import jakarta.xml.bind.JAXBException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,6 +26,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class HqmfServiceTest {
+  private static String TOKEN = "joh doe";
 
   @Mock SimpleXmlService simpleXmlService;
   @Mock HQMFGeneratorFactory factory;
@@ -52,8 +54,22 @@ class HqmfServiceTest {
     when(generator.generate(any(MeasureExport.class)))
         .thenReturn("<QualityMeasureDocument></QualityMeasureDocument>");
 
-    String output = hqmfService.generateHqmf(measure);
+    String output = hqmfService.generateHqmf(measure, TOKEN);
     assertThat(output, is(equalTo("<QualityMeasureDocument></QualityMeasureDocument>")));
+  }
+
+  @Test
+  void generateHqmfWhenSimpleXmlGenerationFailed() throws Exception {
+    String message = "An issue occurred while generating the simple xml for measure";
+    doThrow(new JAXBException(message))
+        .when(simpleXmlService)
+        .measureToSimpleXml(any(QdmMeasure.class));
+    Exception ex =
+        assertThrows(
+            PackagingException.class,
+            () -> hqmfService.generateHqmf(measure, TOKEN),
+            "Exception occurred");
+    assertThat(ex.getMessage(), containsString(message));
   }
 
   @Test
@@ -67,7 +83,7 @@ class HqmfServiceTest {
     Exception ex =
         assertThrows(
             PackagingException.class,
-            () -> hqmfService.generateHqmf(measure),
+            () -> hqmfService.generateHqmf(measure, TOKEN),
             "Exception occurred");
     assertThat(ex.getMessage(), containsString(message));
   }

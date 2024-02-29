@@ -19,6 +19,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -106,7 +107,7 @@ class PackageControllerTest {
     Exception ex =
         Assertions.assertThrows(
             UnsupportedModelException.class,
-            () -> packageController.generateHqmf(measure),
+            () -> packageController.generateHqmf(measure, TOKEN),
             errorMessage);
     assertThat(ex.getMessage(), is(equalTo(errorMessage)));
   }
@@ -118,7 +119,7 @@ class PackageControllerTest {
     Exception ex =
         Assertions.assertThrows(
             UnsupportedModelException.class,
-            () -> packageController.generateHqmf(measure),
+            () -> packageController.generateHqmf(measure, TOKEN),
             errorMessage);
     assertThat(ex.getMessage(), is(equalTo(errorMessage)));
   }
@@ -131,9 +132,9 @@ class PackageControllerTest {
             .ecqmTitle("test")
             .model(String.valueOf(ModelType.QDM_5_6))
             .build();
-    when(hqmfService.generateHqmf(any(QdmMeasure.class)))
+    when(hqmfService.generateHqmf(any(QdmMeasure.class), anyString()))
         .thenReturn("<QualityMeasureDocument></QualityMeasureDocument>");
-    String hqmf = packageController.generateHqmf(measure).getBody();
+    String hqmf = packageController.generateHqmf(measure, TOKEN).getBody();
     assertThat(hqmf, is(equalTo("<QualityMeasureDocument></QualityMeasureDocument>")));
   }
 }

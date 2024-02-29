@@ -117,7 +117,7 @@ class PackageControllerMvcTest implements ResourceFileUtil {
   @Test
   void testGetMeasureHqmf() throws Exception {
     String measureJson = getStringFromTestResource("/measures/qdm-test-measure.json");
-    Mockito.when(hqmfService.generateHqmf(any(QdmMeasure.class)))
+    Mockito.when(hqmfService.generateHqmf(any(QdmMeasure.class), anyString()))
         .thenReturn("<QualityMeasureDocument></QualityMeasureDocument>");
     MvcResult mvcResult =
         mockMvc
@@ -132,7 +132,7 @@ class PackageControllerMvcTest implements ResourceFileUtil {
             .andReturn();
     assertThat(
         mvcResult.getResponse().getContentType(), is(equalTo("application/xml;charset=UTF-8")));
-    verify(hqmfService, times(1)).generateHqmf(any(QdmMeasure.class));
+    verify(hqmfService, times(1)).generateHqmf(any(QdmMeasure.class), anyString());
   }
 
   @Test

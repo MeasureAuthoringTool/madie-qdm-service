@@ -44,7 +44,7 @@ public class PackagingService {
           measure.getEcqmTitle() + "-v" + measure.getVersion() + "-QDM" + ".html",
           humanReadable.getBytes());
     }
-    String hqmf = hqmfService.generateHqmf((QdmMeasure) measure);
+    String hqmf = hqmfService.generateHqmf((QdmMeasure) measure, accessToken);
     entries.put(
         measure.getEcqmTitle() + "-v" + measure.getVersion() + "-QDM" + ".xml", hqmf.getBytes());
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
