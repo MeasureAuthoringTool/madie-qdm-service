@@ -25,6 +25,7 @@ import org.junit.jupiter.api.Test;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -362,5 +363,40 @@ class MeasureMapperTest {
     FinalizedDateType output = measureMapper.instantToFinalizedDateType(measure);
     assertThat(output, is(notNullValue()));
     assertThat(output.getValueAttribute(), is(equalTo("20240219")));
+  }
+
+  @Test
+  void testScoringUnitToUcumReturnsScoringUnit() {
+    Object scoringUnit = Map.of("value", Map.of("code", "m/s", "url", "http://blah"));
+    String output = measureMapper.scoringUnitToUcum(scoringUnit);
+    assertThat(output, is(equalTo("m/s")));
+  }
+
+  @Test
+  void testScoringUnitToUcumReturnsNullForNullInput() {
+    Object scoringUnit = null;
+    String output = measureMapper.scoringUnitToUcum(scoringUnit);
+    assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void testScoringUnitToUcumReturnsNullForEmptyStringInput() {
+    Object scoringUnit = "";
+    String output = measureMapper.scoringUnitToUcum(scoringUnit);
+    assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void testScoringUnitToUcumReturnsNullForMapMissingValue() {
+    Object scoringUnit = Map.of("otherData", Map.of("not", "real"));
+    String output = measureMapper.scoringUnitToUcum(scoringUnit);
+    assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void testScoringUnitToUcumReturnsNullForMapMissing() {
+    Object scoringUnit = Map.of("otherData", Map.of("not", "real"));
+    String output = measureMapper.scoringUnitToUcum(scoringUnit);
+    assertThat(output, is(nullValue()));
   }
 }

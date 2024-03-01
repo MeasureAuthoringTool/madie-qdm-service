@@ -30,6 +30,7 @@ class HqmfServiceTest {
 
   @Mock SimpleXmlService simpleXmlService;
   @Mock HQMFGeneratorFactory factory;
+  @Mock TranslationServiceClient translationServiceClient;
 
   @InjectMocks HqmfService hqmfService;
   private QdmMeasure measure;
