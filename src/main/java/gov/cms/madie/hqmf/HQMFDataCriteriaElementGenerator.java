@@ -77,7 +77,7 @@ public class HQMFDataCriteriaElementGenerator implements Generator {
 
     prepHQMF(measureExport);
 
-    createDataCriteriaForQDMELements(measureExport, dataCriteriaXMLProcessor, simpleXmlprocessor);
+    createDataCriteriaForQDMElements(measureExport, dataCriteriaXMLProcessor, simpleXmlprocessor);
     addDataCriteriaComment(dataCriteriaXMLProcessor);
     return dataCriteriaXMLProcessor.transform(dataCriteriaXMLProcessor.getOriginalDoc(), true);
   }
@@ -125,7 +125,7 @@ public class HQMFDataCriteriaElementGenerator implements Generator {
    * @param simpleXmlprocessor the simple xmlprocessor
    * @return the string
    */
-  private void createDataCriteriaForQDMELements(
+  private void createDataCriteriaForQDMElements(
       MeasureExport me, XmlProcessor dataCriteriaXMLProcessor, XmlProcessor simpleXmlprocessor) {
     // XPath String for only QDM's.
     String xPathForOccurQDMNoAttribs =
