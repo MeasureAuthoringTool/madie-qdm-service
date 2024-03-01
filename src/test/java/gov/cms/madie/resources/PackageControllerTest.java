@@ -83,7 +83,7 @@ class PackageControllerTest {
     Exception ex =
         Assertions.assertThrows(
             UnsupportedModelException.class,
-            () -> packageController.getMeasureSimpleXml(measure),
+            () -> packageController.getMeasureSimpleXml(measure, "user.jwt"),
             errorMessage);
     assertThat(ex.getMessage(), is(equalTo(errorMessage)));
   }
@@ -95,7 +95,7 @@ class PackageControllerTest {
     Exception ex =
         Assertions.assertThrows(
             UnsupportedModelException.class,
-            () -> packageController.getMeasureSimpleXml(measure),
+            () -> packageController.getMeasureSimpleXml(measure, "user.jwt"),
             errorMessage);
     assertThat(ex.getMessage(), is(equalTo(errorMessage)));
   }

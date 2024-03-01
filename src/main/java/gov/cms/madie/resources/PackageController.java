@@ -1,6 +1,7 @@
 package gov.cms.madie.resources;
 
 import gov.cms.madie.Exceptions.UnsupportedModelException;
+import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.services.HqmfService;
 import gov.cms.madie.services.PackagingService;
@@ -51,10 +52,13 @@ public class PackageController {
       },
       consumes = {MediaType.APPLICATION_JSON_VALUE})
   public String getMeasureSimpleXml(
-      @RequestBody @Validated(Measure.ValidationSequence.class) Measure measure)
+      @RequestBody @Validated(Measure.ValidationSequence.class) Measure measure,
+      @RequestHeader("Authorization") String accessToken)
       throws JAXBException {
     if (measure.getModel() != null && measure.getModel().contains("QDM")) {
-      return simpleXmlService.measureToSimpleXml((QdmMeasure) measure);
+      // TODO: replace this with fetch CqlLookups from translator
+      CqlLookups cqlLookups = CqlLookups.builder().build();
+      return simpleXmlService.measureToSimpleXml((QdmMeasure) measure, cqlLookups);
     }
     throw new UnsupportedModelException("Unsupported model type: " + measure.getModel());
   }

@@ -37,8 +37,8 @@ public interface MeasureMapper {
 
   @Mapping(target = "measureDetails", source = "measure")
   @Mapping(target = "measureGrouping", source = "measure")
-  @Mapping(target = "supplementalDataElements", source = "supplementalData")
-  @Mapping(target = "riskAdjustmentVariables", source = "riskAdjustments")
+  @Mapping(target = "supplementalDataElements", source = "measure.supplementalData")
+  @Mapping(target = "riskAdjustmentVariables", source = "measure.riskAdjustments")
   MeasureType measureToMeasureType(QdmMeasure measure);
 
   @Mapping(target = "title", source = "measureName")

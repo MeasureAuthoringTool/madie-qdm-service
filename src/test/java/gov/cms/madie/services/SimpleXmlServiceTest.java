@@ -2,6 +2,7 @@ package gov.cms.madie.services;
 
 import generated.gov.cms.madie.simplexml.MeasureDetailsType;
 import generated.gov.cms.madie.simplexml.MeasureType;
+import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.models.measure.QdmMeasure;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Marshaller;
@@ -33,7 +34,7 @@ class SimpleXmlServiceTest {
 
   @Test
   void testMeasureToSimpleXmlNullMeasure() throws JAXBException {
-    String output = simpleXmlService.measureToSimpleXml(null);
+    String output = simpleXmlService.measureToSimpleXml(null, null);
     assertThat(output, is(notNullValue()));
     assertThat(output.isBlank(), is(true));
   }
@@ -46,6 +47,8 @@ class SimpleXmlServiceTest {
     measureDetailsType.setTitle("TestMeasure1");
     measureType.setMeasureDetails(measureDetailsType);
 
+    CqlLookups cqlLookups = CqlLookups.builder().build();
+
     when(measureMapper.measureToMeasureType(any(QdmMeasure.class))).thenReturn(measureType);
     Mockito.doAnswer(
             invocationOnMock -> {
@@ -56,7 +59,7 @@ class SimpleXmlServiceTest {
         .when(simpleXmlMarshaller)
         .marshal(any(Object.class), any(Writer.class));
 
-    String output = simpleXmlService.measureToSimpleXml(measure);
+    String output = simpleXmlService.measureToSimpleXml(measure, cqlLookups);
     assertThat(output, is(notNullValue()));
     assertThat(output, is(equalTo("<measure></measure>")));
   }

@@ -1,5 +1,6 @@
 package gov.cms.madie.resources;
 
+import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.services.HqmfService;
 import gov.cms.madie.services.PackagingService;
@@ -80,7 +81,7 @@ class PackageControllerMvcTest implements ResourceFileUtil {
   @Test
   void testGetMeasureSimpleXml() throws Exception {
     String measureJson = getStringFromTestResource("/measures/qdm-test-measure.json");
-    Mockito.when(simpleXmlService.measureToSimpleXml(any(QdmMeasure.class)))
+    Mockito.when(simpleXmlService.measureToSimpleXml(any(QdmMeasure.class), any(CqlLookups.class)))
         .thenReturn("<measure></measure>");
     mockMvc
         .perform(
@@ -92,7 +93,7 @@ class PackageControllerMvcTest implements ResourceFileUtil {
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
         .andExpect(status().isOk())
         .andReturn();
-    verify(simpleXmlService, times(1)).measureToSimpleXml(any(QdmMeasure.class));
+    verify(simpleXmlService, times(1)).measureToSimpleXml(any(QdmMeasure.class), any(CqlLookups.class));
   }
 
   @Test
