@@ -18,5 +18,5 @@ public class CQLIncludeLibrary {
   private String setId;
   private String isComponent;
   private String measureId;
-  private String libraryModelType = "QDM";
+  private String libraryModelType;
 }

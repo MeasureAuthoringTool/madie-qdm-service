@@ -16,5 +16,5 @@ public class CQLParameter {
   private String parameterLogic;
   private String id;
   private boolean readOnly;
-  private String commentString = "";
+  private String commentString;
 }
