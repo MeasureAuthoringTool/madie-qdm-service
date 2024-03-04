@@ -24,5 +24,5 @@ public class CQLCode {
   private boolean readOnly;
   private String suffix;
   private boolean isCodeSystemVersionIncluded;
-  private String isValidatedWithVsac = "VALID";
+  private String isValidatedWithVsac;
 }
