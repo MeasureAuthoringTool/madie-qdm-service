@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder(toBuilder = true)
 @AllArgsConstructor
@@ -22,4 +24,5 @@ public class CQLDefinition {
   private String libraryDisplayName;
   private String libraryVersion;
   private boolean isFunction;
+  private List<CQLFunctionArgument> functionArguments;
 }
