@@ -132,8 +132,7 @@ public interface MeasureMapper {
         .getGroup()
         .addAll(
             IntStream.range(0, groups.size())
-                .mapToObj(
-                    i -> groupToGroupType(groups.get(i), i + 1))
+                .mapToObj(i -> groupToGroupType(groups.get(i), i + 1))
                 .toList());
 
     return measureGroupingType;
@@ -171,7 +170,9 @@ public interface MeasureMapper {
           "java(String.valueOf(org.apache.commons.lang3.StringUtils.isNotBlank(population.getDefinition())))")
   @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
   @Mapping(target = "cqldefinitionOrCqlaggfunction", source = "population")
+  @Mapping(target = "type", expression = "java(gov.cms.madie.util.MappingUtil.getPopulationType(population.getName()))")
   // TODO: clause type display name
+  @Mapping(target = "displayName", source = "name")
   ClauseType populationToClauseType(Population population);
 
   default List<Object> populationToDefOrAgg(Population population) {

@@ -44,6 +44,11 @@ public final class MappingUtil {
         || populationType == PopulationType.MEASURE_POPULATION_OBSERVATION;
   }
 
+  public static String getPopulationType(PopulationType populationType) {
+    // todo: fill this in
+    return "";
+  }
+
   /**
    * Fetch all descriptions for the given population type (observations are a valid possible input)
    * Combine all descriptions for that population type with a space (not a newline)

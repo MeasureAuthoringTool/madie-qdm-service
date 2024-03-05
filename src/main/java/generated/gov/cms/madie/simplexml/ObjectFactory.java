@@ -284,24 +284,6 @@ public class ObjectFactory {
   }
 
   /**
-   * Create an instance of {@link LibType }
-   *
-   * @return the new instance of {@link LibType }
-   */
-  public LibType createLibType() {
-    return new LibType();
-  }
-
-  /**
-   * Create an instance of {@link AllUsedCQLLibsType }
-   *
-   * @return the new instance of {@link AllUsedCQLLibsType }
-   */
-  public AllUsedCQLLibsType createAllUsedCQLLibsType() {
-    return new AllUsedCQLLibsType();
-  }
-
-  /**
    * Create an instance of {@link PeriodType }
    *
    * @return the new instance of {@link PeriodType }

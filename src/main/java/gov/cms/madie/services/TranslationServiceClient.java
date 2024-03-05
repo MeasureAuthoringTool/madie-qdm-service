@@ -80,6 +80,13 @@ public record TranslationServiceClient(
     HttpEntity<CqlLookupRequest> lookupRequestEntity = new HttpEntity<>(lokRequest, headers);
     try {
       log.info("fetching CQL Lookups");
+
+      final String cqlLookupsStr =
+          elmTranslatorRestTemplate
+              .exchange(uri, HttpMethod.PUT, lookupRequestEntity, String.class)
+              .getBody();
+      log.info("CqlLookup: {}", cqlLookupsStr);
+
       return elmTranslatorRestTemplate
           .exchange(uri, HttpMethod.PUT, lookupRequestEntity, CqlLookups.class)
           .getBody();

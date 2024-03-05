@@ -86,7 +86,7 @@ class PackageControllerMvcTest implements ResourceFileUtil {
     Mockito.when(simpleXmlService.measureToSimpleXml(any(QdmMeasure.class), any(CqlLookups.class)))
         .thenReturn("<measure></measure>");
     Mockito.when(translationServiceClient.getCqlLookups(any(QdmMeasure.class), anyString()))
-                    .thenReturn(CqlLookups.builder().build());
+        .thenReturn(CqlLookups.builder().build());
     mockMvc
         .perform(
             MockMvcRequestBuilders.put("/qdm/measures/simple-xml")
@@ -99,8 +99,7 @@ class PackageControllerMvcTest implements ResourceFileUtil {
         .andReturn();
     verify(simpleXmlService, times(1))
         .measureToSimpleXml(any(QdmMeasure.class), any(CqlLookups.class));
-    verify(translationServiceClient, times(1))
-            .getCqlLookups(any(QdmMeasure.class), anyString());
+    verify(translationServiceClient, times(1)).getCqlLookups(any(QdmMeasure.class), anyString());
   }
 
   @Test
