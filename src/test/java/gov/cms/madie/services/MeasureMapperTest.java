@@ -2,7 +2,9 @@ package gov.cms.madie.services;
 
 import generated.gov.cms.madie.simplexml.DevelopersType;
 import generated.gov.cms.madie.simplexml.FinalizedDateType;
+import generated.gov.cms.madie.simplexml.GroupType;
 import generated.gov.cms.madie.simplexml.MeasureDetailsType;
+import generated.gov.cms.madie.simplexml.MeasureGroupingType;
 import generated.gov.cms.madie.simplexml.MeasureType;
 import generated.gov.cms.madie.simplexml.PeriodType;
 import generated.gov.cms.madie.simplexml.ScoringType;
@@ -14,11 +16,15 @@ import gov.cms.madie.models.common.Organization;
 import gov.cms.madie.models.common.Version;
 import gov.cms.madie.models.measure.BaseConfigurationTypes;
 import gov.cms.madie.models.measure.DefDescPair;
+import gov.cms.madie.models.measure.Group;
 import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.models.measure.MeasureMetaData;
 import gov.cms.madie.models.measure.MeasureScoring;
+import gov.cms.madie.models.measure.Population;
+import gov.cms.madie.models.measure.PopulationType;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.models.measure.Reference;
+import gov.cms.madie.models.measure.Stratification;
 import gov.cms.madie.util.MadieConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -176,6 +182,59 @@ class MeasureMapperTest {
         output.getRecommendations(),
         is(equalTo(measure.getMeasureMetaData().getClinicalRecommendation())));
     assertThat(output.getCopyright(), is(equalTo(measure.getMeasureMetaData().getCopyright())));
+  }
+
+  @Test
+  void testMeasureToMeasureGroupingTypeReturnsNullForNullInput() {
+    MeasureGroupingType output = measureMapper.measureToMeasureGroupingType(null);
+    assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void testMeasureToMeasureGroupingTypeReturnsNullForNullGroupsInput() {
+    QdmMeasure measure = new QdmMeasure();
+    measure.setGroups(null);
+    MeasureGroupingType output = measureMapper.measureToMeasureGroupingType(measure);
+    assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void testMeasureToMeasureGroupingTypeReturnsNullForEmptyGroupsInput() {
+    QdmMeasure measure = QdmMeasure.builder().groups(List.of()).build();
+    MeasureGroupingType output = measureMapper.measureToMeasureGroupingType(measure);
+    assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void testMeasureToMeasureGroupingTypeReturnsNullForSingleGroupInput() {
+    QdmMeasure measure = QdmMeasure.builder().groups(List.of(
+            Group.builder()
+                    .scoring(MeasureScoring.PROPORTION.toString())
+                    .scoringUnit(Map.of("label", "m/s", "value", Map.of("code", "m/s", "name", "", "system", "https://clinicaltables.nlm.nih.gov/")))
+                    .populations(List.of(
+                            Population.builder().id("id1").name(PopulationType.INITIAL_POPULATION).definition("ipp").description("the IP description").build(),
+                            Population.builder().id("id2").name(PopulationType.DENOMINATOR).definition("denom").description("the denom description").build(),
+                            Population.builder().id("id90").name(PopulationType.DENOMINATOR_EXCLUSION).definition("").description("").build(),
+                            Population.builder().id("id3").name(PopulationType.NUMERATOR).definition("numer").description("the numer description").build(),
+                            Population.builder().id("id91").name(PopulationType.NUMERATOR_EXCLUSION).definition("").description("").build(),
+                            Population.builder().id("id92").name(PopulationType.DENOMINATOR_EXCEPTION).definition("").description("").build()
+                    ))
+                    .stratifications(List.of(
+                            Stratification.builder().id("id4").cqlDefinition("ipp").description("stratum1 desc").build(),
+                            Stratification.builder().id("id4").cqlDefinition("denom").description("stratum2 desc").build()
+                    ))
+                    .build()
+    )).build();
+    MeasureGroupingType output = measureMapper.measureToMeasureGroupingType(measure);
+    assertThat(output, is(notNullValue()));
+    assertThat(output.getGroup(), is(notNullValue()));
+    assertThat(output.getGroup().size(), is(equalTo(1)));
+    GroupType firstGroup = output.getGroup().get(0);
+    assertThat(firstGroup, is(notNullValue()));
+    assertThat(firstGroup.getSequence(), is(equalTo("1")));
+    assertThat(firstGroup.getUcum(), is(equalTo("m/s")));
+    assertThat(firstGroup.getClause(), is(notNullValue()));
+    assertThat(firstGroup.getClause().size(), is(equalTo(8)));
   }
 
   @Test

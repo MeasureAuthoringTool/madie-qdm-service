@@ -133,23 +133,9 @@ public interface MeasureMapper {
         .addAll(
             IntStream.range(0, groups.size())
                 .mapToObj(
-                    i -> {
-                      Group group = groups.get(i);
-                      return groupToGroupType(group, i + 1);
-                    })
+                    i -> groupToGroupType(groups.get(i), i + 1))
                 .toList());
 
-    measureGroupingType
-        .getGroup()
-        .addAll(
-            measure.getGroups().stream()
-                .map(
-                    group -> {
-                      // todo: fill this in
-                      GroupType gType = new GroupType();
-                      return gType;
-                    })
-                .toList());
     return measureGroupingType;
   }
 
@@ -451,10 +437,13 @@ public interface MeasureMapper {
 
   List<FunctionType> cqlDefinitionsToFunctionTypes(Set<CQLDefinition> cqlDefinitions);
 
+  @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID().toString())")
+  @Mapping(target = "name", source = "definitionName")
   @Mapping(target = "logic", source = "definitionLogic")
   DefinitionType cqlDefinitionToDefinitionType(CQLDefinition cqlDefinition);
 
   @Mapping(target = "logic", source = "definitionLogic")
+  @Mapping(target = "name", source = "definitionName")
   @Mapping(target = "arguments", source = "functionArguments")
   FunctionType cqlDefinitionToFunctionType(CQLDefinition cqlDefinition);
 
