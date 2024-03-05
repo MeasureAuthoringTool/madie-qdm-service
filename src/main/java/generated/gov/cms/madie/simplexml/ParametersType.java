@@ -6,9 +6,10 @@
 
 package generated.gov.cms.madie.simplexml;
 
+import java.util.ArrayList;
+import java.util.List;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
@@ -21,7 +22,7 @@ import jakarta.xml.bind.annotation.XmlType;
  *   <complexContent>
  *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       <sequence>
- *         <element name="parameter" type="{}parameterType"/>
+ *         <element name="parameter" type="{}parameterType" maxOccurs="unbounded" minOccurs="0"/>
  *       </sequence>
  *     </restriction>
  *   </complexContent>
@@ -34,24 +35,29 @@ import jakarta.xml.bind.annotation.XmlType;
     propOrder = {"parameter"})
 public class ParametersType {
 
-  @XmlElement(required = true)
-  protected ParameterType parameter;
+  protected List<ParameterType> parameter;
 
   /**
    * Gets the value of the parameter property.
    *
-   * @return possible object is {@link ParameterType }
-   */
-  public ParameterType getParameter() {
-    return parameter;
-  }
-
-  /**
-   * Sets the value of the parameter property.
+   * <p>This accessor method returns a reference to the live list, not a snapshot. Therefore any
+   * modification you make to the returned list will be present inside the JAXB object. This is why
+   * there is not a <CODE>set</CODE> method for the parameter property.
    *
-   * @param value allowed object is {@link ParameterType }
+   * <p>For example, to add a new item, do as follows:
+   *
+   * <pre>
+   * getParameter().add(newItem);
+   * </pre>
+   *
+   * <p>Objects of the following type(s) are allowed in the list {@link ParameterType }
+   *
+   * @return The value of the parameter property.
    */
-  public void setParameter(ParameterType value) {
-    this.parameter = value;
+  public List<ParameterType> getParameter() {
+    if (parameter == null) {
+      parameter = new ArrayList<>();
+    }
+    return this.parameter;
   }
 }

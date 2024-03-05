@@ -7,6 +7,7 @@ import gov.cms.madie.services.HqmfService;
 import gov.cms.madie.services.PackagingService;
 import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.services.SimpleXmlService;
+import gov.cms.madie.services.TranslationServiceClient;
 import jakarta.xml.bind.JAXBException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ public class PackageController {
   private final PackagingService packagingService;
   private final SimpleXmlService simpleXmlService;
   private final HqmfService hqmfService;
+  private final TranslationServiceClient translationServiceClient;
 
   @PutMapping(
       value = "/package",
@@ -56,9 +58,9 @@ public class PackageController {
       @RequestHeader("Authorization") String accessToken)
       throws JAXBException {
     if (measure.getModel() != null && measure.getModel().contains("QDM")) {
-      // TODO: replace this with fetch CqlLookups from translator
-      CqlLookups cqlLookups = CqlLookups.builder().build();
-      return simpleXmlService.measureToSimpleXml((QdmMeasure) measure, cqlLookups);
+      QdmMeasure qdmMeasure = (QdmMeasure) measure;
+      CqlLookups cqlLookups = translationServiceClient.getCqlLookups(qdmMeasure, accessToken);
+      return simpleXmlService.measureToSimpleXml(qdmMeasure, cqlLookups);
     }
     throw new UnsupportedModelException("Unsupported model type: " + measure.getModel());
   }

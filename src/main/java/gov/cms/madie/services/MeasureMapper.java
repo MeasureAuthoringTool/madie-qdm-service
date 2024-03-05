@@ -1,6 +1,12 @@
 package gov.cms.madie.services;
 
 import generated.gov.cms.madie.simplexml.*;
+import gov.cms.madie.dto.CQLCode;
+import gov.cms.madie.dto.CQLCodeSystem;
+import gov.cms.madie.dto.CQLDefinition;
+import gov.cms.madie.dto.CQLFunctionArgument;
+import gov.cms.madie.dto.CQLParameter;
+import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.models.common.Organization;
 import gov.cms.madie.models.common.Version;
 import gov.cms.madie.models.measure.BaseConfigurationTypes;
@@ -29,17 +35,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface MeasureMapper {
 
+  @Mapping(target = "cqlLookUp", source = "cqlLookups")
   @Mapping(target = "measureDetails", source = "measure")
   @Mapping(target = "measureGrouping", source = "measure")
   @Mapping(target = "supplementalDataElements", source = "measure.supplementalData")
   @Mapping(target = "riskAdjustmentVariables", source = "measure.riskAdjustments")
-  MeasureType measureToMeasureType(QdmMeasure measure);
+  MeasureType measureToMeasureType(QdmMeasure measure, CqlLookups cqlLookups);
 
   @Mapping(target = "title", source = "measureName")
   @Mapping(target = "measureModel", source = "model")
@@ -359,4 +368,108 @@ public interface MeasureMapper {
             .format(measure.getLastModifiedAt()));
     return finalizedDateType;
   }
+
+  @Mapping(target = "definitions", source = "definitions")
+  @Mapping(target = "functions", source = "definitions")
+  CqlLookUpType cqlLookupsToCqlLookUpType(CqlLookups cqlLookups);
+
+  default CodeSystemsType cqlCodeSystemsToCodeSystemsType(Set<CQLCodeSystem> codeSystems) {
+    if (!CollectionUtils.isEmpty(codeSystems)) {
+      CodeSystemsType codeSystemsType = new CodeSystemsType();
+      codeSystemsType.getCodeSystem().addAll(cqlCodeSystemsToCodeSystems(codeSystems));
+      return codeSystemsType;
+    }
+
+    return null;
+  }
+
+  default CodesType cqlCodesToCodesType(Set<CQLCode> cqlCodes) {
+    if (!CollectionUtils.isEmpty(cqlCodes)) {
+      CodesType codesType = new CodesType();
+      codesType.getCode().addAll(cqlCodesToCodes(cqlCodes));
+      return codesType;
+    }
+
+    return null;
+  }
+
+  default ParametersType cqlParametersToParametersType(Set<CQLParameter> cqlParameters) {
+    if (!CollectionUtils.isEmpty(cqlParameters)) {
+      ParametersType parametersType = new ParametersType();
+      parametersType.getParameter().addAll(cqlParametersToParameterTypes(cqlParameters));
+      return parametersType;
+    }
+    return null;
+  }
+
+  List<ParameterType> cqlParametersToParameterTypes(Set<CQLParameter> cqlParameters);
+
+  default DefinitionsType cqlDefinitionsToDefinitionsType(Set<CQLDefinition> cqlDefinitions) {
+    if (!CollectionUtils.isEmpty(cqlDefinitions)) {
+      Set<CQLDefinition> defsWithoutFuncs =
+          cqlDefinitions.stream().filter(d -> !d.isFunction()).collect(Collectors.toSet());
+      if (!CollectionUtils.isEmpty(defsWithoutFuncs)) {
+        DefinitionsType definitionsType = new DefinitionsType();
+        definitionsType.getDefinition().addAll(cqlDefinitionsToDefinitionTypes(defsWithoutFuncs));
+        return definitionsType;
+      }
+    }
+
+    return null;
+  }
+
+  default FunctionsType cqlDefinitionsToFunctionsType(Set<CQLDefinition> cqlDefinitions) {
+    if (!CollectionUtils.isEmpty(cqlDefinitions)) {
+      Set<CQLDefinition> defsOnlyFuncs =
+          cqlDefinitions.stream().filter(CQLDefinition::isFunction).collect(Collectors.toSet());
+      if (!CollectionUtils.isEmpty(defsOnlyFuncs)) {
+        FunctionsType functionsType = new FunctionsType();
+        functionsType.getFunction().addAll(cqlDefinitionsToFunctionTypes(defsOnlyFuncs));
+        return functionsType;
+      }
+    }
+
+    return null;
+  }
+
+  List<CodeSystemType> cqlCodeSystemsToCodeSystems(Set<CQLCodeSystem> codeSystems);
+
+  List<CodeType> cqlCodesToCodes(Set<CQLCode> cqlCodes);
+
+  @Mapping(
+      target = "codeSystemOID",
+      expression =
+          "java(org.apache.commons.lang3.StringUtils.replaceChars(cqlCode.getCodeSystemOID(), \"urn:oid:\",\"\"))")
+  @Mapping(target = "codeOID", source = "id")
+  @Mapping(target = "isValidatedWithVsac", source = "isValidatedWithVsac")
+  @Mapping(
+      target = "isCodeSystemVersionIncluded",
+      expression = "java(String.valueOf(cqlCode.isCodeSystemVersionIncluded()))")
+  CodeType cqlCodeToCodeType(CQLCode cqlCode);
+
+  List<DefinitionType> cqlDefinitionsToDefinitionTypes(Set<CQLDefinition> cqlDefinitions);
+
+  List<FunctionType> cqlDefinitionsToFunctionTypes(Set<CQLDefinition> cqlDefinitions);
+
+  @Mapping(target = "logic", source = "definitionLogic")
+  DefinitionType cqlDefinitionToDefinitionType(CQLDefinition cqlDefinition);
+
+  @Mapping(target = "logic", source = "definitionLogic")
+  @Mapping(target = "arguments", source = "functionArguments")
+  FunctionType cqlDefinitionToFunctionType(CQLDefinition cqlDefinition);
+
+  default ArgumentsType functionArgumentsToArgumentsType(
+      List<CQLFunctionArgument> functionArguments) {
+    if (!CollectionUtils.isEmpty(functionArguments)) {
+      ArgumentsType argumentsType = new ArgumentsType();
+      argumentsType.getArgument().addAll(functionArgumentsToArgumentTypes(functionArguments));
+      return argumentsType;
+    }
+    return null;
+  }
+
+  List<ArgumentType> functionArgumentsToArgumentTypes(List<CQLFunctionArgument> functionArguments);
+
+  @Mapping(target = "type", source = "argumentType")
+  ArgumentType functionArgumentToArgumentType(CQLFunctionArgument functionArguments);
 }

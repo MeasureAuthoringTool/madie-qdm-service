@@ -24,7 +24,7 @@ public class SimpleXmlService {
   public String measureToSimpleXml(QdmMeasure measure, CqlLookups cqlLookups) throws JAXBException {
     StringWriter sw = new StringWriter();
     if (measure != null) {
-      MeasureType measureType = measureMapper.measureToMeasureType(measure);
+      MeasureType measureType = measureMapper.measureToMeasureType(measure, cqlLookups);
       JAXBElement<MeasureType> jaxbElement =
           new JAXBElement<>(new QName(null, "measure"), MeasureType.class, measureType);
       simpleXmlMarshaller.marshal(jaxbElement, sw);

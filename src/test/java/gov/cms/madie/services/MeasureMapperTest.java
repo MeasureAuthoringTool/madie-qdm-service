@@ -8,6 +8,7 @@ import generated.gov.cms.madie.simplexml.PeriodType;
 import generated.gov.cms.madie.simplexml.ScoringType;
 import generated.gov.cms.madie.simplexml.StewardType;
 import generated.gov.cms.madie.simplexml.TypesType;
+import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.common.Organization;
 import gov.cms.madie.models.common.Version;
@@ -44,7 +45,7 @@ class MeasureMapperTest {
 
   @Test
   void testMeasureToMeasureTypeNull() {
-    MeasureType output = measureMapper.measureToMeasureType(null);
+    MeasureType output = measureMapper.measureToMeasureType(null, null);
     assertThat(output, is(nullValue()));
   }
 
@@ -89,7 +90,10 @@ class MeasureMapperTest {
                                 .build()))
                     .build())
             .build();
-    MeasureType output = measureMapper.measureToMeasureType(measure);
+
+    CqlLookups cqlLookups = CqlLookups.builder().build();
+
+    MeasureType output = measureMapper.measureToMeasureType(measure, cqlLookups);
     assertThat(output, is(notNullValue()));
     assertThat(output.getMeasureDetails(), is(notNullValue()));
     assertThat(

@@ -75,7 +75,7 @@
   </xs:complexType>
   <xs:complexType name="parametersType">
     <xs:sequence>
-      <xs:element type="parameterType" name="parameter"/>
+      <xs:element type="parameterType" name="parameter" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="definitionType">
@@ -107,7 +107,7 @@
   </xs:complexType>
   <xs:complexType name="argumentsType">
     <xs:sequence>
-      <xs:element type="argumentType" name="argument"/>
+      <xs:element type="argumentType" name="argument" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="functionType">
@@ -265,7 +265,7 @@
   </xs:complexType>
   <xs:complexType name="allUsedCQLLibsType">
     <xs:sequence>
-      <xs:element type="libType" name="lib"/>
+      <xs:element type="libType" name="lib" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
 <!--  <xs:complexType name="nqfidType">-->

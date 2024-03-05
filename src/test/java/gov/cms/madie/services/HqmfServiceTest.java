@@ -52,7 +52,7 @@ class HqmfServiceTest {
     when(simpleXmlService.measureToSimpleXml(any(QdmMeasure.class), any(CqlLookups.class)))
         .thenReturn("<measure></measure>");
     when(translationServiceClient.getCqlLookups(any(QdmMeasure.class), anyString()))
-            .thenReturn(CqlLookups.builder().build());
+        .thenReturn(CqlLookups.builder().build());
 
     HQMFGenerator generator = mock(HQMFGenerator.class);
     when(factory.getHQMFGenerator()).thenReturn(generator);
@@ -66,7 +66,7 @@ class HqmfServiceTest {
   @Test
   void generateHqmfWhenSimpleXmlGenerationFailed() throws Exception {
     when(translationServiceClient.getCqlLookups(any(QdmMeasure.class), anyString()))
-            .thenReturn(CqlLookups.builder().build());
+        .thenReturn(CqlLookups.builder().build());
     String message = "An issue occurred while generating the simple xml for measure";
     doThrow(new JAXBException(message))
         .when(simpleXmlService)

@@ -49,7 +49,8 @@ class SimpleXmlServiceTest {
 
     CqlLookups cqlLookups = CqlLookups.builder().build();
 
-    when(measureMapper.measureToMeasureType(any(QdmMeasure.class))).thenReturn(measureType);
+    when(measureMapper.measureToMeasureType(any(QdmMeasure.class), any(CqlLookups.class)))
+        .thenReturn(measureType);
     Mockito.doAnswer(
             invocationOnMock -> {
               StringWriter writer = invocationOnMock.getArgument(1);

@@ -93,7 +93,8 @@ class PackageControllerMvcTest implements ResourceFileUtil {
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
         .andExpect(status().isOk())
         .andReturn();
-    verify(simpleXmlService, times(1)).measureToSimpleXml(any(QdmMeasure.class), any(CqlLookups.class));
+    verify(simpleXmlService, times(1))
+        .measureToSimpleXml(any(QdmMeasure.class), any(CqlLookups.class));
   }
 
   @Test
