@@ -50,6 +50,8 @@ public interface MeasureMapper {
   @Mapping(target = "riskAdjustmentVariables", source = "measure.riskAdjustments")
   MeasureType measureToMeasureType(QdmMeasure measure, CqlLookups cqlLookups);
 
+  @Mapping(target = "uuid", expression = "java(measure.getId())")
+  @Mapping(target = "cqlUUID", expression = "java(measure.getMeasureSetId())")
   @Mapping(target = "title", source = "measureName")
   @Mapping(target = "measureModel", source = "model")
   @Mapping(target = "shortTitle", source = "ecqmTitle")
@@ -170,9 +172,10 @@ public interface MeasureMapper {
           "java(String.valueOf(org.apache.commons.lang3.StringUtils.isNotBlank(population.getDefinition())))")
   @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
   @Mapping(target = "cqldefinitionOrCqlaggfunction", source = "population")
-  @Mapping(target = "type", expression = "java(gov.cms.madie.util.MappingUtil.getPopulationType(population.getName()))")
-  // TODO: clause type display name
-  @Mapping(target = "displayName", source = "name")
+  @Mapping(
+      target = "type",
+      expression = "java(gov.cms.madie.util.MappingUtil.getPopulationType(population.getName()))")
+  @Mapping(target = "displayName", expression = "java(population.getName().getDisplay())")
   ClauseType populationToClauseType(Population population);
 
   default List<Object> populationToDefOrAgg(Population population) {
@@ -190,7 +193,8 @@ public interface MeasureMapper {
       expression =
           "java(String.valueOf(org.apache.commons.lang3.StringUtils.isNotBlank(observation.getDefinition())))")
   @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
-  // TODO: clause type display name
+  @Mapping(target = "type", constant = "measureObservation")
+  @Mapping(target = "displayName", constant = "Measure Observation")
   ClauseType observationToClauseType(MeasureObservation observation);
 
   // TODO: map observation to definition/aggregate function
