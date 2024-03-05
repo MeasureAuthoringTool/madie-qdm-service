@@ -5,6 +5,7 @@ import gov.cms.madie.dto.CQLCode;
 import gov.cms.madie.dto.CQLCodeSystem;
 import gov.cms.madie.dto.CQLDefinition;
 import gov.cms.madie.dto.CQLFunctionArgument;
+import gov.cms.madie.dto.CQLIncludeLibrary;
 import gov.cms.madie.dto.CQLParameter;
 import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.models.common.Organization;
@@ -362,6 +363,7 @@ public interface MeasureMapper {
 
   @Mapping(target = "definitions", source = "definitions")
   @Mapping(target = "functions", source = "definitions")
+  @Mapping(target = "includeLibrarys", source = "includeLibraries")
   CqlLookUpType cqlLookupsToCqlLookUpType(CqlLookups cqlLookups);
 
   default CodeSystemsType cqlCodeSystemsToCodeSystemsType(Set<CQLCodeSystem> codeSystems) {
@@ -466,4 +468,19 @@ public interface MeasureMapper {
 
   @Mapping(target = "type", source = "argumentType")
   ArgumentType functionArgumentToArgumentType(CQLFunctionArgument functionArguments);
+
+  default IncludeLibrarysType cqlIncludeLibrariesToIncludeLibrarysType(
+      Set<CQLIncludeLibrary> cqlIncludeLibraries) {
+    if (!CollectionUtils.isEmpty(cqlIncludeLibraries)) {
+      IncludeLibrarysType includeLibrarysType = new IncludeLibrarysType();
+      includeLibrarysType
+          .getIncludeLibrary()
+          .addAll(cqlIncludeLibrariesToIncludeLibraryType(cqlIncludeLibraries));
+      return includeLibrarysType;
+    }
+    return null;
+  }
+
+  List<IncludeLibraryType> cqlIncludeLibrariesToIncludeLibraryType(
+      Set<CQLIncludeLibrary> cqlIncludeLibraries);
 }

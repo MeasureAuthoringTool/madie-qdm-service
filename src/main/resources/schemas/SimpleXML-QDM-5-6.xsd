@@ -141,7 +141,7 @@
   </xs:complexType>
   <xs:complexType name="includeLibrarysType">
     <xs:sequence>
-      <xs:element type="includeLibraryType" name="includeLibrary"/>
+      <xs:element type="includeLibraryType" name="includeLibrary" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="cqlLookUpType">
