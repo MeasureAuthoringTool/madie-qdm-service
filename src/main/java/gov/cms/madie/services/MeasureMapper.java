@@ -6,6 +6,7 @@ import gov.cms.madie.dto.CQLCodeSystem;
 import gov.cms.madie.dto.CQLDefinition;
 import gov.cms.madie.dto.CQLFunctionArgument;
 import gov.cms.madie.dto.CQLParameter;
+import gov.cms.madie.dto.CQLValueSet;
 import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.models.common.Organization;
 import gov.cms.madie.models.common.Version;
@@ -360,9 +361,29 @@ public interface MeasureMapper {
     return finalizedDateType;
   }
 
+  @Mapping(target = "valuesets", source = "valueSets")
   @Mapping(target = "definitions", source = "definitions")
   @Mapping(target = "functions", source = "definitions")
   CqlLookUpType cqlLookupsToCqlLookUpType(CqlLookups cqlLookups);
+
+  default ValuesetsType valueSetsToValuesetsType(Set<CQLValueSet> cqlValueSets) {
+    if (CollectionUtils.isEmpty(cqlValueSets)) {
+      return null;
+    }
+    ValuesetsType valuesetsType = new ValuesetsType();
+    valuesetsType.getValueset().addAll(valueSetsToValuesetType(cqlValueSets));
+    return valuesetsType;
+  }
+
+  @Mapping(target = "datatype", constant = "")
+  @Mapping(target = "suppDataElement", source = "false")
+  @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID().toString())")
+  @Mapping(target = "name", source = "name")
+  @Mapping(target = "oid", source = "oid")
+  @Mapping(target = "originalName", source = "name")
+  ValuesetType cqlValueSetToValuesetType(CQLValueSet cqlValueSet);
+
+  List<ValuesetType> valueSetsToValuesetType(Set<CQLValueSet> cqlValueSets);
 
   default CodeSystemsType cqlCodeSystemsToCodeSystemsType(Set<CQLCodeSystem> codeSystems) {
     if (!CollectionUtils.isEmpty(codeSystems)) {
@@ -465,5 +486,5 @@ public interface MeasureMapper {
   List<ArgumentType> functionArgumentsToArgumentTypes(List<CQLFunctionArgument> functionArguments);
 
   @Mapping(target = "type", source = "argumentType")
-  ArgumentType functionArgumentToArgumentType(CQLFunctionArgument functionArguments);
+  ArgumentType functionArgumentToArgumentType(CQLFunctionArgument functionArgument);
 }
