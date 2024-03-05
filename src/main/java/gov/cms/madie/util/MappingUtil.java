@@ -70,7 +70,7 @@ public final class MappingUtil {
                                         .name()
                                         .equalsIgnoreCase(population.getName().name())
                                     && StringUtils.isNotBlank(population.getDescription()))
-                        .map(p -> p.getDefinition().replaceAll("[\\t\\n\\r]+", " "))
+                        .map(p -> p.getDescription().replaceAll("[\\t\\n\\r]+", " "))
                         .collect(Collectors.joining(" "));
                   } else if (CollectionUtils.isNotEmpty(group.getMeasureObservations())
                       && isPopulationObservation(populationType)) {
@@ -81,7 +81,7 @@ public final class MappingUtil {
                             observation ->
                                 StringUtils.isNotBlank(observation.getDefinition())
                                     && StringUtils.isNotBlank(observation.getDescription()))
-                        .map(mo -> mo.getDefinition().replaceAll("[\\t\\n\\r]+", " "))
+                        .map(mo -> mo.getDescription().replaceAll("[\\t\\n\\r]+", " "))
                         .collect(Collectors.joining(" "));
                   }
                   return null;

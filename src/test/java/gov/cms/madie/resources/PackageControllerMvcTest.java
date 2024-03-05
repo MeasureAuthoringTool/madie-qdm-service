@@ -7,6 +7,7 @@ import gov.cms.madie.services.PackagingService;
 import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.packaging.utils.ResourceFileUtil;
 import gov.cms.madie.services.SimpleXmlService;
+import gov.cms.madie.services.TranslationServiceClient;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ class PackageControllerMvcTest implements ResourceFileUtil {
   @MockBean private PackagingService packagingService;
   @MockBean private SimpleXmlService simpleXmlService;
   @MockBean private HqmfService hqmfService;
+  @MockBean private TranslationServiceClient translationServiceClient;
   @Autowired private MockMvc mockMvc;
 
   private static final String TEST_USER_ID = "john_doe";
@@ -83,6 +85,8 @@ class PackageControllerMvcTest implements ResourceFileUtil {
     String measureJson = getStringFromTestResource("/measures/qdm-test-measure.json");
     Mockito.when(simpleXmlService.measureToSimpleXml(any(QdmMeasure.class), any(CqlLookups.class)))
         .thenReturn("<measure></measure>");
+    Mockito.when(translationServiceClient.getCqlLookups(any(QdmMeasure.class), anyString()))
+                    .thenReturn(CqlLookups.builder().build());
     mockMvc
         .perform(
             MockMvcRequestBuilders.put("/qdm/measures/simple-xml")
@@ -95,6 +99,8 @@ class PackageControllerMvcTest implements ResourceFileUtil {
         .andReturn();
     verify(simpleXmlService, times(1))
         .measureToSimpleXml(any(QdmMeasure.class), any(CqlLookups.class));
+    verify(translationServiceClient, times(1))
+            .getCqlLookups(any(QdmMeasure.class), anyString());
   }
 
   @Test
