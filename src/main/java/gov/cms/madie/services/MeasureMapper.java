@@ -362,6 +362,7 @@ public interface MeasureMapper {
   }
 
   @Mapping(target = "valuesets", source = "valueSets")
+  @Mapping(target = "parameters", source = "parameters")
   @Mapping(target = "definitions", source = "definitions")
   @Mapping(target = "functions", source = "definitions")
   CqlLookUpType cqlLookupsToCqlLookUpType(CqlLookups cqlLookups);
@@ -378,7 +379,7 @@ public interface MeasureMapper {
   List<ValuesetType> valueSetsToValuesetType(Set<CQLValueSet> cqlValueSets);
 
   @Mapping(target = "datatype", constant = "")
-  @Mapping(target = "suppDataElement", source = "false")
+  @Mapping(target = "suppDataElement", constant = "false")
   @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID().toString())")
   @Mapping(target = "name", source = "name")
   @Mapping(target = "oid", source = "oid")
@@ -415,6 +416,12 @@ public interface MeasureMapper {
   }
 
   List<ParameterType> cqlParametersToParameterTypes(Set<CQLParameter> cqlParameters);
+
+  @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID().toString())")
+  @Mapping(target = "name", source = "parameterName")
+  @Mapping(target = "logic", source = "parameterLogic")
+  @Mapping(target = "readOnly", constant = "true")
+  ParameterType cqlParameterToParameterType(CQLParameter cqlParameter);
 
   default DefinitionsType cqlDefinitionsToDefinitionsType(Set<CQLDefinition> cqlDefinitions) {
     if (!CollectionUtils.isEmpty(cqlDefinitions)) {
