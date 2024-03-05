@@ -375,6 +375,8 @@ public interface MeasureMapper {
     return valuesetsType;
   }
 
+  List<ValuesetType> valueSetsToValuesetType(Set<CQLValueSet> cqlValueSets);
+
   @Mapping(target = "datatype", constant = "")
   @Mapping(target = "suppDataElement", source = "false")
   @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID().toString())")
@@ -382,8 +384,6 @@ public interface MeasureMapper {
   @Mapping(target = "oid", source = "oid")
   @Mapping(target = "originalName", source = "name")
   ValuesetType cqlValueSetToValuesetType(CQLValueSet cqlValueSet);
-
-  List<ValuesetType> valueSetsToValuesetType(Set<CQLValueSet> cqlValueSets);
 
   default CodeSystemsType cqlCodeSystemsToCodeSystemsType(Set<CQLCodeSystem> codeSystems) {
     if (!CollectionUtils.isEmpty(codeSystems)) {
