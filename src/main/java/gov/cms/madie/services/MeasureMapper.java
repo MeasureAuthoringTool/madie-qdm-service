@@ -363,6 +363,7 @@ public interface MeasureMapper {
   }
 
   @Mapping(target = "valuesets", source = "valueSets")
+  @Mapping(target = "parameters", source = "parameters")
   @Mapping(target = "definitions", source = "definitions")
   @Mapping(target = "functions", source = "definitions")
   @Mapping(target = "includeLibrarys", source = "includeLibraries")
@@ -417,6 +418,12 @@ public interface MeasureMapper {
   }
 
   List<ParameterType> cqlParametersToParameterTypes(Set<CQLParameter> cqlParameters);
+
+  @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID().toString())")
+  @Mapping(target = "name", source = "parameterName")
+  @Mapping(target = "logic", source = "parameterLogic")
+  @Mapping(target = "readOnly", constant = "true")
+  ParameterType cqlParameterToParameterType(CQLParameter cqlParameter);
 
   default DefinitionsType cqlDefinitionsToDefinitionsType(Set<CQLDefinition> cqlDefinitions) {
     if (!CollectionUtils.isEmpty(cqlDefinitions)) {
