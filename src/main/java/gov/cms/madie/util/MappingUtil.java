@@ -45,26 +45,17 @@ public final class MappingUtil {
   }
 
   public static String getPopulationType(PopulationType populationType) {
-    switch (populationType) {
-      case INITIAL_POPULATION:
-        return "initialPopulation";
-      case DENOMINATOR:
-        return "denominator";
-      case DENOMINATOR_EXCLUSION:
-        return "denominatorExclusion";
-      case DENOMINATOR_EXCEPTION:
-        return "denominatorException";
-      case NUMERATOR:
-        return "numerator";
-      case NUMERATOR_EXCLUSION:
-        return "numeratorExclusion";
-      case MEASURE_POPULATION:
-        return "measurePopulation";
-      case MEASURE_POPULATION_EXCLUSION:
-        return "measurePopulationExclusion";
-      default:
-        return "?";
-    }
+    return switch (populationType) {
+      case INITIAL_POPULATION -> "initialPopulation";
+      case DENOMINATOR -> "denominator";
+      case DENOMINATOR_EXCLUSION -> "denominatorExclusion";
+      case DENOMINATOR_EXCEPTION -> "denominatorException";
+      case NUMERATOR -> "numerator";
+      case NUMERATOR_EXCLUSION -> "numeratorExclusion";
+      case MEASURE_POPULATION -> "measurePopulation";
+      case MEASURE_POPULATION_EXCLUSION -> "measurePopulationExclusion";
+      default -> "?";
+    };
   }
 
   /**
