@@ -50,7 +50,7 @@ public interface MeasureMapper {
   @Mapping(target = "riskAdjustmentVariables", source = "measure.riskAdjustments")
   MeasureType measureToMeasureType(QdmMeasure measure, CqlLookups cqlLookups);
 
-  @Mapping(target = "uuid", expression = "java(measure.getId())")
+  @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
   @Mapping(target = "cqlUUID", expression = "java(measure.getMeasureSetId())")
   @Mapping(target = "title", source = "measureName")
   @Mapping(target = "measureModel", source = "model")
