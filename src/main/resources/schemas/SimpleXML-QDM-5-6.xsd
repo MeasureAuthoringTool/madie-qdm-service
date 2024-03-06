@@ -250,7 +250,24 @@
       <xs:element type="qdmType" name="qdm" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
-
+  <xs:complexType name="libType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute type="xs:string" name="alias"/>
+        <xs:attribute type="xs:string" name="id"/>
+        <xs:attribute type="xs:string" name="isComponent"/>
+        <xs:attribute type="xs:string" name="isUnUsedGrandChild"/>
+        <xs:attribute type="xs:string" name="name"/>
+        <xs:attribute type="xs:string" name="setId"/>
+        <xs:attribute type="xs:string" name="version"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="allUsedCQLLibsType">
+    <xs:sequence>
+      <xs:element type="libType" name="lib" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
   <xs:complexType name="periodType">
     <xs:sequence>
       <xs:element type="xs:string" name="startDate"/>
@@ -400,6 +417,7 @@
       <xs:element type="riskAdjustmentVariablesType" name="riskAdjustmentVariables"/>
       <xs:element type="measureGroupingType" name="measureGrouping"/>
       <xs:element type="elementLookUpType" name="elementLookUp"/>
+      <xs:element type="allUsedCQLLibsType" name="allUsedCQLLibs"/>
       <xs:element type="measureDetailsType" name="measureDetails"/>
     </xs:sequence>
   </xs:complexType>

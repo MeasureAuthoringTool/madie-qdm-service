@@ -52,6 +52,7 @@ public interface MeasureMapper {
   @Mapping(target = "elementLookUp", source = "cqlLookups.elementLookups")
   @Mapping(target = "supplementalDataElements", source = "measure.supplementalData")
   @Mapping(target = "riskAdjustmentVariables", source = "measure.riskAdjustments")
+  @Mapping(target = "allUsedCQLLibs", source = "cqlLookups.includeLibraries")
   MeasureType measureToMeasureType(QdmMeasure measure, CqlLookups cqlLookups);
 
   @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
@@ -541,4 +542,20 @@ public interface MeasureMapper {
   @Mapping(target = "name", source = "aliasName")
   @Mapping(target = "qdmVersion", source = "qdmVersion")
   IncludeLibraryType cQLIncludeLibraryToIncludeLibraryType(CQLIncludeLibrary cqlIncludeLibrary);
+
+  default AllUsedCQLLibsType includeLibrariesToAllUsedCqlLibsType(
+      Set<CQLIncludeLibrary> includeLibraries) {
+    if (!CollectionUtils.isEmpty(includeLibraries)) {
+      AllUsedCQLLibsType allUsedCQLLibsType = new AllUsedCQLLibsType();
+      allUsedCQLLibsType.getLib().addAll(includeLibrariesToLibTypes(includeLibraries));
+      return allUsedCQLLibsType;
+    }
+    return null;
+  }
+
+  List<LibType> includeLibrariesToLibTypes(Set<CQLIncludeLibrary> includeLibraries);
+
+  @Mapping(target = "name", source = "cqlLibraryName")
+  @Mapping(target = "alias", source = "aliasName")
+  LibType cqlIncludeLibraryToLibType(CQLIncludeLibrary cqlIncludeLibrary);
 }

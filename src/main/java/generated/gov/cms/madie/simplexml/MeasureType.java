@@ -26,6 +26,7 @@ import jakarta.xml.bind.annotation.XmlType;
  *         <element name="riskAdjustmentVariables" type="{}riskAdjustmentVariablesType"/>
  *         <element name="measureGrouping" type="{}measureGroupingType"/>
  *         <element name="elementLookUp" type="{}elementLookUpType"/>
+ *         <element name="allUsedCQLLibs" type="{}allUsedCQLLibsType"/>
  *         <element name="measureDetails" type="{}measureDetailsType"/>
  *       </sequence>
  *     </restriction>
@@ -42,6 +43,7 @@ import jakarta.xml.bind.annotation.XmlType;
       "riskAdjustmentVariables",
       "measureGrouping",
       "elementLookUp",
+      "allUsedCQLLibs",
       "measureDetails"
     })
 public class MeasureType {
@@ -60,6 +62,9 @@ public class MeasureType {
 
   @XmlElement(required = true)
   protected ElementLookUpType elementLookUp;
+
+  @XmlElement(required = true)
+  protected AllUsedCQLLibsType allUsedCQLLibs;
 
   @XmlElement(required = true)
   protected MeasureDetailsType measureDetails;
@@ -152,6 +157,24 @@ public class MeasureType {
    */
   public void setElementLookUp(ElementLookUpType value) {
     this.elementLookUp = value;
+  }
+
+  /**
+   * Gets the value of the allUsedCQLLibs property.
+   *
+   * @return possible object is {@link AllUsedCQLLibsType }
+   */
+  public AllUsedCQLLibsType getAllUsedCQLLibs() {
+    return allUsedCQLLibs;
+  }
+
+  /**
+   * Sets the value of the allUsedCQLLibs property.
+   *
+   * @param value allowed object is {@link AllUsedCQLLibsType }
+   */
+  public void setAllUsedCQLLibs(AllUsedCQLLibsType value) {
+    this.allUsedCQLLibs = value;
   }
 
   /**
