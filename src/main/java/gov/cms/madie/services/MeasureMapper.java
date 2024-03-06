@@ -126,7 +126,11 @@ public interface MeasureMapper {
           "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.MEASURE_OBSERVATION))")
   @Mapping(target = "supplementalData", source = "supplementalDataDescription")
   @Mapping(target = "finalizedDate", source = "measure")
+  @Mapping(target = "qualityMeasureSet", source = "measure")
   MeasureDetailsType measureToMeasureDetailsType(QdmMeasure measure);
+
+  @Mapping(target = "uuid", expression = "java(measure.getMeasureSetId())")
+  QualityMeasureSetType measureToQualityMeasureSet(QdmMeasure measure);
 
   default MeasureGroupingType measureToMeasureGroupingType(QdmMeasure measure) {
     if (measure == null || CollectionUtils.isEmpty(measure.getGroups())) {
