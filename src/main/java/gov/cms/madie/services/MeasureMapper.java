@@ -512,8 +512,11 @@ public interface MeasureMapper {
   List<IncludeLibraryType> cqlIncludeLibrariesToIncludeLibraryType(
       Set<CQLIncludeLibrary> cqlIncludeLibraries);
 
-  @Mapping(target = "cqlLibRefId", source = "cqlLibraryId")
+  @Mapping(target = "id", source = "id")
+  @Mapping(target = "cqlLibRefId", source = "id")
   @Mapping(target = "cqlLibRefName", source = "cqlLibraryName")
   @Mapping(target = "cqlVersion", source = "version")
+  @Mapping(target = "name", source = "aliasName")
+  @Mapping(target = "qdmVersion", source = "qdmVersion")
   IncludeLibraryType cQLIncludeLibraryToIncludeLibraryType(CQLIncludeLibrary cqlIncludeLibrary);
 }
