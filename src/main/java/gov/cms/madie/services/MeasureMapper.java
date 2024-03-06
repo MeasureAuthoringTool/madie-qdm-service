@@ -325,12 +325,12 @@ public interface MeasureMapper {
     return CollectionUtils.isEmpty(endorsements)
             || StringUtils.isEmpty(endorsements.get(0).getEndorsementId())
         ? null
-        : organizationToEndorsementType(endorsements.get(0));
+        : endorsementToEndorsementType(endorsements.get(0));
   }
 
   @Mapping(target = "id", source = "endorsementId")
   @Mapping(target = "value", source = "endorser")
-  EndorsementType organizationToEndorsementType(Endorsement endorsement);
+  EndorsementType endorsementToEndorsementType(Endorsement endorsement);
 
   @Mapping(target = "value", source = "organization.name")
   @Mapping(target = "id", source = "organization.oid")

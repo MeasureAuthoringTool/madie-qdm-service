@@ -1,6 +1,7 @@
 package gov.cms.madie.services;
 
 import generated.gov.cms.madie.simplexml.DevelopersType;
+import generated.gov.cms.madie.simplexml.EndorsementType;
 import generated.gov.cms.madie.simplexml.FinalizedDateType;
 import generated.gov.cms.madie.simplexml.GroupType;
 import generated.gov.cms.madie.simplexml.MeasureDetailsType;
@@ -14,17 +15,7 @@ import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.common.Organization;
 import gov.cms.madie.models.common.Version;
-import gov.cms.madie.models.measure.BaseConfigurationTypes;
-import gov.cms.madie.models.measure.DefDescPair;
-import gov.cms.madie.models.measure.Group;
-import gov.cms.madie.models.measure.Measure;
-import gov.cms.madie.models.measure.MeasureMetaData;
-import gov.cms.madie.models.measure.MeasureScoring;
-import gov.cms.madie.models.measure.Population;
-import gov.cms.madie.models.measure.PopulationType;
-import gov.cms.madie.models.measure.QdmMeasure;
-import gov.cms.madie.models.measure.Reference;
-import gov.cms.madie.models.measure.Stratification;
+import gov.cms.madie.models.measure.*;
 import gov.cms.madie.util.MadieConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -402,10 +393,62 @@ class MeasureMapperTest {
   }
 
   @Test
-  void endorsementsToCbeid() {}
+  void testEndorsementsToCbeidReturnsNullForNullInput() {
+    String output = measureMapper.endorsementsToCbeid(null);
+    assertThat(output, is(nullValue()));
+  }
 
   @Test
-  void endorsementsToEndorsementType() {}
+  void testEndorsementsToCbeidReturnsNullForEmptyInput() {
+    String output = measureMapper.endorsementsToCbeid(List.of());
+    assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void testEndorsementsToCbeidReturnsNullForEmptyEndorsementId() {
+    String output = measureMapper.endorsementsToCbeid(List.of(Endorsement.builder().endorsementId(null).build()));
+    assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void testEndorsementsToCbeidReturnsEndorsementId() {
+    String output = measureMapper.endorsementsToCbeid(
+            List.of(Endorsement.builder().endorser("ICF").endorserSystemId("123").endorsementId("110402B").build()
+            ));
+    assertThat(output, is(equalTo("110402B")));
+  }
+
+  @Test
+  void testEndorsementsToEndorsementTypeReturnsNullForNullInput() {
+    EndorsementType output = measureMapper.endorsementsToEndorsementType(null);
+    assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void testEndorsementsToEndorsementTypeReturnsNullForEmptyInput() {
+    EndorsementType output = measureMapper.endorsementsToEndorsementType(List.of());
+    assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void testEndorsementsToEndorsementTypeReturnsNullForEmptyEndorsementId() {
+    EndorsementType output = measureMapper.endorsementsToEndorsementType(
+            List.of(Endorsement.builder().endorsementId(null).build())
+    );
+    assertThat(output, is(nullValue()));
+  }
+
+
+
+  @Test
+  void testEndorsementsToEndorsementTypeReturnsEndorsemenType() {
+    EndorsementType output = measureMapper.endorsementsToEndorsementType(
+            List.of(Endorsement.builder().endorser("ICF").endorserSystemId("123").endorsementId("110402B").build()
+            ));
+    assertThat(output, is(notNullValue()));
+    assertThat(output.getId(), is(equalTo("110402B")));
+    assertThat(output.getValue(), is(equalTo("ICF")));
+  }
 
   @Test
   void organizationToEndorsementType() {}
@@ -523,4 +566,6 @@ class MeasureMapperTest {
     String output = measureMapper.scoringUnitToUcum(scoringUnit);
     assertThat(output, is(nullValue()));
   }
+
+
 }
