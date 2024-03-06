@@ -9,6 +9,7 @@ import gov.cms.madie.dto.CQLIncludeLibrary;
 import gov.cms.madie.dto.CQLParameter;
 import gov.cms.madie.dto.CQLValueSet;
 import gov.cms.madie.dto.CqlLookups;
+import gov.cms.madie.dto.ElementLookup;
 import gov.cms.madie.models.common.Organization;
 import gov.cms.madie.models.common.Version;
 import gov.cms.madie.models.measure.BaseConfigurationTypes;
@@ -48,6 +49,7 @@ public interface MeasureMapper {
   @Mapping(target = "cqlLookUp", source = "cqlLookups")
   @Mapping(target = "measureDetails", source = "measure")
   @Mapping(target = "measureGrouping", source = "measure")
+  @Mapping(target = "elementLookUp", source = "cqlLookups.elementLookups")
   @Mapping(target = "supplementalDataElements", source = "measure.supplementalData")
   @Mapping(target = "riskAdjustmentVariables", source = "measure.riskAdjustments")
   MeasureType measureToMeasureType(QdmMeasure measure, CqlLookups cqlLookups);
@@ -242,6 +244,26 @@ public interface MeasureMapper {
     supplementalDataElementsType.getCqldefinition().addAll(defs);
     return supplementalDataElementsType;
   }
+
+  default ElementLookUpType elementLookupsToElementLookupType(Set<ElementLookup> elementLookups) {
+    if (CollectionUtils.isEmpty(elementLookups)) {
+      return null;
+    }
+    ElementLookUpType elementLookUp = new ElementLookUpType();
+    elementLookUp.getQdm().addAll(elementLookupsToQdmTypes(elementLookups));
+    return elementLookUp;
+  }
+
+  List<QdmType> elementLookupsToQdmTypes(Set<ElementLookup> elementLookups);
+
+  @Mapping(target = "id", source = "id")
+  @Mapping(target = "uuid", source = "id")
+  @Mapping(target = "code", source = "code")
+  @Mapping(target = "datatype", source = "datatype")
+  @Mapping(target = "originalName", source = "name")
+  @Mapping(target = "suppDataElement", constant = "false")
+  @Mapping(target = "version", constant = "")
+  QdmType elementLookupToQdmType(ElementLookup elementLookup);
 
   default RiskAdjustmentVariablesType riskAdjustmentsToRiskAdjustmentVariablesType(
       List<DefDescPair> riskAdjustments) {
