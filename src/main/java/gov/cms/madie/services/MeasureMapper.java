@@ -209,7 +209,8 @@ public interface MeasureMapper {
       expression =
           "java(String.valueOf(org.apache.commons.lang3.StringUtils.isNotBlank(stratification.getCqlDefinition())))")
   @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
-  // TODO: clause type display name
+  @Mapping(target = "type", constant = "stratum")
+  @Mapping(target = "displayName", constant = "stratum")
   ClauseType stratificationToClauseType(Stratification stratification);
 
   // TODO: map stratification to definition/aggregate function

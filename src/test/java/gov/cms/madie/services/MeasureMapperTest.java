@@ -287,6 +287,15 @@ class MeasureMapperTest {
     assertThat(firstGroup.getUcum(), is(equalTo("m/s")));
     assertThat(firstGroup.getClause(), is(notNullValue()));
     assertThat(firstGroup.getClause().size(), is(equalTo(8)));
+    assertThat(firstGroup.getClause().get(0).getIsInGrouping(), is(equalTo("true")));
+    assertThat(firstGroup.getClause().get(0).getDisplayName(), is(equalTo("Initial Population")));
+    assertThat(firstGroup.getClause().get(1).getIsInGrouping(), is(equalTo("true")));
+    assertThat(firstGroup.getClause().get(1).getDisplayName(), is(equalTo("Denominator")));
+    assertThat(firstGroup.getClause().get(2).getIsInGrouping(), is(equalTo("false")));
+    assertThat(firstGroup.getClause().get(2).getDisplayName(), is(equalTo("Denominator Exclusion")));
+    assertThat(firstGroup.getClause().get(6).getIsInGrouping(), is(equalTo("true")));
+    assertThat(firstGroup.getClause().get(6).getDisplayName(), is(equalTo("stratum")));
+    assertThat(firstGroup.getClause().get(6).getType(), is(equalTo("stratum")));
   }
 
   @Test
