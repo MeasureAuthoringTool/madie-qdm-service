@@ -39,7 +39,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -180,22 +179,16 @@ public interface MeasureMapper {
       expression =
           "java(String.valueOf(org.apache.commons.lang3.StringUtils.isNotBlank(population.getDefinition())))")
   @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
-  @Mapping(target = "cqldefinitionOrCqlaggfunction", source = "population")
+  @Mapping(target = "cqldefinition", source = "population")
   @Mapping(
       target = "type",
       expression = "java(gov.cms.madie.util.MappingUtil.getPopulationType(population.getName()))")
   @Mapping(target = "displayName", expression = "java(population.getName().getDisplay())")
   ClauseType populationToClauseType(Population population);
 
-  default List<Object> populationToDefOrAgg(Population population) {
-    if (population == null || StringUtils.isBlank(population.getDefinition())) {
-      return null;
-    }
-    CqldefinitionType cqldefinitionType = new CqldefinitionType();
-    cqldefinitionType.setUuid(UUID.randomUUID().toString());
-    cqldefinitionType.setDisplayName(population.getDefinition());
-    return List.of(cqldefinitionType);
-  }
+  @Mapping(target = "displayName", source = "name.display")
+  @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
+  CqldefinitionType populationToCqlDefinition(Population population);
 
   @Mapping(
       target = "isInGrouping",
@@ -204,7 +197,16 @@ public interface MeasureMapper {
   @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
   @Mapping(target = "type", constant = "measureObservation")
   @Mapping(target = "displayName", constant = "Measure Observation")
+  @Mapping(target = "cqlaggfunction", source = "observation")
   ClauseType observationToClauseType(MeasureObservation observation);
+
+  @Mapping(target = "displayName", source = "aggregateMethod")
+  @Mapping(target = "cqlfunction", source = "observation")
+  CqlaggfunctionType observationToCqlAggFunction(MeasureObservation observation);
+
+  @Mapping(target = "displayName", source = "definition")
+  @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
+  CqlfunctionType observationToCqlFunction(MeasureObservation observation);
 
   // TODO: map observation to definition/aggregate function
 

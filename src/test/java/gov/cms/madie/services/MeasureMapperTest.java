@@ -283,7 +283,8 @@ class MeasureMapperTest {
     assertThat(firstGroup.getClause().get(1).getIsInGrouping(), is(equalTo("true")));
     assertThat(firstGroup.getClause().get(1).getDisplayName(), is(equalTo("Denominator")));
     assertThat(firstGroup.getClause().get(2).getIsInGrouping(), is(equalTo("false")));
-    assertThat(firstGroup.getClause().get(2).getDisplayName(), is(equalTo("Denominator Exclusion")));
+    assertThat(
+        firstGroup.getClause().get(2).getDisplayName(), is(equalTo("Denominator Exclusion")));
     assertThat(firstGroup.getClause().get(6).getIsInGrouping(), is(equalTo("true")));
     assertThat(firstGroup.getClause().get(6).getDisplayName(), is(equalTo("stratum")));
     assertThat(firstGroup.getClause().get(6).getType(), is(equalTo("stratum")));
@@ -406,15 +407,22 @@ class MeasureMapperTest {
 
   @Test
   void testEndorsementsToCbeidReturnsNullForEmptyEndorsementId() {
-    String output = measureMapper.endorsementsToCbeid(List.of(Endorsement.builder().endorsementId(null).build()));
+    String output =
+        measureMapper.endorsementsToCbeid(
+            List.of(Endorsement.builder().endorsementId(null).build()));
     assertThat(output, is(nullValue()));
   }
 
   @Test
   void testEndorsementsToCbeidReturnsEndorsementId() {
-    String output = measureMapper.endorsementsToCbeid(
-            List.of(Endorsement.builder().endorser("ICF").endorserSystemId("123").endorsementId("110402B").build()
-            ));
+    String output =
+        measureMapper.endorsementsToCbeid(
+            List.of(
+                Endorsement.builder()
+                    .endorser("ICF")
+                    .endorserSystemId("123")
+                    .endorsementId("110402B")
+                    .build()));
     assertThat(output, is(equalTo("110402B")));
   }
 
@@ -432,19 +440,22 @@ class MeasureMapperTest {
 
   @Test
   void testEndorsementsToEndorsementTypeReturnsNullForEmptyEndorsementId() {
-    EndorsementType output = measureMapper.endorsementsToEndorsementType(
-            List.of(Endorsement.builder().endorsementId(null).build())
-    );
+    EndorsementType output =
+        measureMapper.endorsementsToEndorsementType(
+            List.of(Endorsement.builder().endorsementId(null).build()));
     assertThat(output, is(nullValue()));
   }
 
-
-
   @Test
   void testEndorsementsToEndorsementTypeReturnsEndorsemenType() {
-    EndorsementType output = measureMapper.endorsementsToEndorsementType(
-            List.of(Endorsement.builder().endorser("ICF").endorserSystemId("123").endorsementId("110402B").build()
-            ));
+    EndorsementType output =
+        measureMapper.endorsementsToEndorsementType(
+            List.of(
+                Endorsement.builder()
+                    .endorser("ICF")
+                    .endorserSystemId("123")
+                    .endorsementId("110402B")
+                    .build()));
     assertThat(output, is(notNullValue()));
     assertThat(output.getId(), is(equalTo("110402B")));
     assertThat(output.getValue(), is(equalTo("ICF")));
@@ -566,6 +577,4 @@ class MeasureMapperTest {
     String output = measureMapper.scoringUnitToUcum(scoringUnit);
     assertThat(output, is(nullValue()));
   }
-
-
 }

@@ -6,13 +6,9 @@
 
 package generated.gov.cms.madie.simplexml;
 
-import java.util.ArrayList;
-import java.util.List;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlAttribute;
-import jakarta.xml.bind.annotation.XmlElement;
-import jakarta.xml.bind.annotation.XmlElements;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
@@ -24,7 +20,7 @@ import jakarta.xml.bind.annotation.XmlType;
  * <complexType name="clauseType">
  *   <complexContent>
  *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       <sequence maxOccurs="unbounded" minOccurs="0">
+ *       <sequence>
  *         <choice>
  *           <element name="cqldefinition" type="{}cqldefinitionType" minOccurs="0"/>
  *           <element name="cqlaggfunction" type="{}cqlaggfunctionType" minOccurs="0"/>
@@ -42,14 +38,11 @@ import jakarta.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(
     name = "clauseType",
-    propOrder = {"cqldefinitionOrCqlaggfunction"})
+    propOrder = {"cqldefinition", "cqlaggfunction"})
 public class ClauseType {
 
-  @XmlElements({
-    @XmlElement(name = "cqldefinition", type = CqldefinitionType.class),
-    @XmlElement(name = "cqlaggfunction", type = CqlaggfunctionType.class)
-  })
-  protected List<Object> cqldefinitionOrCqlaggfunction;
+  protected CqldefinitionType cqldefinition;
+  protected CqlaggfunctionType cqlaggfunction;
 
   @XmlAttribute(name = "displayName")
   protected String displayName;
@@ -64,28 +57,39 @@ public class ClauseType {
   protected String uuid;
 
   /**
-   * Gets the value of the cqldefinitionOrCqlaggfunction property.
+   * Gets the value of the cqldefinition property.
    *
-   * <p>This accessor method returns a reference to the live list, not a snapshot. Therefore any
-   * modification you make to the returned list will be present inside the JAXB object. This is why
-   * there is not a <CODE>set</CODE> method for the cqldefinitionOrCqlaggfunction property.
-   *
-   * <p>For example, to add a new item, do as follows:
-   *
-   * <pre>
-   * getCqldefinitionOrCqlaggfunction().add(newItem);
-   * </pre>
-   *
-   * <p>Objects of the following type(s) are allowed in the list {@link CqlaggfunctionType } {@link
-   * CqldefinitionType }
-   *
-   * @return The value of the cqldefinitionOrCqlaggfunction property.
+   * @return possible object is {@link CqldefinitionType }
    */
-  public List<Object> getCqldefinitionOrCqlaggfunction() {
-    if (cqldefinitionOrCqlaggfunction == null) {
-      cqldefinitionOrCqlaggfunction = new ArrayList<>();
-    }
-    return this.cqldefinitionOrCqlaggfunction;
+  public CqldefinitionType getCqldefinition() {
+    return cqldefinition;
+  }
+
+  /**
+   * Sets the value of the cqldefinition property.
+   *
+   * @param value allowed object is {@link CqldefinitionType }
+   */
+  public void setCqldefinition(CqldefinitionType value) {
+    this.cqldefinition = value;
+  }
+
+  /**
+   * Gets the value of the cqlaggfunction property.
+   *
+   * @return possible object is {@link CqlaggfunctionType }
+   */
+  public CqlaggfunctionType getCqlaggfunction() {
+    return cqlaggfunction;
+  }
+
+  /**
+   * Sets the value of the cqlaggfunction property.
+   *
+   * @param value allowed object is {@link CqlaggfunctionType }
+   */
+  public void setCqlaggfunction(CqlaggfunctionType value) {
+    this.cqlaggfunction = value;
   }
 
   /**
