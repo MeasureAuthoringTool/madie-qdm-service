@@ -90,39 +90,39 @@ public interface MeasureMapper {
   @Mapping(
       target = "initialPopDescription",
       expression =
-          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.INITIAL_POPULATION))")
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, PopulationType.INITIAL_POPULATION))")
   @Mapping(
       target = "denominatorDescription",
       expression =
-          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.DENOMINATOR))")
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, PopulationType.DENOMINATOR))")
   @Mapping(
       target = "denominatorExclusionsDescription",
       expression =
-          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.DENOMINATOR_EXCLUSION))")
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, PopulationType.DENOMINATOR_EXCLUSION))")
   @Mapping(
       target = "numeratorDescription",
       expression =
-          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.NUMERATOR))")
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, PopulationType.NUMERATOR))")
   @Mapping(
       target = "numeratorExclusionsDescription",
       expression =
-          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.NUMERATOR_EXCLUSION))")
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, PopulationType.NUMERATOR_EXCLUSION))")
   @Mapping(
       target = "denominatorExceptionsDescription",
       expression =
-          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.DENOMINATOR_EXCEPTION))")
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, PopulationType.DENOMINATOR_EXCEPTION))")
   @Mapping(
       target = "measurePopulationDescription",
       expression =
-          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.MEASURE_POPULATION))")
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, PopulationType.MEASURE_POPULATION))")
   @Mapping(
       target = "measurePopulationExclusionsDescription",
       expression =
-          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.MEASURE_POPULATION_OBSERVATION))")
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, PopulationType.MEASURE_POPULATION_OBSERVATION))")
   @Mapping(
       target = "measureObservationsDescription",
       expression =
-          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.MEASURE_OBSERVATION))")
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, PopulationType.MEASURE_OBSERVATION))")
   @Mapping(target = "supplementalData", source = "supplementalDataDescription")
   @Mapping(target = "finalizedDate", source = "measure")
   @Mapping(target = "qualityMeasureSet", source = "measure")
