@@ -10,6 +10,7 @@ madie:
       base-url: ${ELM_TRANSLATOR_SERVICE_URL:http://localhost:8084/api}
       cql-elm-urn: /cql/elm
       human-readable: /human-readable
+      cql-lookups: /cql/lookups
 
 management:
   endpoints:

@@ -68,7 +68,7 @@ class PackagingServiceTest {
             .build();
     when(translationServiceClient.getTranslatedLibraries(measure.getCql(), TOKEN))
         .thenReturn(List.of(library1, library2));
-    when(hqmfService.generateHqmf(measure)).thenReturn("<hqmf>this is a test hqmf</hqmf>");
+    when(hqmfService.generateHqmf(measure, TOKEN)).thenReturn("<hqmf>this is a test hqmf</hqmf>");
     when(translationServiceClient.getHumanReadable(measure, TOKEN)).thenReturn("success");
     byte[] packageContents = packagingService.createMeasurePackage(measure, TOKEN);
     String packageString = new String(packageContents);

@@ -1,11 +1,13 @@
 package gov.cms.madie.resources;
 
+import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.services.HqmfService;
 import gov.cms.madie.services.PackagingService;
 import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.packaging.utils.ResourceFileUtil;
 import gov.cms.madie.services.SimpleXmlService;
+import gov.cms.madie.services.TranslationServiceClient;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,7 @@ class PackageControllerMvcTest implements ResourceFileUtil {
   @MockBean private PackagingService packagingService;
   @MockBean private SimpleXmlService simpleXmlService;
   @MockBean private HqmfService hqmfService;
+  @MockBean private TranslationServiceClient translationServiceClient;
   @Autowired private MockMvc mockMvc;
 
   private static final String TEST_USER_ID = "john_doe";
@@ -80,8 +83,10 @@ class PackageControllerMvcTest implements ResourceFileUtil {
   @Test
   void testGetMeasureSimpleXml() throws Exception {
     String measureJson = getStringFromTestResource("/measures/qdm-test-measure.json");
-    Mockito.when(simpleXmlService.measureToSimpleXml(any(QdmMeasure.class)))
+    Mockito.when(simpleXmlService.measureToSimpleXml(any(QdmMeasure.class), any(CqlLookups.class)))
         .thenReturn("<measure></measure>");
+    Mockito.when(translationServiceClient.getCqlLookups(any(QdmMeasure.class), anyString()))
+        .thenReturn(CqlLookups.builder().build());
     mockMvc
         .perform(
             MockMvcRequestBuilders.put("/qdm/measures/simple-xml")
@@ -92,7 +97,9 @@ class PackageControllerMvcTest implements ResourceFileUtil {
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
         .andExpect(status().isOk())
         .andReturn();
-    verify(simpleXmlService, times(1)).measureToSimpleXml(any(QdmMeasure.class));
+    verify(simpleXmlService, times(1))
+        .measureToSimpleXml(any(QdmMeasure.class), any(CqlLookups.class));
+    verify(translationServiceClient, times(1)).getCqlLookups(any(QdmMeasure.class), anyString());
   }
 
   @Test
@@ -117,7 +124,7 @@ class PackageControllerMvcTest implements ResourceFileUtil {
   @Test
   void testGetMeasureHqmf() throws Exception {
     String measureJson = getStringFromTestResource("/measures/qdm-test-measure.json");
-    Mockito.when(hqmfService.generateHqmf(any(QdmMeasure.class)))
+    Mockito.when(hqmfService.generateHqmf(any(QdmMeasure.class), anyString()))
         .thenReturn("<QualityMeasureDocument></QualityMeasureDocument>");
     MvcResult mvcResult =
         mockMvc
@@ -132,7 +139,7 @@ class PackageControllerMvcTest implements ResourceFileUtil {
             .andReturn();
     assertThat(
         mvcResult.getResponse().getContentType(), is(equalTo("application/xml;charset=UTF-8")));
-    verify(hqmfService, times(1)).generateHqmf(any(QdmMeasure.class));
+    verify(hqmfService, times(1)).generateHqmf(any(QdmMeasure.class), anyString());
   }
 
   @Test

@@ -3,9 +3,7 @@ package gov.cms.madie.util;
 import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 import gov.cms.madie.models.measure.BaseConfigurationTypes;
 import gov.cms.madie.models.measure.Measure;
-import gov.cms.madie.models.measure.MeasureObservation;
 import gov.cms.madie.models.measure.MeasureScoring;
-import gov.cms.madie.models.measure.Population;
 import gov.cms.madie.models.measure.PopulationType;
 import org.apache.commons.lang3.StringUtils;
 
@@ -46,6 +44,28 @@ public final class MappingUtil {
         || populationType == PopulationType.MEASURE_POPULATION_OBSERVATION;
   }
 
+  public static String getPopulationType(PopulationType populationType) {
+    return switch (populationType) {
+      case INITIAL_POPULATION -> "initialPopulation";
+      case DENOMINATOR -> "denominator";
+      case DENOMINATOR_EXCLUSION -> "denominatorExclusion";
+      case DENOMINATOR_EXCEPTION -> "denominatorException";
+      case NUMERATOR -> "numerator";
+      case NUMERATOR_EXCLUSION -> "numeratorExclusion";
+      case MEASURE_POPULATION -> "measurePopulation";
+      case MEASURE_POPULATION_EXCLUSION -> "measurePopulationExclusion";
+      default -> "?";
+    };
+  }
+
+  /**
+   * Fetch all descriptions for the given population type (observations are a valid possible input)
+   * Combine all descriptions for that population type with a space (not a newline)
+   *
+   * @param measure
+   * @param populationType
+   * @return
+   */
   public static String getPopulationDescription(Measure measure, PopulationType populationType) {
     if (CollectionUtils.isEmpty(measure.getGroups())) {
       return null;
@@ -64,8 +84,8 @@ public final class MappingUtil {
                                         .name()
                                         .equalsIgnoreCase(population.getName().name())
                                     && StringUtils.isNotBlank(population.getDescription()))
-                        .map(Population::getDescription)
-                        .collect(Collectors.joining("\n"));
+                        .map(p -> p.getDescription().replaceAll("[\\t\\n\\r]+", " "))
+                        .collect(Collectors.joining(" "));
                   } else if (CollectionUtils.isNotEmpty(group.getMeasureObservations())
                       && isPopulationObservation(populationType)) {
                     // there is only one observation description field, so grab all available
@@ -75,13 +95,13 @@ public final class MappingUtil {
                             observation ->
                                 StringUtils.isNotBlank(observation.getDefinition())
                                     && StringUtils.isNotBlank(observation.getDescription()))
-                        .map(MeasureObservation::getDescription)
-                        .collect(Collectors.joining("\n"));
+                        .map(mo -> mo.getDescription().replaceAll("[\\t\\n\\r]+", " "))
+                        .collect(Collectors.joining(" "));
                   }
                   return null;
                 })
             .filter(StringUtils::isNotBlank)
-            .collect(Collectors.joining("\n"));
+            .collect(Collectors.joining(" "));
     return StringUtils.isBlank(description) ? null : description;
   }
 }

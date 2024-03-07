@@ -6,9 +6,10 @@
 
 package generated.gov.cms.madie.simplexml;
 
+import java.util.ArrayList;
+import java.util.List;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
@@ -21,7 +22,7 @@ import jakarta.xml.bind.annotation.XmlType;
  *   <complexContent>
  *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       <sequence>
- *         <element name="argument" type="{}argumentType"/>
+ *         <element name="argument" type="{}argumentType" maxOccurs="unbounded" minOccurs="0"/>
  *       </sequence>
  *     </restriction>
  *   </complexContent>
@@ -34,24 +35,29 @@ import jakarta.xml.bind.annotation.XmlType;
     propOrder = {"argument"})
 public class ArgumentsType {
 
-  @XmlElement(required = true)
-  protected ArgumentType argument;
+  protected List<ArgumentType> argument;
 
   /**
    * Gets the value of the argument property.
    *
-   * @return possible object is {@link ArgumentType }
-   */
-  public ArgumentType getArgument() {
-    return argument;
-  }
-
-  /**
-   * Sets the value of the argument property.
+   * <p>This accessor method returns a reference to the live list, not a snapshot. Therefore any
+   * modification you make to the returned list will be present inside the JAXB object. This is why
+   * there is not a <CODE>set</CODE> method for the argument property.
    *
-   * @param value allowed object is {@link ArgumentType }
+   * <p>For example, to add a new item, do as follows:
+   *
+   * <pre>
+   * getArgument().add(newItem);
+   * </pre>
+   *
+   * <p>Objects of the following type(s) are allowed in the list {@link ArgumentType }
+   *
+   * @return The value of the argument property.
    */
-  public void setArgument(ArgumentType value) {
-    this.argument = value;
+  public List<ArgumentType> getArgument() {
+    if (argument == null) {
+      argument = new ArrayList<>();
+    }
+    return this.argument;
   }
 }

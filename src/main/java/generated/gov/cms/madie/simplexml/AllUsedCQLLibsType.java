@@ -6,9 +6,10 @@
 
 package generated.gov.cms.madie.simplexml;
 
+import java.util.ArrayList;
+import java.util.List;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
 import jakarta.xml.bind.annotation.XmlType;
 
 /**
@@ -21,7 +22,7 @@ import jakarta.xml.bind.annotation.XmlType;
  *   <complexContent>
  *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       <sequence>
- *         <element name="lib" type="{}libType"/>
+ *         <element name="lib" type="{}libType" maxOccurs="unbounded" minOccurs="0"/>
  *       </sequence>
  *     </restriction>
  *   </complexContent>
@@ -34,24 +35,29 @@ import jakarta.xml.bind.annotation.XmlType;
     propOrder = {"lib"})
 public class AllUsedCQLLibsType {
 
-  @XmlElement(required = true)
-  protected LibType lib;
+  protected List<LibType> lib;
 
   /**
    * Gets the value of the lib property.
    *
-   * @return possible object is {@link LibType }
-   */
-  public LibType getLib() {
-    return lib;
-  }
-
-  /**
-   * Sets the value of the lib property.
+   * <p>This accessor method returns a reference to the live list, not a snapshot. Therefore any
+   * modification you make to the returned list will be present inside the JAXB object. This is why
+   * there is not a <CODE>set</CODE> method for the lib property.
    *
-   * @param value allowed object is {@link LibType }
+   * <p>For example, to add a new item, do as follows:
+   *
+   * <pre>
+   * getLib().add(newItem);
+   * </pre>
+   *
+   * <p>Objects of the following type(s) are allowed in the list {@link LibType }
+   *
+   * @return The value of the lib property.
    */
-  public void setLib(LibType value) {
-    this.lib = value;
+  public List<LibType> getLib() {
+    if (lib == null) {
+      lib = new ArrayList<>();
+    }
+    return this.lib;
   }
 }

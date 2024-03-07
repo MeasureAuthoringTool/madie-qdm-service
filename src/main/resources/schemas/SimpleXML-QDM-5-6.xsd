@@ -75,7 +75,7 @@
   </xs:complexType>
   <xs:complexType name="parametersType">
     <xs:sequence>
-      <xs:element type="parameterType" name="parameter"/>
+      <xs:element type="parameterType" name="parameter" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="definitionType">
@@ -107,7 +107,7 @@
   </xs:complexType>
   <xs:complexType name="argumentsType">
     <xs:sequence>
-      <xs:element type="argumentType" name="argument"/>
+      <xs:element type="argumentType" name="argument" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="functionType">
@@ -141,7 +141,7 @@
   </xs:complexType>
   <xs:complexType name="includeLibrarysType">
     <xs:sequence>
-      <xs:element type="includeLibraryType" name="includeLibrary"/>
+      <xs:element type="includeLibraryType" name="includeLibrary" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="cqlLookUpType">
@@ -179,7 +179,7 @@
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="clauseType">
-    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+    <xs:sequence>
       <xs:choice>
         <xs:element type="cqldefinitionType" name="cqldefinition" minOccurs="0"/>
         <xs:element type="cqlaggfunctionType" name="cqlaggfunction" minOccurs="0"/>
@@ -265,17 +265,9 @@
   </xs:complexType>
   <xs:complexType name="allUsedCQLLibsType">
     <xs:sequence>
-      <xs:element type="libType" name="lib"/>
+      <xs:element type="libType" name="lib" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
-<!--  <xs:complexType name="nqfidType">-->
-<!--    <xs:simpleContent>-->
-<!--      <xs:extension base="xs:string">-->
-<!--        <xs:attribute type="xs:string" name="extension"/>-->
-<!--        <xs:attribute type="xs:string" name="root"/>-->
-<!--      </xs:extension>-->
-<!--    </xs:simpleContent>-->
-<!--  </xs:complexType>-->
   <xs:complexType name="periodType">
     <xs:sequence>
       <xs:element type="xs:string" name="startDate"/>

@@ -1,6 +1,15 @@
 package gov.cms.madie.services;
 
 import generated.gov.cms.madie.simplexml.*;
+import gov.cms.madie.dto.CQLCode;
+import gov.cms.madie.dto.CQLCodeSystem;
+import gov.cms.madie.dto.CQLDefinition;
+import gov.cms.madie.dto.CQLFunctionArgument;
+import gov.cms.madie.dto.CQLIncludeLibrary;
+import gov.cms.madie.dto.CQLParameter;
+import gov.cms.madie.dto.CQLValueSet;
+import gov.cms.madie.dto.CqlLookups;
+import gov.cms.madie.dto.ElementLookup;
 import gov.cms.madie.models.common.Organization;
 import gov.cms.madie.models.common.Version;
 import gov.cms.madie.models.measure.BaseConfigurationTypes;
@@ -29,18 +38,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
+import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface MeasureMapper {
 
+  @Mapping(target = "cqlLookUp", source = "cqlLookups")
   @Mapping(target = "measureDetails", source = "measure")
   @Mapping(target = "measureGrouping", source = "measure")
-  @Mapping(target = "supplementalDataElements", source = "supplementalData")
-  @Mapping(target = "riskAdjustmentVariables", source = "riskAdjustments")
-  MeasureType measureToMeasureType(QdmMeasure measure);
+  @Mapping(target = "elementLookUp", source = "cqlLookups.elementLookups")
+  @Mapping(target = "supplementalDataElements", source = "measure.supplementalData")
+  @Mapping(target = "riskAdjustmentVariables", source = "measure.riskAdjustments")
+  @Mapping(target = "allUsedCQLLibs", source = "cqlLookups.includeLibraries")
+  MeasureType measureToMeasureType(QdmMeasure measure, CqlLookups cqlLookups);
 
+  @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
+  @Mapping(target = "cqlUUID", expression = "java(measure.getMeasureSetId())")
   @Mapping(target = "title", source = "measureName")
   @Mapping(target = "measureModel", source = "model")
   @Mapping(target = "shortTitle", source = "ecqmTitle")
@@ -75,42 +90,46 @@ public interface MeasureMapper {
   @Mapping(
       target = "initialPopDescription",
       expression =
-          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.INITIAL_POPULATION))")
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, PopulationType.INITIAL_POPULATION))")
   @Mapping(
       target = "denominatorDescription",
       expression =
-          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.DENOMINATOR))")
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, PopulationType.DENOMINATOR))")
   @Mapping(
       target = "denominatorExclusionsDescription",
       expression =
-          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.DENOMINATOR_EXCLUSION))")
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, PopulationType.DENOMINATOR_EXCLUSION))")
   @Mapping(
       target = "numeratorDescription",
       expression =
-          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.NUMERATOR))")
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, PopulationType.NUMERATOR))")
   @Mapping(
       target = "numeratorExclusionsDescription",
       expression =
-          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.NUMERATOR_EXCLUSION))")
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, PopulationType.NUMERATOR_EXCLUSION))")
   @Mapping(
       target = "denominatorExceptionsDescription",
       expression =
-          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.DENOMINATOR_EXCEPTION))")
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, PopulationType.DENOMINATOR_EXCEPTION))")
   @Mapping(
       target = "measurePopulationDescription",
       expression =
-          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.MEASURE_POPULATION))")
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, PopulationType.MEASURE_POPULATION))")
   @Mapping(
       target = "measurePopulationExclusionsDescription",
       expression =
-          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.MEASURE_POPULATION_OBSERVATION))")
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, PopulationType.MEASURE_POPULATION_OBSERVATION))")
   @Mapping(
       target = "measureObservationsDescription",
       expression =
-          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, gov.cms.madie.models.measure.PopulationType.MEASURE_OBSERVATION))")
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, PopulationType.MEASURE_OBSERVATION))")
   @Mapping(target = "supplementalData", source = "supplementalDataDescription")
   @Mapping(target = "finalizedDate", source = "measure")
+  @Mapping(target = "qualityMeasureSet", source = "measure")
   MeasureDetailsType measureToMeasureDetailsType(QdmMeasure measure);
+
+  @Mapping(target = "uuid", source = "measureSetId")
+  QualityMeasureSetType measureToQualityMeasureSet(QdmMeasure measure);
 
   default MeasureGroupingType measureToMeasureGroupingType(QdmMeasure measure) {
     if (measure == null || CollectionUtils.isEmpty(measure.getGroups())) {
@@ -123,24 +142,9 @@ public interface MeasureMapper {
         .getGroup()
         .addAll(
             IntStream.range(0, groups.size())
-                .mapToObj(
-                    i -> {
-                      Group group = groups.get(i);
-                      return groupToGroupType(group, i + 1);
-                    })
+                .mapToObj(i -> groupToGroupType(groups.get(i), i + 1))
                 .toList());
 
-    measureGroupingType
-        .getGroup()
-        .addAll(
-            measure.getGroups().stream()
-                .map(
-                    group -> {
-                      // todo: fill this in
-                      GroupType gType = new GroupType();
-                      return gType;
-                    })
-                .toList());
     return measureGroupingType;
   }
 
@@ -175,27 +179,34 @@ public interface MeasureMapper {
       expression =
           "java(String.valueOf(org.apache.commons.lang3.StringUtils.isNotBlank(population.getDefinition())))")
   @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
-  @Mapping(target = "cqldefinitionOrCqlaggfunction", source = "population")
-  // TODO: clause type display name
+  @Mapping(target = "cqldefinition", source = "population")
+  @Mapping(
+      target = "type",
+      expression = "java(gov.cms.madie.util.MappingUtil.getPopulationType(population.getName()))")
+  @Mapping(target = "displayName", expression = "java(population.getName().getDisplay())")
   ClauseType populationToClauseType(Population population);
 
-  default List<Object> populationToDefOrAgg(Population population) {
-    if (population == null || StringUtils.isBlank(population.getDefinition())) {
-      return null;
-    }
-    CqldefinitionType cqldefinitionType = new CqldefinitionType();
-    cqldefinitionType.setUuid(UUID.randomUUID().toString());
-    cqldefinitionType.setDisplayName(population.getDefinition());
-    return List.of(cqldefinitionType);
-  }
+  @Mapping(target = "displayName", source = "name.display")
+  @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
+  CqldefinitionType populationToCqlDefinition(Population population);
 
   @Mapping(
       target = "isInGrouping",
       expression =
           "java(String.valueOf(org.apache.commons.lang3.StringUtils.isNotBlank(observation.getDefinition())))")
   @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
-  // TODO: clause type display name
+  @Mapping(target = "type", constant = "measureObservation")
+  @Mapping(target = "displayName", constant = "Measure Observation")
+  @Mapping(target = "cqlaggfunction", source = "observation")
   ClauseType observationToClauseType(MeasureObservation observation);
+
+  @Mapping(target = "displayName", source = "aggregateMethod")
+  @Mapping(target = "cqlfunction", source = "observation")
+  CqlaggfunctionType observationToCqlAggFunction(MeasureObservation observation);
+
+  @Mapping(target = "displayName", source = "definition")
+  @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
+  CqlfunctionType observationToCqlFunction(MeasureObservation observation);
 
   // TODO: map observation to definition/aggregate function
 
@@ -204,7 +215,8 @@ public interface MeasureMapper {
       expression =
           "java(String.valueOf(org.apache.commons.lang3.StringUtils.isNotBlank(stratification.getCqlDefinition())))")
   @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
-  // TODO: clause type display name
+  @Mapping(target = "type", constant = "stratum")
+  @Mapping(target = "displayName", constant = "stratum")
   ClauseType stratificationToClauseType(Stratification stratification);
 
   // TODO: map stratification to definition/aggregate function
@@ -240,6 +252,26 @@ public interface MeasureMapper {
     supplementalDataElementsType.getCqldefinition().addAll(defs);
     return supplementalDataElementsType;
   }
+
+  default ElementLookUpType elementLookupsToElementLookupType(Set<ElementLookup> elementLookups) {
+    if (CollectionUtils.isEmpty(elementLookups)) {
+      return null;
+    }
+    ElementLookUpType elementLookUp = new ElementLookUpType();
+    elementLookUp.getQdm().addAll(elementLookupsToQdmTypes(elementLookups));
+    return elementLookUp;
+  }
+
+  List<QdmType> elementLookupsToQdmTypes(Set<ElementLookup> elementLookups);
+
+  @Mapping(target = "id", source = "id")
+  @Mapping(target = "uuid", source = "id")
+  @Mapping(target = "code", source = "code")
+  @Mapping(target = "datatype", source = "datatype")
+  @Mapping(target = "originalName", source = "name")
+  @Mapping(target = "suppDataElement", constant = "false")
+  @Mapping(target = "version", constant = "")
+  QdmType elementLookupToQdmType(ElementLookup elementLookup);
 
   default RiskAdjustmentVariablesType riskAdjustmentsToRiskAdjustmentVariablesType(
       List<DefDescPair> riskAdjustments) {
@@ -295,12 +327,12 @@ public interface MeasureMapper {
     return CollectionUtils.isEmpty(endorsements)
             || StringUtils.isEmpty(endorsements.get(0).getEndorsementId())
         ? null
-        : organizationToEndorsementType(endorsements.get(0));
+        : endorsementToEndorsementType(endorsements.get(0));
   }
 
   @Mapping(target = "id", source = "endorsementId")
   @Mapping(target = "value", source = "endorser")
-  EndorsementType organizationToEndorsementType(Endorsement endorsement);
+  EndorsementType endorsementToEndorsementType(Endorsement endorsement);
 
   @Mapping(target = "value", source = "organization.name")
   @Mapping(target = "id", source = "organization.oid")
@@ -359,4 +391,178 @@ public interface MeasureMapper {
             .format(measure.getLastModifiedAt()));
     return finalizedDateType;
   }
+
+  @Mapping(target = "valuesets", source = "valueSets")
+  @Mapping(target = "parameters", source = "parameters")
+  @Mapping(target = "definitions", source = "definitions")
+  @Mapping(target = "functions", source = "definitions")
+  @Mapping(target = "includeLibrarys", source = "includeLibraries")
+  CqlLookUpType cqlLookupsToCqlLookUpType(CqlLookups cqlLookups);
+
+  default ValuesetsType valueSetsToValuesetsType(Set<CQLValueSet> cqlValueSets) {
+    if (CollectionUtils.isEmpty(cqlValueSets)) {
+      return null;
+    }
+    ValuesetsType valuesetsType = new ValuesetsType();
+    valuesetsType.getValueset().addAll(valueSetsToValuesetType(cqlValueSets));
+    return valuesetsType;
+  }
+
+  List<ValuesetType> valueSetsToValuesetType(Set<CQLValueSet> cqlValueSets);
+
+  @Mapping(target = "datatype", constant = "")
+  @Mapping(target = "suppDataElement", constant = "false")
+  @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID().toString())")
+  @Mapping(target = "name", source = "name")
+  @Mapping(target = "oid", source = "oid")
+  @Mapping(target = "originalName", source = "name")
+  ValuesetType cqlValueSetToValuesetType(CQLValueSet cqlValueSet);
+
+  default CodeSystemsType cqlCodeSystemsToCodeSystemsType(Set<CQLCodeSystem> codeSystems) {
+    if (!CollectionUtils.isEmpty(codeSystems)) {
+      CodeSystemsType codeSystemsType = new CodeSystemsType();
+      codeSystemsType.getCodeSystem().addAll(cqlCodeSystemsToCodeSystems(codeSystems));
+      return codeSystemsType;
+    }
+
+    return null;
+  }
+
+  default CodesType cqlCodesToCodesType(Set<CQLCode> cqlCodes) {
+    if (!CollectionUtils.isEmpty(cqlCodes)) {
+      CodesType codesType = new CodesType();
+      codesType.getCode().addAll(cqlCodesToCodes(cqlCodes));
+      return codesType;
+    }
+
+    return null;
+  }
+
+  default ParametersType cqlParametersToParametersType(Set<CQLParameter> cqlParameters) {
+    if (!CollectionUtils.isEmpty(cqlParameters)) {
+      ParametersType parametersType = new ParametersType();
+      parametersType.getParameter().addAll(cqlParametersToParameterTypes(cqlParameters));
+      return parametersType;
+    }
+    return null;
+  }
+
+  List<ParameterType> cqlParametersToParameterTypes(Set<CQLParameter> cqlParameters);
+
+  @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID().toString())")
+  @Mapping(target = "name", source = "parameterName")
+  @Mapping(target = "logic", source = "parameterLogic")
+  @Mapping(target = "readOnly", constant = "true")
+  ParameterType cqlParameterToParameterType(CQLParameter cqlParameter);
+
+  default DefinitionsType cqlDefinitionsToDefinitionsType(Set<CQLDefinition> cqlDefinitions) {
+    if (!CollectionUtils.isEmpty(cqlDefinitions)) {
+      Set<CQLDefinition> defsWithoutFuncs =
+          cqlDefinitions.stream().filter(d -> !d.isFunction()).collect(Collectors.toSet());
+      if (!CollectionUtils.isEmpty(defsWithoutFuncs)) {
+        DefinitionsType definitionsType = new DefinitionsType();
+        definitionsType.getDefinition().addAll(cqlDefinitionsToDefinitionTypes(defsWithoutFuncs));
+        return definitionsType;
+      }
+    }
+
+    return null;
+  }
+
+  default FunctionsType cqlDefinitionsToFunctionsType(Set<CQLDefinition> cqlDefinitions) {
+    if (!CollectionUtils.isEmpty(cqlDefinitions)) {
+      Set<CQLDefinition> defsOnlyFuncs =
+          cqlDefinitions.stream().filter(CQLDefinition::isFunction).collect(Collectors.toSet());
+      if (!CollectionUtils.isEmpty(defsOnlyFuncs)) {
+        FunctionsType functionsType = new FunctionsType();
+        functionsType.getFunction().addAll(cqlDefinitionsToFunctionTypes(defsOnlyFuncs));
+        return functionsType;
+      }
+    }
+
+    return null;
+  }
+
+  List<CodeSystemType> cqlCodeSystemsToCodeSystems(Set<CQLCodeSystem> codeSystems);
+
+  List<CodeType> cqlCodesToCodes(Set<CQLCode> cqlCodes);
+
+  @Mapping(
+      target = "codeSystemOID",
+      expression =
+          "java(org.apache.commons.lang3.StringUtils.replaceChars(cqlCode.getCodeSystemOID(), \"urn:oid:\",\"\"))")
+  @Mapping(target = "codeOID", source = "id")
+  @Mapping(target = "isValidatedWithVsac", source = "isValidatedWithVsac")
+  @Mapping(
+      target = "isCodeSystemVersionIncluded",
+      expression = "java(String.valueOf(cqlCode.isCodeSystemVersionIncluded()))")
+  CodeType cqlCodeToCodeType(CQLCode cqlCode);
+
+  List<DefinitionType> cqlDefinitionsToDefinitionTypes(Set<CQLDefinition> cqlDefinitions);
+
+  List<FunctionType> cqlDefinitionsToFunctionTypes(Set<CQLDefinition> cqlDefinitions);
+
+  @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID().toString())")
+  @Mapping(target = "name", source = "definitionName")
+  @Mapping(target = "logic", source = "definitionLogic")
+  DefinitionType cqlDefinitionToDefinitionType(CQLDefinition cqlDefinition);
+
+  @Mapping(target = "logic", source = "definitionLogic")
+  @Mapping(target = "name", source = "definitionName")
+  @Mapping(target = "arguments", source = "functionArguments")
+  FunctionType cqlDefinitionToFunctionType(CQLDefinition cqlDefinition);
+
+  default ArgumentsType functionArgumentsToArgumentsType(
+      List<CQLFunctionArgument> functionArguments) {
+    if (!CollectionUtils.isEmpty(functionArguments)) {
+      ArgumentsType argumentsType = new ArgumentsType();
+      argumentsType.getArgument().addAll(functionArgumentsToArgumentTypes(functionArguments));
+      return argumentsType;
+    }
+    return null;
+  }
+
+  List<ArgumentType> functionArgumentsToArgumentTypes(List<CQLFunctionArgument> functionArguments);
+
+  @Mapping(target = "type", source = "argumentType")
+  ArgumentType functionArgumentToArgumentType(CQLFunctionArgument functionArguments);
+
+  default IncludeLibrarysType cqlIncludeLibrariesToIncludeLibrarysType(
+      Set<CQLIncludeLibrary> cqlIncludeLibraries) {
+    if (!CollectionUtils.isEmpty(cqlIncludeLibraries)) {
+      IncludeLibrarysType includeLibrarysType = new IncludeLibrarysType();
+      includeLibrarysType
+          .getIncludeLibrary()
+          .addAll(cqlIncludeLibrariesToIncludeLibraryType(cqlIncludeLibraries));
+      return includeLibrarysType;
+    }
+    return null;
+  }
+
+  List<IncludeLibraryType> cqlIncludeLibrariesToIncludeLibraryType(
+      Set<CQLIncludeLibrary> cqlIncludeLibraries);
+
+  @Mapping(target = "id", source = "id")
+  @Mapping(target = "cqlLibRefId", source = "id")
+  @Mapping(target = "cqlLibRefName", source = "cqlLibraryName")
+  @Mapping(target = "cqlVersion", source = "version")
+  @Mapping(target = "name", source = "aliasName")
+  @Mapping(target = "qdmVersion", source = "qdmVersion")
+  IncludeLibraryType cQLIncludeLibraryToIncludeLibraryType(CQLIncludeLibrary cqlIncludeLibrary);
+
+  default AllUsedCQLLibsType includeLibrariesToAllUsedCqlLibsType(
+      Set<CQLIncludeLibrary> includeLibraries) {
+    if (!CollectionUtils.isEmpty(includeLibraries)) {
+      AllUsedCQLLibsType allUsedCQLLibsType = new AllUsedCQLLibsType();
+      allUsedCQLLibsType.getLib().addAll(includeLibrariesToLibTypes(includeLibraries));
+      return allUsedCQLLibsType;
+    }
+    return null;
+  }
+
+  List<LibType> includeLibrariesToLibTypes(Set<CQLIncludeLibrary> includeLibraries);
+
+  @Mapping(target = "name", source = "cqlLibraryName")
+  @Mapping(target = "alias", source = "aliasName")
+  LibType cqlIncludeLibraryToLibType(CQLIncludeLibrary cqlIncludeLibrary);
 }

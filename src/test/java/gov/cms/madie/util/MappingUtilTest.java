@@ -239,7 +239,7 @@ class MappingUtilTest {
             .build();
     String output =
         MappingUtil.getPopulationDescription(measure, PopulationType.INITIAL_POPULATION);
-    assertThat(output, equalTo("IP Description\nIPG2 Description"));
+    assertThat(output, equalTo("IP Description IPG2 Description"));
   }
 
   @Test
@@ -356,6 +356,6 @@ class MappingUtilTest {
     assertThat(
         output,
         equalTo(
-            "Denominator Obs Description\nNumerator Obs Description\nG2 Denominator Obs Description\nG2 Numerator Obs Description"));
+            "Denominator Obs Description Numerator Obs Description G2 Denominator Obs Description G2 Numerator Obs Description"));
   }
 }

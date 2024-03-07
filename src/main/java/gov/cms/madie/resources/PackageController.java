@@ -1,12 +1,13 @@
 package gov.cms.madie.resources;
 
 import gov.cms.madie.Exceptions.UnsupportedModelException;
+import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.services.HqmfService;
 import gov.cms.madie.services.PackagingService;
 import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.services.SimpleXmlService;
-import jakarta.xml.bind.JAXBException;
+import gov.cms.madie.services.TranslationServiceClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -27,6 +28,7 @@ public class PackageController {
   private final PackagingService packagingService;
   private final SimpleXmlService simpleXmlService;
   private final HqmfService hqmfService;
+  private final TranslationServiceClient translationServiceClient;
 
   @PutMapping(
       value = "/package",
@@ -51,10 +53,12 @@ public class PackageController {
       },
       consumes = {MediaType.APPLICATION_JSON_VALUE})
   public String getMeasureSimpleXml(
-      @RequestBody @Validated(Measure.ValidationSequence.class) Measure measure)
-      throws JAXBException {
+      @RequestBody @Validated(Measure.ValidationSequence.class) Measure measure,
+      @RequestHeader("Authorization") String accessToken) {
     if (measure.getModel() != null && measure.getModel().contains("QDM")) {
-      return simpleXmlService.measureToSimpleXml((QdmMeasure) measure);
+      QdmMeasure qdmMeasure = (QdmMeasure) measure;
+      CqlLookups cqlLookups = translationServiceClient.getCqlLookups(qdmMeasure, accessToken);
+      return simpleXmlService.measureToSimpleXml(qdmMeasure, cqlLookups);
     }
     throw new UnsupportedModelException("Unsupported model type: " + measure.getModel());
   }
@@ -64,10 +68,11 @@ public class PackageController {
       produces = {MediaType.APPLICATION_XML_VALUE},
       consumes = {MediaType.APPLICATION_JSON_VALUE})
   public ResponseEntity<String> generateHqmf(
-      @RequestBody @Validated(Measure.ValidationSequence.class) Measure measure) throws Exception {
+      @RequestBody @Validated(Measure.ValidationSequence.class) Measure measure,
+      @RequestHeader("Authorization") String accessToken) {
     // generate HQMF if the model type is QDM
     if (measure != null && measure.getModel() != null && measure.getModel().contains("QDM")) {
-      return ResponseEntity.ok().body(hqmfService.generateHqmf((QdmMeasure) measure));
+      return ResponseEntity.ok().body(hqmfService.generateHqmf((QdmMeasure) measure, accessToken));
     }
     throw new UnsupportedModelException(
         "Unsupported model type: "

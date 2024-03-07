@@ -2,9 +2,11 @@ package gov.cms.madie.services;
 
 import gov.cms.madie.Exceptions.TranslationServiceException;
 import gov.cms.madie.config.CqlElmTranslatorClientConfig;
+import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.models.dto.TranslatedLibrary;
 import gov.cms.madie.models.measure.Measure;
 
+import gov.cms.madie.models.measure.QdmMeasure;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -99,6 +101,41 @@ class TranslationServiceClientTest {
             () ->
                 translationServiceClient.getHumanReadable(
                     Measure.builder().id("testMeasureId").build(), "token"),
+            message);
+    assertThat(ex.getMessage(), containsString(message));
+  }
+
+  @Test
+  void testGetCqlLookups() {
+    CqlLookups cqlLookups =
+        CqlLookups.builder()
+            .library("Test")
+            .version("0.0.001")
+            .usingModel("QDM")
+            .usingModelVersion("5.6")
+            .build();
+    QdmMeasure measure = QdmMeasure.builder().cqlLibraryName("Test").build();
+    ResponseEntity<CqlLookups> LookupResponseEntity = ResponseEntity.ok().body(cqlLookups);
+    when(elmTranslatorRestTemplate.exchange(
+            any(URI.class), eq(HttpMethod.PUT), any(HttpEntity.class), any(Class.class)))
+        .thenReturn(LookupResponseEntity);
+    CqlLookups cqlLookupsResponse = translationServiceClient.getCqlLookups(measure, "token");
+    assertThat(cqlLookupsResponse.getLibrary(), is(equalTo(cqlLookups.getLibrary())));
+    assertThat(cqlLookupsResponse.getVersion(), is(equalTo(cqlLookups.getVersion())));
+  }
+
+  @Test
+  void testGetCqlLookupsFailure() {
+    String message = "An issue occurred while fetching CQL Lookups for measure: testMeasureId";
+    when(elmTranslatorRestTemplate.exchange(
+            any(URI.class), eq(HttpMethod.PUT), any(HttpEntity.class), any(Class.class)))
+        .thenThrow(new TranslationServiceException(message, new Exception()));
+    Exception ex =
+        assertThrows(
+            TranslationServiceException.class,
+            () ->
+                translationServiceClient.getCqlLookups(
+                    QdmMeasure.builder().id("testMeasureId").build(), "token"),
             message);
     assertThat(ex.getMessage(), containsString(message));
   }
