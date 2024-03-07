@@ -7,7 +7,6 @@ import gov.cms.madie.hqmf.dto.MeasureExport;
 import gov.cms.madie.hqmf.qdm_5_6.HQMFGenerator;
 import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.measure.QdmMeasure;
-import jakarta.xml.bind.JAXBException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -61,22 +60,6 @@ class HqmfServiceTest {
 
     String output = hqmfService.generateHqmf(measure, TOKEN);
     assertThat(output, is(equalTo("<QualityMeasureDocument></QualityMeasureDocument>")));
-  }
-
-  @Test
-  void generateHqmfWhenSimpleXmlGenerationFailed() throws Exception {
-    when(translationServiceClient.getCqlLookups(any(QdmMeasure.class), anyString()))
-        .thenReturn(CqlLookups.builder().build());
-    String message = "An issue occurred while generating the simple xml for measure";
-    doThrow(new JAXBException(message))
-        .when(simpleXmlService)
-        .measureToSimpleXml(any(QdmMeasure.class), any(CqlLookups.class));
-    Exception ex =
-        assertThrows(
-            PackagingException.class,
-            () -> hqmfService.generateHqmf(measure, TOKEN),
-            "Exception occurred");
-    assertThat(ex.getMessage(), containsString(message));
   }
 
   @Test

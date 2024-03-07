@@ -8,7 +8,6 @@ import gov.cms.madie.services.PackagingService;
 import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.services.SimpleXmlService;
 import gov.cms.madie.services.TranslationServiceClient;
-import jakarta.xml.bind.JAXBException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -55,8 +54,7 @@ public class PackageController {
       consumes = {MediaType.APPLICATION_JSON_VALUE})
   public String getMeasureSimpleXml(
       @RequestBody @Validated(Measure.ValidationSequence.class) Measure measure,
-      @RequestHeader("Authorization") String accessToken)
-      throws JAXBException {
+      @RequestHeader("Authorization") String accessToken) {
     if (measure.getModel() != null && measure.getModel().contains("QDM")) {
       QdmMeasure qdmMeasure = (QdmMeasure) measure;
       CqlLookups cqlLookups = translationServiceClient.getCqlLookups(qdmMeasure, accessToken);

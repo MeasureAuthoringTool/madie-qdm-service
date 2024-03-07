@@ -128,7 +128,7 @@ public interface MeasureMapper {
   @Mapping(target = "qualityMeasureSet", source = "measure")
   MeasureDetailsType measureToMeasureDetailsType(QdmMeasure measure);
 
-  @Mapping(target = "uuid", expression = "java(measure.getMeasureSetId())")
+  @Mapping(target = "uuid", source = "measureSetId")
   QualityMeasureSetType measureToQualityMeasureSet(QdmMeasure measure);
 
   default MeasureGroupingType measureToMeasureGroupingType(QdmMeasure measure) {
