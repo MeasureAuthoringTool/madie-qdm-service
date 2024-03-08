@@ -49,44 +49,44 @@ class MeasureMapperTest {
   @Test
   void testMeasureToMeasureType() {
     QdmMeasure measure =
-      QdmMeasure.builder()
-        .measureName("Measure1")
-        .cqlLibraryName("MeasureLib1")
-        .ecqmTitle("MLib1")
-        .model(ModelType.QDM_5_6.getValue())
-        .rateAggregation("Rate Aggr")
-        .improvementNotation("Improvement Notation")
-        .supplementalData(
-          List.of(
-            DefDescPair.builder().description("sde1").description("first SDE").build(),
-            DefDescPair.builder().description("sde2").description("second SDE").build()))
-        .measureMetaData(
-          MeasureMetaData.builder()
-            .description("Measure Description")
-            .rationale("the rationale")
-            .clinicalRecommendation("the clinical recommendation")
-            .copyright("the copyright")
-            .developers(
-              List.of(
-                Organization.builder()
-                  .id("org1Id")
-                  .oid("111.222.333")
-                  .name("SB")
-                  .build()))
-            .steward(
-              Organization.builder().id("org2Id").oid("222.333.444").name("ICF").build())
-            .references(
-              List.of(
-                Reference.builder()
-                  .referenceType("CITATION")
-                  .referenceText("This is a citation")
-                  .build(),
-                Reference.builder()
-                  .referenceType("DOCUMENTATION")
-                  .referenceText("This is documentation")
-                  .build()))
-            .build())
-        .build();
+        QdmMeasure.builder()
+            .measureName("Measure1")
+            .cqlLibraryName("MeasureLib1")
+            .ecqmTitle("MLib1")
+            .model(ModelType.QDM_5_6.getValue())
+            .rateAggregation("Rate Aggr")
+            .improvementNotation("Improvement Notation")
+            .supplementalData(
+                List.of(
+                    DefDescPair.builder().description("sde1").description("first SDE").build(),
+                    DefDescPair.builder().description("sde2").description("second SDE").build()))
+            .measureMetaData(
+                MeasureMetaData.builder()
+                    .description("Measure Description")
+                    .rationale("the rationale")
+                    .clinicalRecommendation("the clinical recommendation")
+                    .copyright("the copyright")
+                    .developers(
+                        List.of(
+                            Organization.builder()
+                                .id("org1Id")
+                                .oid("111.222.333")
+                                .name("SB")
+                                .build()))
+                    .steward(
+                        Organization.builder().id("org2Id").oid("222.333.444").name("ICF").build())
+                    .references(
+                        List.of(
+                            Reference.builder()
+                                .referenceType("CITATION")
+                                .referenceText("This is a citation")
+                                .build(),
+                            Reference.builder()
+                                .referenceType("DOCUMENTATION")
+                                .referenceText("This is documentation")
+                                .build()))
+                    .build())
+            .build();
 
     CqlLookups cqlLookups = CqlLookups.builder().build();
 
@@ -94,40 +94,40 @@ class MeasureMapperTest {
     assertThat(output, is(notNullValue()));
     assertThat(output.getMeasureDetails(), is(notNullValue()));
     assertThat(
-      output.getMeasureDetails().getAggregation(), is(equalTo(measure.getRateAggregation())));
+        output.getMeasureDetails().getAggregation(), is(equalTo(measure.getRateAggregation())));
     assertThat(
-      output.getMeasureDetails().getImprovementNotations(),
-      is(equalTo(measure.getImprovementNotation())));
+        output.getMeasureDetails().getImprovementNotations(),
+        is(equalTo(measure.getImprovementNotation())));
     assertThat(
-      output.getMeasureDetails().getDescription(),
-      is(equalTo(measure.getMeasureMetaData().getDescription())));
+        output.getMeasureDetails().getDescription(),
+        is(equalTo(measure.getMeasureMetaData().getDescription())));
     assertThat(
-      output.getMeasureDetails().getRationale(),
-      is(equalTo(measure.getMeasureMetaData().getRationale())));
+        output.getMeasureDetails().getRationale(),
+        is(equalTo(measure.getMeasureMetaData().getRationale())));
     assertThat(
-      output.getMeasureDetails().getRecommendations(),
-      is(equalTo(measure.getMeasureMetaData().getClinicalRecommendation())));
+        output.getMeasureDetails().getRecommendations(),
+        is(equalTo(measure.getMeasureMetaData().getClinicalRecommendation())));
     assertThat(
-      output.getMeasureDetails().getCopyright(),
-      is(equalTo(measure.getMeasureMetaData().getCopyright())));
+        output.getMeasureDetails().getCopyright(),
+        is(equalTo(measure.getMeasureMetaData().getCopyright())));
     assertThat(output.getMeasureDetails().getReferences(), is(notNullValue()));
     assertThat(output.getMeasureDetails().getReferences().getReference(), is(notNullValue()));
     assertThat(output.getMeasureDetails().getReferences().getReference().size(), is(equalTo(2)));
     assertThat(
-      output.getMeasureDetails().getReferences().getReference().get(0).getReferenceType(),
-      is(equalTo("CITATION")));
+        output.getMeasureDetails().getReferences().getReference().get(0).getReferenceType(),
+        is(equalTo("CITATION")));
     assertThat(
-      output.getMeasureDetails().getReferences().getReference().get(0).getReferenceText(),
-      is(equalTo("This is a citation")));
+        output.getMeasureDetails().getReferences().getReference().get(0).getReferenceText(),
+        is(equalTo("This is a citation")));
     assertThat(output.getSupplementalDataElements(), is(notNullValue()));
     assertThat(output.getSupplementalDataElements().getCqldefinition(), is(notNullValue()));
     assertThat(output.getSupplementalDataElements().getCqldefinition().size(), is(equalTo(2)));
     assertThat(
-      output.getSupplementalDataElements().getCqldefinition().get(0).getUuid(),
-      is(notNullValue()));
+        output.getSupplementalDataElements().getCqldefinition().get(0).getUuid(),
+        is(notNullValue()));
     assertThat(
-      output.getSupplementalDataElements().getCqldefinition().get(0).getUuid(),
-      is(notNullValue()));
+        output.getSupplementalDataElements().getCqldefinition().get(0).getUuid(),
+        is(notNullValue()));
   }
 
   @Test
@@ -139,30 +139,30 @@ class MeasureMapperTest {
   @Test
   void measureToMeasureDetailsType() {
     QdmMeasure measure =
-      QdmMeasure.builder()
-        .measureName("Measure1")
-        .cqlLibraryName("MeasureLib1")
-        .ecqmTitle("MLib1")
-        .model(ModelType.QDM_5_6.getValue())
-        .rateAggregation("Rate Aggr")
-        .improvementNotation("Improvement Notation")
-        .measureMetaData(
-          MeasureMetaData.builder()
-            .description("Measure Description")
-            .rationale("the rationale")
-            .clinicalRecommendation("the clinical recommendation")
-            .copyright("the copyright")
-            .developers(
-              List.of(
-                Organization.builder()
-                  .id("org1Id")
-                  .oid("111.222.333")
-                  .name("SB")
-                  .build()))
-            .steward(
-              Organization.builder().id("org2Id").oid("222.333.444").name("ICF").build())
-            .build())
-        .build();
+        QdmMeasure.builder()
+            .measureName("Measure1")
+            .cqlLibraryName("MeasureLib1")
+            .ecqmTitle("MLib1")
+            .model(ModelType.QDM_5_6.getValue())
+            .rateAggregation("Rate Aggr")
+            .improvementNotation("Improvement Notation")
+            .measureMetaData(
+                MeasureMetaData.builder()
+                    .description("Measure Description")
+                    .rationale("the rationale")
+                    .clinicalRecommendation("the clinical recommendation")
+                    .copyright("the copyright")
+                    .developers(
+                        List.of(
+                            Organization.builder()
+                                .id("org1Id")
+                                .oid("111.222.333")
+                                .name("SB")
+                                .build()))
+                    .steward(
+                        Organization.builder().id("org2Id").oid("222.333.444").name("ICF").build())
+                    .build())
+            .build();
     MeasureDetailsType output = measureMapper.measureToMeasureDetailsType(measure);
     assertThat(output, is(notNullValue()));
     assertThat(output.getAggregation(), is(equalTo(measure.getRateAggregation())));
@@ -170,8 +170,8 @@ class MeasureMapperTest {
     assertThat(output.getDescription(), is(equalTo(measure.getMeasureMetaData().getDescription())));
     assertThat(output.getRationale(), is(equalTo(measure.getMeasureMetaData().getRationale())));
     assertThat(
-      output.getRecommendations(),
-      is(equalTo(measure.getMeasureMetaData().getClinicalRecommendation())));
+        output.getRecommendations(),
+        is(equalTo(measure.getMeasureMetaData().getClinicalRecommendation())));
     assertThat(output.getCopyright(), is(equalTo(measure.getMeasureMetaData().getCopyright())));
   }
 
@@ -199,75 +199,75 @@ class MeasureMapperTest {
   @Test
   void testMeasureToMeasureGroupingTypeReturnsNullForSingleGroupInput() {
     QdmMeasure measure =
-      QdmMeasure.builder()
-        .groups(
-          List.of(
-            Group.builder()
-              .scoring(MeasureScoring.PROPORTION.toString())
-              .scoringUnit(
-                Map.of(
-                  "label",
-                  "m/s",
-                  "value",
-                  Map.of(
-                    "code",
-                    "m/s",
-                    "name",
-                    "",
-                    "system",
-                    "https://clinicaltables.nlm.nih.gov/")))
-              .populations(
+        QdmMeasure.builder()
+            .groups(
                 List.of(
-                  Population.builder()
-                    .id("id1")
-                    .name(PopulationType.INITIAL_POPULATION)
-                    .definition("ipp")
-                    .description("the IP description")
-                    .build(),
-                  Population.builder()
-                    .id("id2")
-                    .name(PopulationType.DENOMINATOR)
-                    .definition("denom")
-                    .description("the denom description")
-                    .build(),
-                  Population.builder()
-                    .id("id90")
-                    .name(PopulationType.DENOMINATOR_EXCLUSION)
-                    .definition("")
-                    .description("")
-                    .build(),
-                  Population.builder()
-                    .id("id3")
-                    .name(PopulationType.NUMERATOR)
-                    .definition("numer")
-                    .description("the numer description")
-                    .build(),
-                  Population.builder()
-                    .id("id91")
-                    .name(PopulationType.NUMERATOR_EXCLUSION)
-                    .definition("")
-                    .description("")
-                    .build(),
-                  Population.builder()
-                    .id("id92")
-                    .name(PopulationType.DENOMINATOR_EXCEPTION)
-                    .definition("")
-                    .description("")
-                    .build()))
-              .stratifications(
-                List.of(
-                  Stratification.builder()
-                    .id("id4")
-                    .cqlDefinition("ipp")
-                    .description("stratum1 desc")
-                    .build(),
-                  Stratification.builder()
-                    .id("id4")
-                    .cqlDefinition("denom")
-                    .description("stratum2 desc")
-                    .build()))
-              .build()))
-        .build();
+                    Group.builder()
+                        .scoring(MeasureScoring.PROPORTION.toString())
+                        .scoringUnit(
+                            Map.of(
+                                "label",
+                                "m/s",
+                                "value",
+                                Map.of(
+                                    "code",
+                                    "m/s",
+                                    "name",
+                                    "",
+                                    "system",
+                                    "https://clinicaltables.nlm.nih.gov/")))
+                        .populations(
+                            List.of(
+                                Population.builder()
+                                    .id("id1")
+                                    .name(PopulationType.INITIAL_POPULATION)
+                                    .definition("ipp")
+                                    .description("the IP description")
+                                    .build(),
+                                Population.builder()
+                                    .id("id2")
+                                    .name(PopulationType.DENOMINATOR)
+                                    .definition("denom")
+                                    .description("the denom description")
+                                    .build(),
+                                Population.builder()
+                                    .id("id90")
+                                    .name(PopulationType.DENOMINATOR_EXCLUSION)
+                                    .definition("")
+                                    .description("")
+                                    .build(),
+                                Population.builder()
+                                    .id("id3")
+                                    .name(PopulationType.NUMERATOR)
+                                    .definition("numer")
+                                    .description("the numer description")
+                                    .build(),
+                                Population.builder()
+                                    .id("id91")
+                                    .name(PopulationType.NUMERATOR_EXCLUSION)
+                                    .definition("")
+                                    .description("")
+                                    .build(),
+                                Population.builder()
+                                    .id("id92")
+                                    .name(PopulationType.DENOMINATOR_EXCEPTION)
+                                    .definition("")
+                                    .description("")
+                                    .build()))
+                        .stratifications(
+                            List.of(
+                                Stratification.builder()
+                                    .id("id4")
+                                    .cqlDefinition("ipp")
+                                    .description("stratum1 desc")
+                                    .build(),
+                                Stratification.builder()
+                                    .id("id4")
+                                    .cqlDefinition("denom")
+                                    .description("stratum2 desc")
+                                    .build()))
+                        .build()))
+            .build();
     MeasureGroupingType output = measureMapper.measureToMeasureGroupingType(measure);
     assertThat(output, is(notNullValue()));
     assertThat(output.getGroup(), is(notNullValue()));
@@ -284,7 +284,7 @@ class MeasureMapperTest {
     assertThat(firstGroup.getClause().get(1).getDisplayName(), is(equalTo("Denominator")));
     assertThat(firstGroup.getClause().get(2).getIsInGrouping(), is(equalTo("false")));
     assertThat(
-      firstGroup.getClause().get(2).getDisplayName(), is(equalTo("Denominator Exclusion")));
+        firstGroup.getClause().get(2).getDisplayName(), is(equalTo("Denominator Exclusion")));
     assertThat(firstGroup.getClause().get(6).getIsInGrouping(), is(equalTo("true")));
     assertThat(firstGroup.getClause().get(6).getDisplayName(), is(equalTo("stratum")));
     assertThat(firstGroup.getClause().get(6).getType(), is(equalTo("stratum")));
@@ -322,8 +322,8 @@ class MeasureMapperTest {
   @Test
   void testVersionToVersion() {
     String output =
-      measureMapper.versionToVersion(
-        Version.builder().major(2).minor(1).revisionNumber(3).build());
+        measureMapper.versionToVersion(
+            Version.builder().major(2).minor(1).revisionNumber(3).build());
     assertThat(output, is(notNullValue()));
     assertThat(output, is(equalTo("2.1.003")));
   }
@@ -333,10 +333,10 @@ class MeasureMapperTest {
     Date startDate = new Date(1676818800000L); // 2/19/2023 15:00 GMT
     Date endDate = new Date(1708354800000L); // 2/19/2024 15:00 GMT
     QdmMeasure measure =
-      QdmMeasure.builder()
-        .measurementPeriodStart(startDate)
-        .measurementPeriodEnd(endDate)
-        .build();
+        QdmMeasure.builder()
+            .measurementPeriodStart(startDate)
+            .measurementPeriodEnd(endDate)
+            .build();
     PeriodType output = measureMapper.measureToPeriodType(measure);
     assertThat(output, is(notNullValue()));
     assertThat(output.getCalenderYear(), is(equalTo("false")));
@@ -354,8 +354,8 @@ class MeasureMapperTest {
   @Test
   void testOrganizationToStewardType() {
     StewardType output =
-      measureMapper.organizationToStewardType(
-        Organization.builder().oid("111.222.333").name("ICF").build());
+        measureMapper.organizationToStewardType(
+            Organization.builder().oid("111.222.333").name("ICF").build());
     assertThat(output, is(notNullValue()));
     assertThat(output.getId(), is(equalTo("111.222.333")));
     assertThat(output.getValue(), is(equalTo("ICF")));
@@ -377,12 +377,12 @@ class MeasureMapperTest {
   @Test
   void testMeasureMetaDataToDevelopersType() {
     MeasureMetaData metaData =
-      MeasureMetaData.builder()
-        .developers(
-          List.of(
-            Organization.builder().oid("555.666.777").name("SB").build(),
-            Organization.builder().oid("999.888.777").name("ICF").build()))
-        .build();
+        MeasureMetaData.builder()
+            .developers(
+                List.of(
+                    Organization.builder().oid("555.666.777").name("SB").build(),
+                    Organization.builder().oid("999.888.777").name("ICF").build()))
+            .build();
     DevelopersType output = measureMapper.measureMetaDataToDevelopersType(metaData);
     assertThat(output, is(notNullValue()));
     assertThat(output.getDeveloper(), is(notNullValue()));
@@ -408,21 +408,21 @@ class MeasureMapperTest {
   @Test
   void testEndorsementsToCbeidReturnsNullForEmptyEndorsementId() {
     String output =
-      measureMapper.endorsementsToCbeid(
-        List.of(Endorsement.builder().endorsementId(null).build()));
+        measureMapper.endorsementsToCbeid(
+            List.of(Endorsement.builder().endorsementId(null).build()));
     assertThat(output, is(nullValue()));
   }
 
   @Test
   void testEndorsementsToCbeidReturnsEndorsementId() {
     String output =
-      measureMapper.endorsementsToCbeid(
-        List.of(
-          Endorsement.builder()
-            .endorser("ICF")
-            .endorserSystemId("123")
-            .endorsementId("110402B")
-            .build()));
+        measureMapper.endorsementsToCbeid(
+            List.of(
+                Endorsement.builder()
+                    .endorser("ICF")
+                    .endorserSystemId("123")
+                    .endorsementId("110402B")
+                    .build()));
     assertThat(output, is(equalTo("110402B")));
   }
 
@@ -441,21 +441,21 @@ class MeasureMapperTest {
   @Test
   void testEndorsementsToEndorsementTypeReturnsNullForEmptyEndorsementId() {
     EndorsementType output =
-      measureMapper.endorsementsToEndorsementType(
-        List.of(Endorsement.builder().endorsementId(null).build()));
+        measureMapper.endorsementsToEndorsementType(
+            List.of(Endorsement.builder().endorsementId(null).build()));
     assertThat(output, is(nullValue()));
   }
 
   @Test
   void testEndorsementsToEndorsementTypeReturnsEndorsemenType() {
     EndorsementType output =
-      measureMapper.endorsementsToEndorsementType(
-        List.of(
-          Endorsement.builder()
-            .endorser("ICF")
-            .endorserSystemId("123")
-            .endorsementId("110402B")
-            .build()));
+        measureMapper.endorsementsToEndorsementType(
+            List.of(
+                Endorsement.builder()
+                    .endorser("ICF")
+                    .endorserSystemId("123")
+                    .endorsementId("110402B")
+                    .build()));
     assertThat(output, is(notNullValue()));
     assertThat(output.getId(), is(equalTo("110402B")));
     assertThat(output.getValue(), is(equalTo("ICF")));
@@ -485,12 +485,12 @@ class MeasureMapperTest {
   @Test
   void testBaseConfigurationTypesToTypesTypes() {
     TypesType output =
-      measureMapper.baseConfigurationTypesToTypesTypes(
-        List.of(BaseConfigurationTypes.PERFORMANCE, BaseConfigurationTypes.OUTCOME));
+        measureMapper.baseConfigurationTypesToTypesTypes(
+            List.of(BaseConfigurationTypes.PERFORMANCE, BaseConfigurationTypes.OUTCOME));
     assertThat(output, is(notNullValue()));
     assertThat(output.getType(), is(notNullValue()));
     assertThat(
-      output.getType().get(0).getValue(), is(BaseConfigurationTypes.PERFORMANCE.toString()));
+        output.getType().get(0).getValue(), is(BaseConfigurationTypes.PERFORMANCE.toString()));
     assertThat(output.getType().get(0).getId(), is(MadieConstants.MeasureType.PERFORMANCE));
     assertThat(output.getType().get(1).getValue(), is(BaseConfigurationTypes.OUTCOME.toString()));
     assertThat(output.getType().get(1).getId(), is(MadieConstants.MeasureType.OUTCOME));
@@ -515,7 +515,7 @@ class MeasureMapperTest {
   @Test
   void testInstantToFinalizedDateTypeDraft() {
     Measure measure =
-      Measure.builder().measureMetaData(MeasureMetaData.builder().draft(true).build()).build();
+        Measure.builder().measureMetaData(MeasureMetaData.builder().draft(true).build()).build();
     FinalizedDateType output = measureMapper.instantToFinalizedDateType(measure);
     assertThat(output, is(nullValue()));
   }
@@ -523,10 +523,10 @@ class MeasureMapperTest {
   @Test
   void testInstantToFinalizedDateNullLastModified() {
     Measure measure =
-      Measure.builder()
-        .measureMetaData(MeasureMetaData.builder().draft(false).build())
-        .lastModifiedAt(null)
-        .build();
+        Measure.builder()
+            .measureMetaData(MeasureMetaData.builder().draft(false).build())
+            .lastModifiedAt(null)
+            .build();
     FinalizedDateType output = measureMapper.instantToFinalizedDateType(measure);
     assertThat(output, is(nullValue()));
   }
@@ -534,10 +534,10 @@ class MeasureMapperTest {
   @Test
   void testInstantToFinalizedDate() {
     Measure measure =
-      Measure.builder()
-        .measureMetaData(MeasureMetaData.builder().draft(false).build())
-        .lastModifiedAt(Instant.ofEpochSecond(1708358014))
-        .build();
+        Measure.builder()
+            .measureMetaData(MeasureMetaData.builder().draft(false).build())
+            .lastModifiedAt(Instant.ofEpochSecond(1708358014))
+            .build();
     FinalizedDateType output = measureMapper.instantToFinalizedDateType(measure);
     assertThat(output, is(notNullValue()));
     assertThat(output.getValueAttribute(), is(equalTo("20240219")));
