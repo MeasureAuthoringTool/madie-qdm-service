@@ -51,8 +51,14 @@ public interface MeasureMapper {
       target = "measureGrouping",
       expression = "java(measureToMeasureGroupingType(measure, cqlLookups))")
   @Mapping(target = "elementLookUp", source = "cqlLookups.elementLookups")
-  @Mapping(target = "supplementalDataElements", source = "measure.supplementalData")
-  @Mapping(target = "riskAdjustmentVariables", source = "measure.riskAdjustments")
+  @Mapping(
+      target = "supplementalDataElements",
+      expression =
+          "java(supplementalDataToSupplementalDataElementsType(measure.getSupplementalData(), cqlLookups.getDefinitions()))")
+  @Mapping(
+      target = "riskAdjustmentVariables",
+      expression =
+          "java(riskAdjustmentsToRiskAdjustmentVariablesType(measure.getRiskAdjustments(), cqlLookups.getDefinitions()))")
   @Mapping(target = "allUsedCQLLibs", source = "cqlLookups.includeLibraries")
   MeasureType measureToMeasureType(QdmMeasure measure, CqlLookups cqlLookups);
 
@@ -285,10 +291,15 @@ public interface MeasureMapper {
   ScoringType scoringToScoringType(String scoring);
 
   default SupplementalDataElementsType supplementalDataToSupplementalDataElementsType(
-      List<DefDescPair> supplementalData) {
+      List<DefDescPair> supplementalData, Set<CQLDefinition> cqlDefinitions) {
     List<CqldefinitionType> defs =
         Optional.ofNullable(supplementalData).orElse(List.of()).stream()
-            .map(this::defDescPairToCqldefinitionType)
+            .map(
+                sde -> {
+                  CQLDefinition cqlDefinition =
+                      getCqlDefinition(sde.getDefinition(), cqlDefinitions);
+                  return defDescPairToCqldefinitionType(sde, cqlDefinition);
+                })
             .toList();
     SupplementalDataElementsType supplementalDataElementsType = new SupplementalDataElementsType();
     supplementalDataElementsType.getCqldefinition().addAll(defs);
@@ -316,10 +327,15 @@ public interface MeasureMapper {
   QdmType elementLookupToQdmType(ElementLookup elementLookup);
 
   default RiskAdjustmentVariablesType riskAdjustmentsToRiskAdjustmentVariablesType(
-      List<DefDescPair> riskAdjustments) {
+      List<DefDescPair> riskAdjustments, Set<CQLDefinition> cqlDefinitions) {
     List<CqldefinitionType> defs =
         Optional.ofNullable(riskAdjustments).orElse(List.of()).stream()
-            .map(this::defDescPairToCqldefinitionType)
+            .map(
+                rav -> {
+                  CQLDefinition cqlDefinition =
+                      getCqlDefinition(rav.getDefinition(), cqlDefinitions);
+                  return defDescPairToCqldefinitionType(rav, cqlDefinition);
+                })
             .toList();
     RiskAdjustmentVariablesType riskAdjustmentVariablesType = new RiskAdjustmentVariablesType();
     riskAdjustmentVariablesType.getCqldefinition().addAll(defs);
@@ -380,9 +396,10 @@ public interface MeasureMapper {
   @Mapping(target = "id", source = "organization.oid")
   DeveloperType organizationToDeveloperType(Organization organization);
 
-  @Mapping(target = "displayName", source = "definition")
-  @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
-  CqldefinitionType defDescPairToCqldefinitionType(DefDescPair defDescPair);
+  @Mapping(target = "displayName", source = "defDescPair.definition")
+  @Mapping(target = "uuid", source = "definition.uuid")
+  CqldefinitionType defDescPairToCqldefinitionType(
+      DefDescPair defDescPair, CQLDefinition definition);
 
   default TypesType baseConfigurationTypesToTypesTypes(
       List<BaseConfigurationTypes> baseConfigurationTypes) {
