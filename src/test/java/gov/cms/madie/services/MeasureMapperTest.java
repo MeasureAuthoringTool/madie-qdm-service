@@ -11,6 +11,7 @@ import generated.gov.cms.madie.simplexml.PeriodType;
 import generated.gov.cms.madie.simplexml.ScoringType;
 import generated.gov.cms.madie.simplexml.StewardType;
 import generated.gov.cms.madie.simplexml.TypesType;
+import gov.cms.madie.dto.CQLDefinition;
 import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.common.Organization;
@@ -24,6 +25,8 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -58,8 +61,8 @@ class MeasureMapperTest {
             .improvementNotation("Improvement Notation")
             .supplementalData(
                 List.of(
-                    DefDescPair.builder().description("sde1").description("first SDE").build(),
-                    DefDescPair.builder().description("sde2").description("second SDE").build()))
+                    DefDescPair.builder().definition("sde1").description("first SDE").build(),
+                    DefDescPair.builder().definition("sde2").description("second SDE").build()))
             .measureMetaData(
                 MeasureMetaData.builder()
                     .description("Measure Description")
@@ -88,7 +91,21 @@ class MeasureMapperTest {
                     .build())
             .build();
 
-    CqlLookups cqlLookups = CqlLookups.builder().build();
+    CqlLookups cqlLookups =
+        CqlLookups.builder()
+            .definitions(
+                Set.of(
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .uuid(UUID.randomUUID().toString())
+                        .definitionName("sde1")
+                        .build(),
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .uuid(UUID.randomUUID().toString())
+                        .definitionName("sde2")
+                        .build()))
+            .build();
 
     MeasureType output = measureMapper.measureToMeasureType(measure, cqlLookups);
     assertThat(output, is(notNullValue()));
@@ -176,8 +193,16 @@ class MeasureMapperTest {
   }
 
   @Test
-  void testMeasureToMeasureGroupingTypeReturnsNullForNullInput() {
-    MeasureGroupingType output = measureMapper.measureToMeasureGroupingType(null);
+  void testMeasureToMeasureGroupingTypeReturnsNullForNullMeasure() {
+    MeasureGroupingType output =
+        measureMapper.measureToMeasureGroupingType(null, CqlLookups.builder().build());
+    assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void testMeasureToMeasureGroupingTypeReturnsNullForNullLookups() {
+    MeasureGroupingType output =
+        measureMapper.measureToMeasureGroupingType(QdmMeasure.builder().build(), null);
     assertThat(output, is(nullValue()));
   }
 
@@ -185,14 +210,16 @@ class MeasureMapperTest {
   void testMeasureToMeasureGroupingTypeReturnsNullForNullGroupsInput() {
     QdmMeasure measure = new QdmMeasure();
     measure.setGroups(null);
-    MeasureGroupingType output = measureMapper.measureToMeasureGroupingType(measure);
+    MeasureGroupingType output =
+        measureMapper.measureToMeasureGroupingType(measure, CqlLookups.builder().build());
     assertThat(output, is(nullValue()));
   }
 
   @Test
   void testMeasureToMeasureGroupingTypeReturnsNullForEmptyGroupsInput() {
     QdmMeasure measure = QdmMeasure.builder().groups(List.of()).build();
-    MeasureGroupingType output = measureMapper.measureToMeasureGroupingType(measure);
+    MeasureGroupingType output =
+        measureMapper.measureToMeasureGroupingType(measure, CqlLookups.builder().build());
     assertThat(output, is(nullValue()));
   }
 
@@ -268,7 +295,24 @@ class MeasureMapperTest {
                                     .build()))
                         .build()))
             .build();
-    MeasureGroupingType output = measureMapper.measureToMeasureGroupingType(measure);
+    CqlLookups cqlLookups =
+        CqlLookups.builder()
+            .definitions(
+                Set.of(
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .definitionName("ipp")
+                        .build(),
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .definitionName("denom")
+                        .build(),
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .definitionName("numer")
+                        .build()))
+            .build();
+    MeasureGroupingType output = measureMapper.measureToMeasureGroupingType(measure, cqlLookups);
     assertThat(output, is(notNullValue()));
     assertThat(output.getGroup(), is(notNullValue()));
     assertThat(output.getGroup().size(), is(equalTo(1)));

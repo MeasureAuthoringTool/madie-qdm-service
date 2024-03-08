@@ -142,7 +142,7 @@ public interface MeasureMapper {
   // measureGrouping mappings
   default MeasureGroupingType measureToMeasureGroupingType(
       QdmMeasure measure, CqlLookups cqlLookups) {
-    if (measure == null || CollectionUtils.isEmpty(measure.getGroups())) {
+    if (measure == null || CollectionUtils.isEmpty(measure.getGroups()) || cqlLookups == null) {
       return null;
     }
 
