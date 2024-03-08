@@ -1,5 +1,6 @@
 package gov.cms.madie.services;
 
+import generated.gov.cms.madie.simplexml.ClauseType;
 import generated.gov.cms.madie.simplexml.DevelopersType;
 import generated.gov.cms.madie.simplexml.EndorsementType;
 import generated.gov.cms.madie.simplexml.FinalizedDateType;
@@ -620,5 +621,149 @@ class MeasureMapperTest {
     Object scoringUnit = Map.of("otherData", Map.of("not", "real"));
     String output = measureMapper.scoringUnitToUcum(scoringUnit);
     assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void testGroupToClauseTypesForCvGroup() {
+    Group group =
+        Group.builder()
+            .scoring(MeasureScoring.CONTINUOUS_VARIABLE.toString())
+            .populations(
+                List.of(
+                    Population.builder()
+                        .id("id1")
+                        .name(PopulationType.INITIAL_POPULATION)
+                        .definition("Initial Population")
+                        .description("the IP description")
+                        .build(),
+                    Population.builder()
+                        .id("id2")
+                        .name(PopulationType.MEASURE_POPULATION)
+                        .definition("Measure Population")
+                        .description("the denom description")
+                        .build(),
+                    Population.builder()
+                        .id("id3")
+                        .name(PopulationType.MEASURE_POPULATION_EXCLUSION)
+                        .definition("")
+                        .description("")
+                        .build()))
+            .measureObservations(
+                List.of(
+                    MeasureObservation.builder()
+                        .id("obs1")
+                        .definition("Measure Observations")
+                        .criteriaReference("id2")
+                        .aggregateMethod("Average")
+                        .build()))
+            .build();
+
+    CqlLookups cqlLookups =
+        CqlLookups.builder()
+            .definitions(
+                Set.of(
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .definitionName("Initial Population")
+                        .build(),
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .definitionName("Measure Population")
+                        .build(),
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .definitionName("Measure Observations")
+                        .build()))
+            .build();
+
+    List<ClauseType> clauses = measureMapper.groupToClauseTypes(group, cqlLookups);
+    assertThat(clauses.size(), is(equalTo(4)));
+    ClauseType observationType = clauses.get(3);
+    assertThat(observationType.getType(), is(equalTo("measureObservation")));
+    assertThat(observationType.getAssociatedPopulationUUID(), is(equalTo("")));
+    assertThat(observationType.getCqlaggfunction(), is(notNullValue()));
+  }
+
+  @Test
+  void testGroupToClauseTypesForRatioGroup() {
+    Population denominator =
+        Population.builder()
+            .id("id2")
+            .name(PopulationType.DENOMINATOR)
+            .definition("Denominator")
+            .description("the denom description")
+            .build();
+    Population numerator =
+        Population.builder()
+            .id("id3")
+            .name(PopulationType.NUMERATOR)
+            .definition("Numerator")
+            .description("")
+            .build();
+    Group group =
+        Group.builder()
+            .scoring(MeasureScoring.RATIO.toString())
+            .populations(
+                List.of(
+                    Population.builder()
+                        .id("id1")
+                        .name(PopulationType.INITIAL_POPULATION)
+                        .definition("Initial Population")
+                        .description("the IP description")
+                        .build(),
+                    denominator,
+                    numerator))
+            .measureObservations(
+                List.of(
+                    MeasureObservation.builder()
+                        .id("obs1")
+                        .definition("Denominator Observations")
+                        .criteriaReference("id2")
+                        .aggregateMethod("Average")
+                        .build(),
+                    MeasureObservation.builder()
+                        .id("obs1")
+                        .definition("Numerator Observations")
+                        .criteriaReference("id3")
+                        .aggregateMethod("Average")
+                        .build()))
+            .build();
+
+    CqlLookups cqlLookups =
+        CqlLookups.builder()
+            .definitions(
+                Set.of(
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .definitionName("Initial Population")
+                        .build(),
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .definitionName("Denominator")
+                        .build(),
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .definitionName("Numerator")
+                        .build(),
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .definitionName("Denominator Observations")
+                        .build(),
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .definitionName("Numerator Observations")
+                        .build()))
+            .build();
+
+    List<ClauseType> clauses = measureMapper.groupToClauseTypes(group, cqlLookups);
+    assertThat(clauses.size(), is(equalTo(5)));
+    ClauseType denomObservationType = clauses.get(3);
+    assertThat(denomObservationType.getType(), is(equalTo("measureObservation")));
+    assertThat(
+        denomObservationType.getAssociatedPopulationUUID(), is(equalTo(denominator.getId())));
+
+    ClauseType numerObservationType = clauses.get(4);
+    assertThat(numerObservationType.getType(), is(equalTo("measureObservation")));
+    assertThat(numerObservationType.getAssociatedPopulationUUID(), is(equalTo(numerator.getId())));
   }
 }
