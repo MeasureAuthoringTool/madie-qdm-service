@@ -160,4 +160,42 @@ class PackageControllerMvcTest implements ResourceFileUtil {
         mockResult.getResolvedException().getMessage(),
         is(equalTo("Unsupported model type: QI-Core v4.1.1")));
   }
+
+  @Test
+  void testGetQRDASuccess() throws Exception {
+    String measureJson = getStringFromTestResource("/measures/qdm-test-measure.json");
+    Mockito.when(packagingService.createQRDA(new Measure(), TOKEN))
+        .thenReturn("measure package".getBytes());
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.put("/qdm/measures/package/qrda")
+                .with(user(TEST_USER_ID))
+                .with(csrf())
+                .header(HttpHeaders.AUTHORIZATION, TOKEN)
+                .content(measureJson)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+        .andExpect(status().isOk())
+        .andReturn();
+
+    verify(packagingService, times(1)).createQRDA(any(Measure.class), anyString());
+  }
+
+  @Test
+  void testGetQRDAUnsupportedModel() throws Exception {
+    String measureJson = getStringFromTestResource("/measures/qicore-test-measure.json");
+    MvcResult mockResult =
+        mockMvc
+            .perform(
+                MockMvcRequestBuilders.put("/qdm/measures/package/qrda")
+                    .with(user(TEST_USER_ID))
+                    .with(csrf())
+                    .header(HttpHeaders.AUTHORIZATION, TOKEN)
+                    .content(measureJson)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE))
+            .andExpect(status().isBadRequest())
+            .andReturn();
+    assertThat(
+        mockResult.getResolvedException().getMessage(),
+        is(equalTo("Unsupported model type: QI-Core v4.1.1")));
+  }
 }

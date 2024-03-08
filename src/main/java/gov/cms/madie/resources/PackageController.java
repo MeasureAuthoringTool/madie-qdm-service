@@ -78,4 +78,21 @@ public class PackageController {
         "Unsupported model type: "
             + (measure == null || measure.getModel() == null ? "NONE" : measure.getModel()));
   }
+
+  @PutMapping(
+      value = "/package/qrda",
+      produces = {
+        MediaType.APPLICATION_OCTET_STREAM_VALUE,
+      },
+      consumes = {MediaType.APPLICATION_JSON_VALUE})
+  public byte[] getQRDA(
+      @RequestBody @Validated(Measure.ValidationSequence.class) Measure measure,
+      @RequestHeader("Authorization") String accessToken) {
+    log.info("export QRDA for measure [{}] ", measure.getId());
+    // generate QRDA if the model type is QDM
+    if (measure.getModel() != null && measure.getModel().contains("QDM")) {
+      return packagingService.createQRDA(measure, accessToken);
+    }
+    throw new UnsupportedModelException("Unsupported model type: " + measure.getModel());
+  }
 }
