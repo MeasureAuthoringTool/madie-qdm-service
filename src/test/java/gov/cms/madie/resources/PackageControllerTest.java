@@ -136,4 +136,36 @@ class PackageControllerTest {
     String hqmf = packageController.generateHqmf(measure).getBody();
     assertThat(hqmf, is(equalTo("<QualityMeasureDocument></QualityMeasureDocument>")));
   }
+
+  @Test
+  void testGetQRDASuccess() {
+    String qrda = "test QRDA";
+    when(packagingService.createQRDA(measure, TOKEN)).thenReturn(qrda.getBytes());
+    byte[] result = packageController.getQRDA(measure, TOKEN);
+    assertThat(new String(result), is(equalTo(qrda)));
+  }
+
+  @Test
+  void testGetQRDAIfModelIsNull() {
+    measure.setModel(null);
+    String errorMessage = "Unsupported model type: " + measure.getModel();
+    Exception ex =
+        Assertions.assertThrows(
+            UnsupportedModelException.class,
+            () -> packageController.getQRDA(measure, TOKEN),
+            errorMessage);
+    assertThat(ex.getMessage(), is(equalTo(errorMessage)));
+  }
+
+  @Test
+  void testGetQRDAForUnsupportedModel() {
+    measure.setModel(String.valueOf(ModelType.QI_CORE));
+    String errorMessage = "Unsupported model type: " + measure.getModel();
+    Exception ex =
+        Assertions.assertThrows(
+            UnsupportedModelException.class,
+            () -> packageController.getQRDA(measure, TOKEN),
+            errorMessage);
+    assertThat(ex.getMessage(), is(equalTo(errorMessage)));
+  }
 }
