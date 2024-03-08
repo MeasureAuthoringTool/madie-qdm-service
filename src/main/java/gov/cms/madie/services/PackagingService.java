@@ -59,4 +59,10 @@ public class PackagingService {
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     return new ZipUtility().zipEntries(entries, outputStream);
   }
+
+  public byte[] createQRDA(Measure measure, String accessToken) {
+    log.info("Creating QRDA for measure [{}]", measure.getId());
+    // to be implemented: calling back end QRDA Service
+    return "test qrda".getBytes();
+  }
 }

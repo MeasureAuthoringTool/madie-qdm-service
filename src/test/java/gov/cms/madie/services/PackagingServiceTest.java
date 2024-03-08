@@ -101,4 +101,10 @@ class PackagingServiceTest {
             msg);
     assertThat(exception.getMessage(), containsString(msg));
   }
+
+  @Test
+  void testCreateQRDA() {
+    byte[] qrda = packagingService.createQRDA(measure, TOKEN);
+    assertThat(new String(qrda), is(equalTo("test qrda")));
+  }
 }
