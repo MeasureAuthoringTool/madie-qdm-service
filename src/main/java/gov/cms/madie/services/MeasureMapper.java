@@ -188,7 +188,20 @@ public interface MeasureMapper {
                   observation -> {
                     CQLDefinition cqlDefinition =
                         getCqlDefinition(observation.getDefinition(), cqlDefinitions);
-                    return observationToClauseType(observation, cqlDefinition);
+                    String associatedPopulationUUID = "";
+                    if ("Ratio".equals(group.getScoring())) {
+                      Population associatedPopulation =
+                          group.getPopulations().stream()
+                              .filter(
+                                  population ->
+                                      population.getId().equals(observation.getCriteriaReference()))
+                              .findFirst()
+                              .orElse(null);
+                      associatedPopulationUUID =
+                          associatedPopulation != null ? associatedPopulation.getId() : "";
+                    }
+                    return observationToClauseType(
+                        observation, cqlDefinition, associatedPopulationUUID);
                   })
               .toList());
     }
@@ -218,7 +231,7 @@ public interface MeasureMapper {
       target = "isInGrouping",
       expression =
           "java(String.valueOf(org.apache.commons.lang3.StringUtils.isNotBlank(population.getDefinition())))")
-  @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
+  @Mapping(target = "uuid", source = "population.id")
   @Mapping(
       target = "cqldefinition",
       expression = "java(populationToCqlDefinition(population, cqlDefinition))")
@@ -237,13 +250,15 @@ public interface MeasureMapper {
       target = "isInGrouping",
       expression =
           "java(String.valueOf(org.apache.commons.lang3.StringUtils.isNotBlank(observation.getDefinition())))")
-  @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
+  @Mapping(target = "uuid", source = "observation.id")
   @Mapping(target = "type", constant = "measureObservation")
   @Mapping(target = "displayName", constant = "Measure Observation")
+  @Mapping(target = "associatedPopulationUUID", source = "associatedPopulationUUID")
   @Mapping(
       target = "cqlaggfunction",
       expression = "java(observationToCqlAggFunction(observation, cqlDefinition))")
-  ClauseType observationToClauseType(MeasureObservation observation, CQLDefinition cqlDefinition);
+  ClauseType observationToClauseType(
+      MeasureObservation observation, CQLDefinition cqlDefinition, String associatedPopulationUUID);
 
   @Mapping(target = "displayName", source = "observation.aggregateMethod")
   @Mapping(

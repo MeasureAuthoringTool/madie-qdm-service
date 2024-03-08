@@ -26,6 +26,7 @@ import jakarta.xml.bind.annotation.XmlType;
  *           <element name="cqlaggfunction" type="{}cqlaggfunctionType" minOccurs="0"/>
  *         </choice>
  *       </sequence>
+ *       <attribute name="associatedPopulationUUID" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       <attribute name="displayName" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       <attribute name="isInGrouping" type="{http://www.w3.org/2001/XMLSchema}string" />
  *       <attribute name="type" type="{http://www.w3.org/2001/XMLSchema}string" />
@@ -43,6 +44,9 @@ public class ClauseType {
 
   protected CqldefinitionType cqldefinition;
   protected CqlaggfunctionType cqlaggfunction;
+
+  @XmlAttribute(name = "associatedPopulationUUID")
+  protected String associatedPopulationUUID;
 
   @XmlAttribute(name = "displayName")
   protected String displayName;
@@ -90,6 +94,24 @@ public class ClauseType {
    */
   public void setCqlaggfunction(CqlaggfunctionType value) {
     this.cqlaggfunction = value;
+  }
+
+  /**
+   * Gets the value of the associatedPopulationUUID property.
+   *
+   * @return possible object is {@link String }
+   */
+  public String getAssociatedPopulationUUID() {
+    return associatedPopulationUUID;
+  }
+
+  /**
+   * Sets the value of the associatedPopulationUUID property.
+   *
+   * @param value allowed object is {@link String }
+   */
+  public void setAssociatedPopulationUUID(String value) {
+    this.associatedPopulationUUID = value;
   }
 
   /**
