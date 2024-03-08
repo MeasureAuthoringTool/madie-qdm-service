@@ -47,20 +47,22 @@ public interface MeasureMapper {
 
   @Mapping(target = "cqlLookUp", source = "cqlLookups")
   @Mapping(target = "measureDetails", source = "measure")
-  @Mapping(target = "measureGrouping", source = "measure")
+  @Mapping(
+      target = "measureGrouping",
+      expression = "java(measureToMeasureGroupingType(measure, cqlLookups))")
   @Mapping(target = "elementLookUp", source = "cqlLookups.elementLookups")
   @Mapping(target = "supplementalDataElements", source = "measure.supplementalData")
   @Mapping(target = "riskAdjustmentVariables", source = "measure.riskAdjustments")
   @Mapping(target = "allUsedCQLLibs", source = "cqlLookups.includeLibraries")
   MeasureType measureToMeasureType(QdmMeasure measure, CqlLookups cqlLookups);
 
-  @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
-  @Mapping(target = "cqlUUID", expression = "java(measure.getMeasureSetId())")
+  @Mapping(target = "uuid", source = "versionId")
+  @Mapping(target = "cqlUUID", expression = "java(java.util.UUID.randomUUID().toString())")
   @Mapping(target = "title", source = "measureName")
   @Mapping(target = "measureModel", source = "model")
   @Mapping(target = "shortTitle", source = "ecqmTitle")
   @Mapping(target = "emeasureid", source = "cmsId")
-  @Mapping(target = "guid", source = "versionId")
+  @Mapping(target = "guid", source = "measureSetId")
   @Mapping(
       target = "cbeid",
       source = "measure.measureMetaData.endorsements",
@@ -131,7 +133,9 @@ public interface MeasureMapper {
   @Mapping(target = "uuid", source = "measureSetId")
   QualityMeasureSetType measureToQualityMeasureSet(QdmMeasure measure);
 
-  default MeasureGroupingType measureToMeasureGroupingType(QdmMeasure measure) {
+  // measureGrouping mappings
+  default MeasureGroupingType measureToMeasureGroupingType(
+      QdmMeasure measure, CqlLookups cqlLookups) {
     if (measure == null || CollectionUtils.isEmpty(measure.getGroups())) {
       return null;
     }
@@ -142,54 +146,87 @@ public interface MeasureMapper {
         .getGroup()
         .addAll(
             IntStream.range(0, groups.size())
-                .mapToObj(i -> groupToGroupType(groups.get(i), i + 1))
+                .mapToObj(i -> groupToGroupType(groups.get(i), i + 1, cqlLookups))
                 .toList());
 
     return measureGroupingType;
   }
 
   @Mapping(target = "sequence", source = "sequence")
-  @Mapping(target = "clause", source = "group")
+  @Mapping(target = "clause", expression = "java(groupToClauseTypes(group, cqlLookups))")
   @Mapping(target = "ucum", source = "group.scoringUnit", qualifiedByName = "scoringUnitToUcum")
-  GroupType groupToGroupType(Group group, int sequence);
+  GroupType groupToGroupType(Group group, int sequence, CqlLookups cqlLookups);
 
-  default List<ClauseType> groupToClauseTypes(Group group) {
+  default List<ClauseType> groupToClauseTypes(Group group, CqlLookups cqlLookups) {
     if (group == null) {
       return null;
     }
-
+    Set<CQLDefinition> cqlDefinitions = cqlLookups.getDefinitions();
     // Clauses are listed in the order Populations, Observations, Stratums
     List<ClauseType> clauses = new ArrayList<>();
     if (!CollectionUtils.isEmpty(group.getPopulations())) {
-      clauses.addAll(group.getPopulations().stream().map(this::populationToClauseType).toList());
+      clauses.addAll(
+          group.getPopulations().stream()
+              .map(
+                  population -> {
+                    CQLDefinition cqlDefinition =
+                        getCqlDefinition(population.getDefinition(), cqlDefinitions);
+                    return populationToClauseType(population, cqlDefinition);
+                  })
+              .toList());
     }
     if (!CollectionUtils.isEmpty(group.getMeasureObservations())) {
       clauses.addAll(
-          group.getMeasureObservations().stream().map(this::observationToClauseType).toList());
+          group.getMeasureObservations().stream()
+              .map(
+                  observation -> {
+                    CQLDefinition cqlDefinition =
+                        getCqlDefinition(observation.getDefinition(), cqlDefinitions);
+                    return observationToClauseType(observation, cqlDefinition);
+                  })
+              .toList());
     }
     if (!CollectionUtils.isEmpty(group.getStratifications())) {
       clauses.addAll(
-          group.getStratifications().stream().map(this::stratificationToClauseType).toList());
+          group.getStratifications().stream()
+              .map(
+                  stratification -> {
+                    CQLDefinition cqlDefinition =
+                        getCqlDefinition(stratification.getCqlDefinition(), cqlDefinitions);
+                    return stratificationToClauseType(stratification, cqlDefinition);
+                  })
+              .toList());
     }
     return CollectionUtils.isEmpty(clauses) ? null : clauses;
   }
 
+  default CQLDefinition getCqlDefinition(String definition, Set<CQLDefinition> cqlDefinitions) {
+    return cqlDefinitions.stream()
+        .filter(cqlDefinition -> definition.equals(cqlDefinition.getDefinitionName()))
+        .findFirst()
+        .orElse(null);
+  }
+
+  // population mappings
   @Mapping(
       target = "isInGrouping",
       expression =
           "java(String.valueOf(org.apache.commons.lang3.StringUtils.isNotBlank(population.getDefinition())))")
   @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
-  @Mapping(target = "cqldefinition", source = "population")
+  @Mapping(
+      target = "cqldefinition",
+      expression = "java(populationToCqlDefinition(population, cqlDefinition))")
   @Mapping(
       target = "type",
       expression = "java(gov.cms.madie.util.MappingUtil.getPopulationType(population.getName()))")
   @Mapping(target = "displayName", expression = "java(population.getName().getDisplay())")
-  ClauseType populationToClauseType(Population population);
+  ClauseType populationToClauseType(Population population, CQLDefinition cqlDefinition);
 
-  @Mapping(target = "displayName", source = "name.display")
-  @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
-  CqldefinitionType populationToCqlDefinition(Population population);
+  @Mapping(target = "displayName", source = "population.name.display")
+  @Mapping(target = "uuid", source = "cqlDefinition.uuid")
+  CqldefinitionType populationToCqlDefinition(Population population, CQLDefinition cqlDefinition);
 
+  // observation mappings
   @Mapping(
       target = "isInGrouping",
       expression =
@@ -197,19 +234,24 @@ public interface MeasureMapper {
   @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
   @Mapping(target = "type", constant = "measureObservation")
   @Mapping(target = "displayName", constant = "Measure Observation")
-  @Mapping(target = "cqlaggfunction", source = "observation")
-  ClauseType observationToClauseType(MeasureObservation observation);
+  @Mapping(
+      target = "cqlaggfunction",
+      expression = "java(observationToCqlAggFunction(observation, cqlDefinition))")
+  ClauseType observationToClauseType(MeasureObservation observation, CQLDefinition cqlDefinition);
 
-  @Mapping(target = "displayName", source = "aggregateMethod")
-  @Mapping(target = "cqlfunction", source = "observation")
-  CqlaggfunctionType observationToCqlAggFunction(MeasureObservation observation);
+  @Mapping(target = "displayName", source = "observation.aggregateMethod")
+  @Mapping(
+      target = "cqlfunction",
+      expression = "java(observationToCqlFunction(observation, cqlDefinition))")
+  CqlaggfunctionType observationToCqlAggFunction(
+      MeasureObservation observation, CQLDefinition cqlDefinition);
 
-  @Mapping(target = "displayName", source = "definition")
-  @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
-  CqlfunctionType observationToCqlFunction(MeasureObservation observation);
+  @Mapping(target = "displayName", source = "observation.definition")
+  @Mapping(target = "uuid", source = "cqlDefinition.uuid")
+  CqlfunctionType observationToCqlFunction(
+      MeasureObservation observation, CQLDefinition cqlDefinition);
 
-  // TODO: map observation to definition/aggregate function
-
+  // stratification mappings
   @Mapping(
       target = "isInGrouping",
       expression =
@@ -217,7 +259,7 @@ public interface MeasureMapper {
   @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
   @Mapping(target = "type", constant = "stratum")
   @Mapping(target = "displayName", constant = "stratum")
-  ClauseType stratificationToClauseType(Stratification stratification);
+  ClauseType stratificationToClauseType(Stratification stratification, CQLDefinition cqlDefinition);
 
   // TODO: map stratification to definition/aggregate function
 
@@ -502,11 +544,12 @@ public interface MeasureMapper {
 
   List<FunctionType> cqlDefinitionsToFunctionTypes(Set<CQLDefinition> cqlDefinitions);
 
-  @Mapping(target = "id", expression = "java(java.util.UUID.randomUUID().toString())")
+  @Mapping(target = "id", source = "uuid")
   @Mapping(target = "name", source = "definitionName")
   @Mapping(target = "logic", source = "definitionLogic")
   DefinitionType cqlDefinitionToDefinitionType(CQLDefinition cqlDefinition);
 
+  @Mapping(target = "id", source = "uuid")
   @Mapping(target = "logic", source = "definitionLogic")
   @Mapping(target = "name", source = "definitionName")
   @Mapping(target = "arguments", source = "functionArguments")
