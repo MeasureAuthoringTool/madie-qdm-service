@@ -179,7 +179,9 @@ class MeasureMapperTest {
                                 .build()))
                     .steward(
                         Organization.builder().id("org2Id").oid("222.333.444").name("ICF").build())
+                    .endorsements(List.of(Endorsement.builder().endorsementId("cbe13").build()))
                     .build())
+            .measureSet(MeasureSet.builder().cmsId(144).build())
             .build();
     MeasureDetailsType output = measureMapper.measureToMeasureDetailsType(measure);
     assertThat(output, is(notNullValue()));
@@ -191,6 +193,8 @@ class MeasureMapperTest {
         output.getRecommendations(),
         is(equalTo(measure.getMeasureMetaData().getClinicalRecommendation())));
     assertThat(output.getCopyright(), is(equalTo(measure.getMeasureMetaData().getCopyright())));
+    assertThat(output.getEmeasureid(), is(equalTo("144")));
+    assertThat(output.getCbeid(), is(equalTo("cbe13")));
   }
 
   @Test

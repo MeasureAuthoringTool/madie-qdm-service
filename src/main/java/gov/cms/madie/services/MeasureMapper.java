@@ -67,7 +67,7 @@ public interface MeasureMapper {
   @Mapping(target = "title", source = "measureName")
   @Mapping(target = "measureModel", source = "model")
   @Mapping(target = "shortTitle", source = "ecqmTitle")
-  @Mapping(target = "emeasureid", source = "cmsId")
+  @Mapping(target = "emeasureid", source = "measure.measureSet.cmsId")
   @Mapping(target = "guid", source = "measureSetId")
   @Mapping(
       target = "cbeid",
