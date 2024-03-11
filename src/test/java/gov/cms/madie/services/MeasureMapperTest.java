@@ -1,5 +1,6 @@
 package gov.cms.madie.services;
 
+import generated.gov.cms.madie.simplexml.ClauseType;
 import generated.gov.cms.madie.simplexml.DevelopersType;
 import generated.gov.cms.madie.simplexml.EndorsementType;
 import generated.gov.cms.madie.simplexml.FinalizedDateType;
@@ -11,6 +12,7 @@ import generated.gov.cms.madie.simplexml.PeriodType;
 import generated.gov.cms.madie.simplexml.ScoringType;
 import generated.gov.cms.madie.simplexml.StewardType;
 import generated.gov.cms.madie.simplexml.TypesType;
+import gov.cms.madie.dto.CQLDefinition;
 import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.common.Organization;
@@ -24,6 +26,8 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -58,8 +62,8 @@ class MeasureMapperTest {
             .improvementNotation("Improvement Notation")
             .supplementalData(
                 List.of(
-                    DefDescPair.builder().description("sde1").description("first SDE").build(),
-                    DefDescPair.builder().description("sde2").description("second SDE").build()))
+                    DefDescPair.builder().definition("sde1").description("first SDE").build(),
+                    DefDescPair.builder().definition("sde2").description("second SDE").build()))
             .measureMetaData(
                 MeasureMetaData.builder()
                     .description("Measure Description")
@@ -88,7 +92,21 @@ class MeasureMapperTest {
                     .build())
             .build();
 
-    CqlLookups cqlLookups = CqlLookups.builder().build();
+    CqlLookups cqlLookups =
+        CqlLookups.builder()
+            .definitions(
+                Set.of(
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .uuid(UUID.randomUUID().toString())
+                        .definitionName("sde1")
+                        .build(),
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .uuid(UUID.randomUUID().toString())
+                        .definitionName("sde2")
+                        .build()))
+            .build();
 
     MeasureType output = measureMapper.measureToMeasureType(measure, cqlLookups);
     assertThat(output, is(notNullValue()));
@@ -176,8 +194,16 @@ class MeasureMapperTest {
   }
 
   @Test
-  void testMeasureToMeasureGroupingTypeReturnsNullForNullInput() {
-    MeasureGroupingType output = measureMapper.measureToMeasureGroupingType(null);
+  void testMeasureToMeasureGroupingTypeReturnsNullForNullMeasure() {
+    MeasureGroupingType output =
+        measureMapper.measureToMeasureGroupingType(null, CqlLookups.builder().build());
+    assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void testMeasureToMeasureGroupingTypeReturnsNullForNullLookups() {
+    MeasureGroupingType output =
+        measureMapper.measureToMeasureGroupingType(QdmMeasure.builder().build(), null);
     assertThat(output, is(nullValue()));
   }
 
@@ -185,14 +211,16 @@ class MeasureMapperTest {
   void testMeasureToMeasureGroupingTypeReturnsNullForNullGroupsInput() {
     QdmMeasure measure = new QdmMeasure();
     measure.setGroups(null);
-    MeasureGroupingType output = measureMapper.measureToMeasureGroupingType(measure);
+    MeasureGroupingType output =
+        measureMapper.measureToMeasureGroupingType(measure, CqlLookups.builder().build());
     assertThat(output, is(nullValue()));
   }
 
   @Test
   void testMeasureToMeasureGroupingTypeReturnsNullForEmptyGroupsInput() {
     QdmMeasure measure = QdmMeasure.builder().groups(List.of()).build();
-    MeasureGroupingType output = measureMapper.measureToMeasureGroupingType(measure);
+    MeasureGroupingType output =
+        measureMapper.measureToMeasureGroupingType(measure, CqlLookups.builder().build());
     assertThat(output, is(nullValue()));
   }
 
@@ -268,7 +296,24 @@ class MeasureMapperTest {
                                     .build()))
                         .build()))
             .build();
-    MeasureGroupingType output = measureMapper.measureToMeasureGroupingType(measure);
+    CqlLookups cqlLookups =
+        CqlLookups.builder()
+            .definitions(
+                Set.of(
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .definitionName("ipp")
+                        .build(),
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .definitionName("denom")
+                        .build(),
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .definitionName("numer")
+                        .build()))
+            .build();
+    MeasureGroupingType output = measureMapper.measureToMeasureGroupingType(measure, cqlLookups);
     assertThat(output, is(notNullValue()));
     assertThat(output.getGroup(), is(notNullValue()));
     assertThat(output.getGroup().size(), is(equalTo(1)));
@@ -576,5 +621,149 @@ class MeasureMapperTest {
     Object scoringUnit = Map.of("otherData", Map.of("not", "real"));
     String output = measureMapper.scoringUnitToUcum(scoringUnit);
     assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void testGroupToClauseTypesForCvGroup() {
+    Group group =
+        Group.builder()
+            .scoring(MeasureScoring.CONTINUOUS_VARIABLE.toString())
+            .populations(
+                List.of(
+                    Population.builder()
+                        .id("id1")
+                        .name(PopulationType.INITIAL_POPULATION)
+                        .definition("Initial Population")
+                        .description("the IP description")
+                        .build(),
+                    Population.builder()
+                        .id("id2")
+                        .name(PopulationType.MEASURE_POPULATION)
+                        .definition("Measure Population")
+                        .description("the denom description")
+                        .build(),
+                    Population.builder()
+                        .id("id3")
+                        .name(PopulationType.MEASURE_POPULATION_EXCLUSION)
+                        .definition("")
+                        .description("")
+                        .build()))
+            .measureObservations(
+                List.of(
+                    MeasureObservation.builder()
+                        .id("obs1")
+                        .definition("Measure Observations")
+                        .criteriaReference("id2")
+                        .aggregateMethod("Average")
+                        .build()))
+            .build();
+
+    CqlLookups cqlLookups =
+        CqlLookups.builder()
+            .definitions(
+                Set.of(
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .definitionName("Initial Population")
+                        .build(),
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .definitionName("Measure Population")
+                        .build(),
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .definitionName("Measure Observations")
+                        .build()))
+            .build();
+
+    List<ClauseType> clauses = measureMapper.groupToClauseTypes(group, cqlLookups);
+    assertThat(clauses.size(), is(equalTo(4)));
+    ClauseType observationType = clauses.get(3);
+    assertThat(observationType.getType(), is(equalTo("measureObservation")));
+    assertThat(observationType.getAssociatedPopulationUUID(), is(equalTo("")));
+    assertThat(observationType.getCqlaggfunction(), is(notNullValue()));
+  }
+
+  @Test
+  void testGroupToClauseTypesForRatioGroup() {
+    Population denominator =
+        Population.builder()
+            .id("id2")
+            .name(PopulationType.DENOMINATOR)
+            .definition("Denominator")
+            .description("the denom description")
+            .build();
+    Population numerator =
+        Population.builder()
+            .id("id3")
+            .name(PopulationType.NUMERATOR)
+            .definition("Numerator")
+            .description("")
+            .build();
+    Group group =
+        Group.builder()
+            .scoring(MeasureScoring.RATIO.toString())
+            .populations(
+                List.of(
+                    Population.builder()
+                        .id("id1")
+                        .name(PopulationType.INITIAL_POPULATION)
+                        .definition("Initial Population")
+                        .description("the IP description")
+                        .build(),
+                    denominator,
+                    numerator))
+            .measureObservations(
+                List.of(
+                    MeasureObservation.builder()
+                        .id("obs1")
+                        .definition("Denominator Observations")
+                        .criteriaReference("id2")
+                        .aggregateMethod("Average")
+                        .build(),
+                    MeasureObservation.builder()
+                        .id("obs1")
+                        .definition("Numerator Observations")
+                        .criteriaReference("id3")
+                        .aggregateMethod("Average")
+                        .build()))
+            .build();
+
+    CqlLookups cqlLookups =
+        CqlLookups.builder()
+            .definitions(
+                Set.of(
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .definitionName("Initial Population")
+                        .build(),
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .definitionName("Denominator")
+                        .build(),
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .definitionName("Numerator")
+                        .build(),
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .definitionName("Denominator Observations")
+                        .build(),
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .definitionName("Numerator Observations")
+                        .build()))
+            .build();
+
+    List<ClauseType> clauses = measureMapper.groupToClauseTypes(group, cqlLookups);
+    assertThat(clauses.size(), is(equalTo(5)));
+    ClauseType denomObservationType = clauses.get(3);
+    assertThat(denomObservationType.getType(), is(equalTo("measureObservation")));
+    assertThat(
+        denomObservationType.getAssociatedPopulationUUID(), is(equalTo(denominator.getId())));
+
+    ClauseType numerObservationType = clauses.get(4);
+    assertThat(numerObservationType.getType(), is(equalTo("measureObservation")));
+    assertThat(numerObservationType.getAssociatedPopulationUUID(), is(equalTo(numerator.getId())));
   }
 }

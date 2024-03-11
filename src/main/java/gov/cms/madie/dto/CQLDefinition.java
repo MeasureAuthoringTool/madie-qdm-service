@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class CQLDefinition {
   private String id;
+  private String uuid;
   private String definitionName;
   private String definitionLogic;
   private String context = "Patient";

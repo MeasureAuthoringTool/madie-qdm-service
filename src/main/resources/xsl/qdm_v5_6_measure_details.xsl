@@ -192,17 +192,17 @@
                 <id root="{cqlUUID}"/>
                 <text mediaType="text/cql">
                     <reference
-                            value="https://emeasuretool.cms.gov/libraries/{../measureDetails/guid}/{$msrAbbrName}-v{$libraryVersion}-QDM-{$modelVersion}.cql"/>
+                            value="https://madie.cms.gov/libraries/{../measureDetails/guid}/{$msrAbbrName}-v{$libraryVersion}-QDM-{$modelVersion}.cql"/>
                     <translation mediaType="application/elm+xml">
                         <reference
-                                value="https://emeasuretool.cms.gov/libraries/{../measureDetails/guid}/{$msrAbbrName}-v{$libraryVersion}-QDM-{$modelVersion}.xml"/>
+                                value="https://madie.cms.gov/libraries/{../measureDetails/guid}/{$msrAbbrName}-v{$libraryVersion}-QDM-{$modelVersion}.xml"/>
                     </translation>
                     <translation mediaType="application/elm+json">
                         <reference
-                                value="https://emeasuretool.cms.gov/libraries/{../measureDetails/guid}/{$msrAbbrName}-v{$libraryVersion}-QDM-{$modelVersion}.json"/>
+                                value="https://madie.cms.gov/libraries/{../measureDetails/guid}/{$msrAbbrName}-v{$libraryVersion}-QDM-{$modelVersion}.json"/>
                     </translation>
                 </text>
-                <setId root="https://emeasuretool.cms.gov/libraries" extension="{../measureDetails/guid}"
+                <setId root="https://madie.cms.gov/libraries" extension="{../measureDetails/guid}"
                        identifierName="{translate(/measure/cqlLookUp/library,'_','-')}"/>
                 <versionNumber value="{../cqlLookUp/version}"/>
             </expressionDocument>
@@ -214,17 +214,17 @@
                     <id root="{@id}"/>
                     <text mediaType="text/cql">
                         <reference
-                                value="https://emeasuretool.cms.gov/libraries/{@setId}/{translate(@name,'_','-')}-v{translate(@version,'.','-')}-QDM-{$modelVersion}.cql"/>
+                                value="https://madie.cms.gov/libraries/{@setId}/{translate(@name,'_','-')}-v{translate(@version,'.','-')}-QDM-{$modelVersion}.cql"/>
                         <translation mediaType="application/elm+xml">
                             <reference
-                                    value="https://emeasuretool.cms.gov/libraries/{@setId}/{translate(@name,'_','-')}-v{translate(@version,'.','-')}-QDM-{$modelVersion}.xml"/>
+                                    value="https://madie.cms.gov/libraries/{@setId}/{translate(@name,'_','-')}-v{translate(@version,'.','-')}-QDM-{$modelVersion}.xml"/>
                         </translation>
                         <translation mediaType="application/elm+json">
                             <reference
-                                    value="https://emeasuretool.cms.gov/libraries/{@setId}/{translate(@name,'_','-')}-v{translate(@version,'.','-')}-QDM-{$modelVersion}.json"/>
+                                    value="https://madie.cms.gov/libraries/{@setId}/{translate(@name,'_','-')}-v{translate(@version,'.','-')}-QDM-{$modelVersion}.json"/>
                         </translation>
                     </text>
-                    <setId root="https://emeasuretool.cms.gov/libraries" extension="{@setId}"
+                    <setId root="https://madie.cms.gov/libraries" extension="{@setId}"
                            identifierName="{translate(@name,'_','-')}"/>
                     <versionNumber value="{@version}"/>
                 </expressionDocument>
@@ -884,7 +884,7 @@
 
     <xsl:template name="trim">
         <xsl:param name="textString"/>
-        <xsl:value-of select="replace(replace($textString,'\s+$',''),'^\s+','')"/>
+        <xsl:value-of select="normalize-space($textString)"/>
     </xsl:template>
 
     <xsl:template name="constructExt">
