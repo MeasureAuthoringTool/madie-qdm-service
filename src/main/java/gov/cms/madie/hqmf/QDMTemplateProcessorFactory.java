@@ -2,9 +2,7 @@ package gov.cms.madie.hqmf;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.io.InputStream;
 
 /**
  * DO NOT DELETE OLDER GENERATORS.
@@ -18,17 +16,8 @@ public class QDMTemplateProcessorFactory {
 
   public static XmlProcessor getTemplateProcessor(double qdmVersion) {
     String fileName = "templates/hqmf/qdm_v5_6_datatype_templates.xml";
-
-    URL templateFileUrl = QDMTemplateProcessorFactory.class.getClassLoader().getResource(fileName);
-    log.info("Template file path: " + templateFileUrl.getPath());
-    File templateFile = null;
-    try {
-      log.info("Template file uri: " + templateFileUrl.toURI());
-      templateFile = new File(templateFileUrl.toURI());
-    } catch (URISyntaxException e) {
-      e.printStackTrace();
-    }
-
-    return new XmlProcessor(templateFile);
+    InputStream inputStream =
+        QDMTemplateProcessorFactory.class.getClassLoader().getResourceAsStream(fileName);
+    return new XmlProcessor(inputStream);
   }
 }

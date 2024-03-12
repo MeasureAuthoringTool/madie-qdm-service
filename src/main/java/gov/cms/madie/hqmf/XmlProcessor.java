@@ -23,8 +23,8 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -168,14 +168,14 @@ public class XmlProcessor {
   /**
    * Instantiates a new xml processor for HQMFMeasureXml.
    *
-   * @param file the file
+   * @param inputStream the file InputStream
    */
-  public XmlProcessor(File file) {
+  public XmlProcessor(InputStream inputStream) {
     try {
       DocumentBuilderFactory documentBuilderFactory =
           XMLUtility.getInstance().buildDocumentBuilderFactory();
       docBuilder = documentBuilderFactory.newDocumentBuilder();
-      originalDoc = docBuilder.parse(file);
+      originalDoc = docBuilder.parse(inputStream);
       log.debug("Document Object created successfully for the XML String");
     } catch (ParserConfigurationException e) {
       log.error("Exception thrown on XmlProcessor() constructor", e);
