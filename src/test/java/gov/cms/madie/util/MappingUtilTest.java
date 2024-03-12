@@ -7,6 +7,7 @@ import gov.cms.madie.models.measure.MeasureObservation;
 import gov.cms.madie.models.measure.MeasureScoring;
 import gov.cms.madie.models.measure.Population;
 import gov.cms.madie.models.measure.PopulationType;
+import gov.cms.madie.models.measure.Stratification;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -357,5 +358,65 @@ class MappingUtilTest {
         output,
         equalTo(
             "Denominator Obs Description Numerator Obs Description G2 Denominator Obs Description G2 Numerator Obs Description"));
+  }
+
+  @Test
+  void getStratificationDescriptionNullGroups() {
+    Measure measure = Measure.builder().groups(null).build();
+    String output = MappingUtil.getStratificationDescription(measure.getGroups());
+    assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void getStratificationDescriptionGroupEmpty() {
+    Measure measure =
+        Measure.builder().groups(List.of(Group.builder().build(), Group.builder().build())).build();
+    String output = MappingUtil.getStratificationDescription(measure.getGroups());
+    assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void getStratificationDescriptionIfStratificationNull() {
+    Group group = Group.builder().stratifications(null).build();
+    Measure measure = Measure.builder().groups(List.of(group)).build();
+    String output = MappingUtil.getStratificationDescription(measure.getGroups());
+    assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void getStratificationDescriptionIfStratificationDefinitionIsNull() {
+    Group group =
+        Group.builder().stratifications(List.of(Stratification.builder().build())).build();
+    Measure measure = Measure.builder().groups(List.of(group)).build();
+    String output = MappingUtil.getStratificationDescription(measure.getGroups());
+    assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void getGroupStratificationDescriptionIfDescriptionIsNull() {
+    Group group =
+        Group.builder()
+            .stratifications(List.of(Stratification.builder().cqlDefinition("IPP").build()))
+            .build();
+    Measure measure = Measure.builder().groups(List.of(group)).build();
+    String output = MappingUtil.getStratificationDescription(measure.getGroups());
+    assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void getStratificationDescriptionForValidStratifications() {
+    Group group =
+        Group.builder()
+            .stratifications(
+                List.of(
+                    Stratification.builder().cqlDefinition("IPP").description("Stratum 1").build(),
+                    Stratification.builder()
+                        .cqlDefinition("Denominator")
+                        .description("Stratum 2")
+                        .build()))
+            .build();
+    Measure measure = Measure.builder().groups(List.of(group)).build();
+    String output = MappingUtil.getStratificationDescription(measure.getGroups());
+    assertThat(output, is(equalTo("Stratum 1 Stratum 2")));
   }
 }

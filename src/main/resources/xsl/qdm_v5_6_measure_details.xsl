@@ -243,7 +243,7 @@
         <subjectOf>
             <measureAttribute>
                 <code nullFlavor="OTH">
-                    <originalText value="eCQM Identifier (Measure Authoring Tool)"/>
+                    <originalText value="CMS ID"/>
                 </code>
                 <value xsi:type="ED" mediaType="text/plain">
                     <xsl:attribute name="value">
@@ -262,7 +262,7 @@
                 </code>
                 <xsl:variable name="NQFText">
                     <xsl:call-template name="trim">
-                        <xsl:with-param name="textString" select="cbeid/@extension"/>
+                        <xsl:with-param name="textString" select="cbeid"/>
                     </xsl:call-template>
                 </xsl:variable>
                 <xsl:choose>
