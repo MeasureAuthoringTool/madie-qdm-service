@@ -131,6 +131,10 @@ public interface MeasureMapper {
       target = "measureObservationsDescription",
       expression =
           "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, PopulationType.MEASURE_OBSERVATION))")
+  @Mapping(
+      target = "stratification",
+      expression =
+          "java(gov.cms.madie.util.MappingUtil.getStratificationDescription(measure.getGroups()))")
   @Mapping(target = "supplementalData", source = "supplementalDataDescription")
   @Mapping(target = "finalizedDate", source = "measure")
   @Mapping(target = "qualityMeasureSet", source = "measure")
@@ -277,12 +281,18 @@ public interface MeasureMapper {
       target = "isInGrouping",
       expression =
           "java(String.valueOf(org.apache.commons.lang3.StringUtils.isNotBlank(stratification.getCqlDefinition())))")
-  @Mapping(target = "uuid", expression = "java(java.util.UUID.randomUUID().toString())")
+  @Mapping(target = "uuid", source = "stratification.id")
   @Mapping(target = "type", constant = "stratum")
-  @Mapping(target = "displayName", constant = "stratum")
+  @Mapping(target = "displayName", constant = "Stratum")
+  @Mapping(
+      target = "cqldefinition",
+      expression = "java(getStratificationDefinition(stratification, cqlDefinition))")
   ClauseType stratificationToClauseType(Stratification stratification, CQLDefinition cqlDefinition);
 
-  // TODO: map stratification to definition/aggregate function
+  @Mapping(target = "displayName", source = "stratification.cqlDefinition")
+  @Mapping(target = "uuid", source = "cqlDefinition.uuid")
+  CqldefinitionType getStratificationDefinition(
+      Stratification stratification, CQLDefinition cqlDefinition);
 
   @Named("scoringUnitToUcum")
   default String scoringUnitToUcum(Object scoringUnit) {

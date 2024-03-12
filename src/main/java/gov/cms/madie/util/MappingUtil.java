@@ -2,11 +2,13 @@ package gov.cms.madie.util;
 
 import com.nimbusds.oauth2.sdk.util.CollectionUtils;
 import gov.cms.madie.models.measure.BaseConfigurationTypes;
+import gov.cms.madie.models.measure.Group;
 import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.models.measure.MeasureScoring;
 import gov.cms.madie.models.measure.PopulationType;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 public final class MappingUtil {
@@ -96,6 +98,39 @@ public final class MappingUtil {
                                 StringUtils.isNotBlank(observation.getDefinition())
                                     && StringUtils.isNotBlank(observation.getDescription()))
                         .map(mo -> mo.getDescription().replaceAll("[\\t\\n\\r]+", " "))
+                        .collect(Collectors.joining(" "));
+                  }
+                  return null;
+                })
+            .filter(StringUtils::isNotBlank)
+            .collect(Collectors.joining(" "));
+    return StringUtils.isBlank(description) ? null : description;
+  }
+
+  /**
+   * Fetch descriptions of all the stratification from all the groups Combine all descriptions with
+   * a space (not a newline)
+   *
+   * @param groups - measure groups
+   * @return
+   */
+  public static String getStratificationDescription(List<Group> groups) {
+    if (CollectionUtils.isEmpty(groups)) {
+      return null;
+    }
+    final String description =
+        groups.stream()
+            .map(
+                group -> {
+                  if (CollectionUtils.isNotEmpty(group.getStratifications())) {
+                    // there is only one stratum description field, so grab all available
+                    // measure stratification descriptions
+                    return group.getStratifications().stream()
+                        .filter(
+                            stratum ->
+                                StringUtils.isNotBlank(stratum.getCqlDefinition())
+                                    && StringUtils.isNotBlank(stratum.getDescription()))
+                        .map(stratum -> stratum.getDescription().replaceAll("[\\t\\n\\r]+", " "))
                         .collect(Collectors.joining(" "));
                   }
                   return null;

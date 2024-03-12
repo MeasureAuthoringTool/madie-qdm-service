@@ -335,7 +335,7 @@ class MeasureMapperTest {
     assertThat(
         firstGroup.getClause().get(2).getDisplayName(), is(equalTo("Denominator Exclusion")));
     assertThat(firstGroup.getClause().get(6).getIsInGrouping(), is(equalTo("true")));
-    assertThat(firstGroup.getClause().get(6).getDisplayName(), is(equalTo("stratum")));
+    assertThat(firstGroup.getClause().get(6).getDisplayName(), is(equalTo("Stratum")));
     assertThat(firstGroup.getClause().get(6).getType(), is(equalTo("stratum")));
   }
 
