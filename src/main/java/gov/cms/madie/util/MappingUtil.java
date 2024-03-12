@@ -108,7 +108,7 @@ public final class MappingUtil {
   }
 
   /**
-   * Fetch descriptions of all the stratification from all the groups Combine all descriptions with
+   * Fetch descriptions of all the stratification from all the groups. Combine all descriptions with
    * a space (not a newline)
    *
    * @param groups - measure groups
