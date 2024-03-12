@@ -1,6 +1,7 @@
 package gov.cms.madie.hqmf;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 
@@ -14,7 +15,7 @@ import java.net.URL;
 public class QDMTemplateProcessorFactory {
 
   public static XmlProcessor getTemplateProcessor(double qdmVersion) {
-    String fileName = "templates/hqmf/qdm_v5_6_datatype_templates.xml";
+    String fileName = "templates"+ File.separator + "hqmf" + File.separator + "qdm_v5_6_datatype_templates.xml";
 
     URL templateFileUrl = QDMTemplateProcessorFactory.class.getClassLoader().getResource(fileName);
     File templateFile = null;
