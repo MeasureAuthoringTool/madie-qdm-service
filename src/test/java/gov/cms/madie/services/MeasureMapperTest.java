@@ -2,6 +2,7 @@ package gov.cms.madie.services;
 
 import generated.gov.cms.madie.simplexml.ClauseType;
 import generated.gov.cms.madie.simplexml.DevelopersType;
+import generated.gov.cms.madie.simplexml.ElementLookUpType;
 import generated.gov.cms.madie.simplexml.EndorsementType;
 import generated.gov.cms.madie.simplexml.FinalizedDateType;
 import generated.gov.cms.madie.simplexml.GroupType;
@@ -9,11 +10,13 @@ import generated.gov.cms.madie.simplexml.MeasureDetailsType;
 import generated.gov.cms.madie.simplexml.MeasureGroupingType;
 import generated.gov.cms.madie.simplexml.MeasureType;
 import generated.gov.cms.madie.simplexml.PeriodType;
+import generated.gov.cms.madie.simplexml.QdmType;
 import generated.gov.cms.madie.simplexml.ScoringType;
 import generated.gov.cms.madie.simplexml.StewardType;
 import generated.gov.cms.madie.simplexml.TypesType;
 import gov.cms.madie.dto.CQLDefinition;
 import gov.cms.madie.dto.CqlLookups;
+import gov.cms.madie.dto.ElementLookup;
 import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.common.Organization;
 import gov.cms.madie.models.common.Version;
@@ -26,6 +29,7 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -769,5 +773,78 @@ class MeasureMapperTest {
     ClauseType numerObservationType = clauses.get(4);
     assertThat(numerObservationType.getType(), is(equalTo("measureObservation")));
     assertThat(numerObservationType.getAssociatedPopulationUUID(), is(equalTo(numerator.getId())));
+  }
+
+  @Test
+  void testElementLookupsToElementLookupTypeForNullInput() {
+    assertThat(measureMapper.elementLookupsToElementLookupType(null), is(nullValue()));
+  }
+
+  @Test
+  void testElementLookupsToElementLookupTypeForEmptyInput() {
+    assertThat(measureMapper.elementLookupsToElementLookupType(Set.of()), is(nullValue()));
+  }
+
+  @Test
+  void testElementLookupsToElementLookupType() {
+    ElementLookup lookup1 =
+        ElementLookup.builder()
+            .code(true)
+            .id("7d87e17439ea")
+            .name("digoxin 0.125 MG Oral Tablet")
+            .oid("197604")
+            .taxonomy("RXNORM")
+            .codeName("digoxin 0.125 MG Oral Tablet")
+            .codeSystemOID("urn:oid:2.16.840.1.113883.6.88")
+            .build();
+    ElementLookup lookup2 =
+        ElementLookup.builder()
+            .code(true)
+            .datatype("Medication, Order")
+            .id("ed773b5f11d8")
+            .name("1 ML digoxin 0.1 MG/ML Injection")
+            .oid("204504")
+            .taxonomy("RXNORM")
+            .codeName("1 ML digoxin 0.1 MG/ML Injection")
+            .codeSystemOID("urn:oid:2.16.840.1.113883.6.88")
+            .build();
+    ElementLookup lookup3 =
+        ElementLookup.builder()
+            .code(false)
+            .datatype("Medication, Order")
+            .id("3e1ef08235c2")
+            .name("Digoxin Medications")
+            .oid("2.16.840.1.113883.3.464.1003.1065")
+            .taxonomy("Grouping")
+            .build();
+    ElementLookUpType elementLookUpType =
+        measureMapper.elementLookupsToElementLookupType(Set.of(lookup1, lookup2, lookup3));
+    List<QdmType> qdmTypes = elementLookUpType.getQdm();
+    assertThat(qdmTypes.size(), is(equalTo(3)));
+    QdmType type1 =
+        qdmTypes.stream()
+            .filter(qdmType -> Objects.equals(qdmType.getOid(), lookup1.getOid()))
+            .findFirst()
+            .orElse(null);
+    assertThat(type1, is(notNullValue()));
+    assertThat(type1.getCode(), is(equalTo("true")));
+    assertThat(type1.getDatatype(), is(nullValue()));
+    assertThat(type1.getOid(), is(equalTo(lookup1.getOid())));
+    assertThat(type1.getCodeName(), is(equalTo(lookup1.getCodeName())));
+    assertThat(type1.getIsCodeSystemVersionIncluded(), is(equalTo("false")));
+
+    QdmType type2 =
+        qdmTypes.stream()
+            .filter(qdmType -> Objects.equals(qdmType.getOid(), lookup2.getOid()))
+            .findFirst()
+            .orElse(null);
+
+    assertThat(type2, is(notNullValue()));
+    assertThat(type2.getCode(), is(equalTo(String.valueOf(lookup2.isCode()))));
+    assertThat(type2.getDatatype(), is(equalTo("Medication, Order")));
+    assertThat(type2.getOid(), is(equalTo(lookup2.getOid())));
+    assertThat(type2.getName(), is(equalTo(lookup2.getName())));
+    assertThat(type2.getIsCodeSystemVersionIncluded(), is(equalTo("false")));
+    assertThat(type2.getTaxonomy(), is(equalTo(lookup2.getTaxonomy())));
   }
 }

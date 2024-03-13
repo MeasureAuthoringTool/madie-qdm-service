@@ -349,6 +349,17 @@ public interface MeasureMapper {
   @Mapping(target = "originalName", source = "name")
   @Mapping(target = "suppDataElement", constant = "false")
   @Mapping(target = "version", constant = "")
+  @Mapping(
+      target = "codeSystemOID",
+      expression =
+          "java(org.apache.commons.lang3.StringUtils.replaceChars(elementLookup.getCodeSystemOID(), \"urn:oid:\",\"\"))")
+  @Mapping(
+      target = "codeSystemVersion",
+      expression =
+          "java(elementLookup.getCodeSystemVersion() == null ? \"\" : elementLookup.getCodeSystemVersion())")
+  @Mapping(
+      target = "isCodeSystemVersionIncluded",
+      expression = "java(String.valueOf(elementLookup.getCodeSystemVersion() != null))")
   QdmType elementLookupToQdmType(ElementLookup elementLookup);
 
   default RiskAdjustmentVariablesType riskAdjustmentsToRiskAdjustmentVariablesType(
