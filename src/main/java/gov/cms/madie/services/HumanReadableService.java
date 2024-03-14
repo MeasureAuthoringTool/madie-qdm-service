@@ -16,7 +16,7 @@ import gov.cms.madie.model.HumanReadablePopulationCriteriaModel;
 import gov.cms.madie.model.HumanReadablePopulationModel;
 import gov.cms.madie.model.HumanReadableTerminologyModel;
 import gov.cms.madie.model.HumanReadableValuesetModel;
-//import gov.cms.mat.cql_elm_translation.dto.SourceDataCriteria;
+// import gov.cms.mat.cql_elm_translation.dto.SourceDataCriteria;
 import gov.cms.madie.util.HumanReadableDateUtil;
 import gov.cms.madie.util.HumanReadableUtil;
 import gov.cms.madie.dto.CQLCode;
@@ -52,8 +52,8 @@ public class HumanReadableService {
 
   private Template baseHumanReadableTemplate;
 
-//  private final DataCriteriaService dataCriteriaService;
-//  private final CqlParsingService cqlParsingService;
+  //  private final DataCriteriaService dataCriteriaService;
+  //  private final CqlParsingService cqlParsingService;
   private final Collator collator = Collator.getInstance(Locale.US);
 
   /**
@@ -70,27 +70,34 @@ public class HumanReadableService {
       throw new IllegalArgumentException("Measure cannot be null.");
     }
     watch.stop();
-    log.info("Generate for section [{}] took [{}ms]", watch.getLastTaskName(), watch.getLastTaskTimeMillis());
+    log.info(
+        "Generate for section [{}] took [{}ms]",
+        watch.getLastTaskName(),
+        watch.getLastTaskTimeMillis());
     watch.start("generate sourceDataCriteria");
 
-
-
-//    List<SourceDataCriteria> sourceDataCriteria =
-//        dataCriteriaService.getSourceDataCriteria(measure.getCql(), accessToken);
-
+    //    List<SourceDataCriteria> sourceDataCriteria =
+    //        dataCriteriaService.getSourceDataCriteria(measure.getCql(), accessToken);
 
     watch.stop();
-    log.info("Generate for section [{}] took [{}ms]", watch.getLastTaskName(), watch.getLastTaskTimeMillis());
+    log.info(
+        "Generate for section [{}] took [{}ms]",
+        watch.getLastTaskName(),
+        watch.getLastTaskTimeMillis());
     watch.start("generate getUsedCQLCodes");
 
-//    Set<CQLCode> cqlCodes = dataCriteriaService.getUsedCQLCodes(measure.getCql(), accessToken);
+    //    Set<CQLCode> cqlCodes = dataCriteriaService.getUsedCQLCodes(measure.getCql(),
+    // accessToken);
     Set<CQLCode> cqlCodes = cqlLookups.getCodes();
-//    Set<CQLDefinition> allDefinitions =
-//        cqlParsingService.getAllDefinitions(measure.getCql(), accessToken);
+    //    Set<CQLDefinition> allDefinitions =
+    //        cqlParsingService.getAllDefinitions(measure.getCql(), accessToken);
     Set<CQLDefinition> allDefinitions = cqlLookups.getDefinitions();
 
     watch.stop();
-    log.info("Generate for section [{}] took [{}ms]", watch.getLastTaskName(), watch.getLastTaskTimeMillis());
+    log.info(
+        "Generate for section [{}] took [{}ms]",
+        watch.getLastTaskName(),
+        watch.getLastTaskTimeMillis());
     watch.start("HR model setup 1");
 
     HumanReadable hr =
@@ -99,61 +106,76 @@ public class HumanReadableService {
             .populationCriteria(buildPopCriteria(measure, allDefinitions))
             .definitions(buildDefinitions(allDefinitions))
             .functions(buildFunctions(allDefinitions))
-                .valuesetDataCriteriaList(buildValuesetDataCriteriaList(cqlLookups))
-//            .valuesetDataCriteriaList(
-//                buildValuesetDataCriteriaList(sourceDataCriteria, measure, accessToken))
+            .valuesetDataCriteriaList(buildValuesetDataCriteriaList(cqlLookups))
+            //            .valuesetDataCriteriaList(
+            //                buildValuesetDataCriteriaList(sourceDataCriteria, measure,
+            // accessToken))
             .codeDataCriteriaList(buildCodeDataCriteriaList(new ArrayList<>(cqlCodes)))
             .build();
 
     watch.stop();
-    log.info("Generate for section [{}] took [{}ms]", watch.getLastTaskName(), watch.getLastTaskTimeMillis());
+    log.info(
+        "Generate for section [{}] took [{}ms]",
+        watch.getLastTaskName(),
+        watch.getLastTaskTimeMillis());
     watch.start("HR model setup 2");
 
     hr.setValuesetAndCodeDataCriteriaList(new ArrayList<>(hr.getValuesetDataCriteriaList()));
 
-
     watch.stop();
-    log.info("Generate for section [{}] took [{}ms]", watch.getLastTaskName(), watch.getLastTaskTimeMillis());
+    log.info(
+        "Generate for section [{}] took [{}ms]",
+        watch.getLastTaskName(),
+        watch.getLastTaskTimeMillis());
     watch.start("HR model setup 3");
 
     hr.setValuesetTerminologyList(
         buildValuesetTerminologyList(
-            hr.getValuesetDataCriteriaList(), cqlLookups.getValueSets(), cqlLookups.getSourceDataCriteria().stream().toList()));
+            hr.getValuesetDataCriteriaList(),
+            cqlLookups.getValueSets(),
+            cqlLookups.getSourceDataCriteria().stream().toList()));
 
     watch.stop();
-    log.info("Generate for section [{}] took [{}ms]", watch.getLastTaskName(), watch.getLastTaskTimeMillis());
+    log.info(
+        "Generate for section [{}] took [{}ms]",
+        watch.getLastTaskName(),
+        watch.getLastTaskTimeMillis());
     watch.start("HR model setup 4");
 
     hr.setCodeTerminologyList(buildCodeTerminologyList(hr.getCodeDataCriteriaList()));
 
-
     watch.stop();
-    log.info("Generate for section [{}] took [{}ms]", watch.getLastTaskName(), watch.getLastTaskTimeMillis());
+    log.info(
+        "Generate for section [{}] took [{}ms]",
+        watch.getLastTaskName(),
+        watch.getLastTaskTimeMillis());
     watch.start("HR model setup 5");
-
 
     hr.setSupplementalDataElements(buildSupplementalDataElements(measure, hr.getDefinitions()));
 
-
     watch.stop();
-    log.info("Generate for section [{}] took [{}ms]", watch.getLastTaskName(), watch.getLastTaskTimeMillis());
+    log.info(
+        "Generate for section [{}] took [{}ms]",
+        watch.getLastTaskName(),
+        watch.getLastTaskTimeMillis());
     watch.start("HR model setup 6");
-
 
     hr.setRiskAdjustmentVariables(buildRiskAdjustmentVariables(measure, hr.getDefinitions()));
 
-
     watch.stop();
-    log.info("Generate for section [{}] took [{}ms]", watch.getLastTaskName(), watch.getLastTaskTimeMillis());
+    log.info(
+        "Generate for section [{}] took [{}ms]",
+        watch.getLastTaskName(),
+        watch.getLastTaskTimeMillis());
     watch.start("generate HR string");
 
     String output = generate(hr);
 
-
-
     watch.stop();
-    log.info("Generate for section [{}] took [{}ms]", watch.getLastTaskName(), watch.getLastTaskTimeMillis());
-
+    log.info(
+        "Generate for section [{}] took [{}ms]",
+        watch.getLastTaskName(),
+        watch.getLastTaskTimeMillis());
 
     return output;
   }
@@ -357,12 +379,7 @@ public class HumanReadableService {
 
   List<HumanReadableExpressionModel> buildFunctions(Set<CQLDefinition> allDefinitions) {
     List<CQLDefinition> functions =
-        allDefinitions.stream()
-            .filter(
-                definition ->
-                    definition.isFunction()
-            )
-            .toList();
+        allDefinitions.stream().filter(definition -> definition.isFunction()).toList();
 
     List<HumanReadableExpressionModel> expressions =
         functions.stream()
@@ -381,29 +398,29 @@ public class HumanReadableService {
     return expressions;
   }
 
-//  boolean isUsedFunction(Measure measure, String accessToken, String id) {
-//    Map<String, Set<String>> usedFunctions =
-//        cqlParsingService.getUsedFunctions(measure.getCql(), accessToken);
-//    return usedFunctions != null && !usedFunctions.isEmpty() && usedFunctions.containsKey(id);
-//  }
+  //  boolean isUsedFunction(Measure measure, String accessToken, String id) {
+  //    Map<String, Set<String>> usedFunctions =
+  //        cqlParsingService.getUsedFunctions(measure.getCql(), accessToken);
+  //    return usedFunctions != null && !usedFunctions.isEmpty() && usedFunctions.containsKey(id);
+  //  }
 
   List<HumanReadableValuesetModel> buildValuesetDataCriteriaList(CqlLookups cqlLookups) {
     List<SourceDataCriteria> valuesetsSourceDataCriteria =
-            cqlLookups.getSourceDataCriteria().stream()
-                    .filter(valueset -> StringUtils.isBlank(valueset.getCodeId()))
-                    .toList();
-    return valuesetsSourceDataCriteria.stream()
-                    .map(
-                            criteria ->
-                                    new HumanReadableValuesetModel(
-                                            criteria.getName(),
-//                                            criteria.getTitle(),
-                                            criteria.getOid(),
-                                            "",
-                                            criteria.getDescription().split(":")[0]))
-                    .distinct()
-                    .sorted(Comparator.comparing(HumanReadableValuesetModel::getDataCriteriaDisplay, collator))
+        cqlLookups.getSourceDataCriteria().stream()
+            .filter(valueset -> StringUtils.isBlank(valueset.getCodeId()))
             .toList();
+    return valuesetsSourceDataCriteria.stream()
+        .map(
+            criteria ->
+                new HumanReadableValuesetModel(
+                    criteria.getName(),
+                    //                                            criteria.getTitle(),
+                    criteria.getOid(),
+                    "",
+                    criteria.getDescription().split(":")[0]))
+        .distinct()
+        .sorted(Comparator.comparing(HumanReadableValuesetModel::getDataCriteriaDisplay, collator))
+        .toList();
   }
 
   List<HumanReadableValuesetModel> buildValuesetDataCriteriaList(
@@ -432,7 +449,8 @@ public class HumanReadableService {
   }
 
   boolean findUsedValueset(Set<CQLValueSet> usedCqlValuesets, String id) {
-    Set<String> usedValuesets = usedCqlValuesets.stream().map(CQLValueSet::getName).collect(Collectors.toSet());
+    Set<String> usedValuesets =
+        usedCqlValuesets.stream().map(CQLValueSet::getName).collect(Collectors.toSet());
     return usedValuesets != null && !usedValuesets.isEmpty() && usedValuesets.contains(id);
   }
 
@@ -474,9 +492,9 @@ public class HumanReadableService {
   }
 
   Set<HumanReadableValuesetModel> findUsedCQLValueSet(
-          Set<CQLValueSet> usedValuesets, List<SourceDataCriteria> sourceDataCriteria) {
-//    Set<CQLValueSet> usedValuesets =
-//        dataCriteriaService.getUsedCQLValuesets(measure.getCql(), accessToken);
+      Set<CQLValueSet> usedValuesets, List<SourceDataCriteria> sourceDataCriteria) {
+    //    Set<CQLValueSet> usedValuesets =
+    //        dataCriteriaService.getUsedCQLValuesets(measure.getCql(), accessToken);
 
     List<CQLValueSet> otherValueSets =
         usedValuesets.stream()

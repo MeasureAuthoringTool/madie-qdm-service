@@ -10,22 +10,20 @@ import java.io.IOException;
 @Configuration
 public class HumanReadableConfig {
 
+  @Bean
+  public FreeMarkerConfigurer freemarkerConfig() {
+    FreeMarkerConfigurer freeMarkerConfigurer = new FreeMarkerConfigurer();
+    freeMarkerConfigurer.setTemplateLoaderPath("classpath:/templates");
+    return freeMarkerConfigurer;
+  }
 
-    @Bean
-    public FreeMarkerConfigurer freemarkerConfig() {
-        FreeMarkerConfigurer freeMarkerConfigurer = new FreeMarkerConfigurer();
-        freeMarkerConfigurer.setTemplateLoaderPath("classpath:/templates");
-        return freeMarkerConfigurer;
+  @Bean
+  public Template baseHumanReadableTemplate(
+      freemarker.template.Configuration freemarkerConfiguration) {
+    try {
+      return freemarkerConfiguration.getTemplate("humanreadable/human_readable.ftl");
+    } catch (IOException e) {
+      throw new IllegalStateException("Unable to load Human Readable Template", e);
     }
-
-    @Bean
-    public Template baseHumanReadableTemplate(
-            freemarker.template.Configuration freemarkerConfiguration) {
-        try {
-            return freemarkerConfiguration.getTemplate("humanreadable/human_readable.ftl");
-        } catch (IOException e) {
-            throw new IllegalStateException("Unable to load Human Readable Template", e);
-        }
-    }
-
+  }
 }
