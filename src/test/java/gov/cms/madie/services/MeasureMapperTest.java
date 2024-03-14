@@ -1,20 +1,13 @@
 package gov.cms.madie.services;
 
-import generated.gov.cms.madie.simplexml.ClauseType;
-import generated.gov.cms.madie.simplexml.DevelopersType;
-import generated.gov.cms.madie.simplexml.ElementLookUpType;
-import generated.gov.cms.madie.simplexml.EndorsementType;
-import generated.gov.cms.madie.simplexml.FinalizedDateType;
-import generated.gov.cms.madie.simplexml.GroupType;
-import generated.gov.cms.madie.simplexml.MeasureDetailsType;
-import generated.gov.cms.madie.simplexml.MeasureGroupingType;
-import generated.gov.cms.madie.simplexml.MeasureType;
-import generated.gov.cms.madie.simplexml.PeriodType;
-import generated.gov.cms.madie.simplexml.QdmType;
-import generated.gov.cms.madie.simplexml.ScoringType;
-import generated.gov.cms.madie.simplexml.StewardType;
-import generated.gov.cms.madie.simplexml.TypesType;
+import generated.gov.cms.madie.simplexml.*;
+import gov.cms.madie.dto.CQLCode;
+import gov.cms.madie.dto.CQLCodeSystem;
 import gov.cms.madie.dto.CQLDefinition;
+import gov.cms.madie.dto.CQLFunctionArgument;
+import gov.cms.madie.dto.CQLIncludeLibrary;
+import gov.cms.madie.dto.CQLParameter;
+import gov.cms.madie.dto.CQLValueSet;
 import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.dto.ElementLookup;
 import gov.cms.madie.models.common.ModelType;
@@ -846,5 +839,187 @@ class MeasureMapperTest {
     assertThat(type2.getName(), is(equalTo(lookup2.getName())));
     assertThat(type2.getIsCodeSystemVersionIncluded(), is(equalTo("false")));
     assertThat(type2.getTaxonomy(), is(equalTo(lookup2.getTaxonomy())));
+  }
+
+  @Test
+  void testFunctionArgumentsToArgumentsTypeForNullInput() {
+    assertThat(measureMapper.functionArgumentsToArgumentsType(null), is(nullValue()));
+  }
+
+  @Test
+  void testFunctionArgumentsToArgumentsTypeForEmptyInput() {
+    assertThat(measureMapper.functionArgumentsToArgumentsType(List.of()), is(nullValue()));
+  }
+
+  @Test
+  void testFunctionArgumentsToArgumentsType() {
+    CQLFunctionArgument arg1 =
+        CQLFunctionArgument.builder()
+            .id("51e3a1669fad")
+            .argumentName("QualifyingEncounter")
+            .argumentType("QDM Datatype")
+            .qdmDataType("Encounter, Performed")
+            .build();
+    ArgumentsType argumentsTypes = measureMapper.functionArgumentsToArgumentsType(List.of(arg1));
+    assertThat(argumentsTypes, is(notNullValue()));
+    assertThat(argumentsTypes.getArgument().size(), is(equalTo(1)));
+    ArgumentType argumentsType = argumentsTypes.getArgument().get(0);
+    assertThat(argumentsType.getType(), is(equalTo(arg1.getArgumentType())));
+    assertThat(argumentsType.getQdmDataType(), is(equalTo(arg1.getQdmDataType())));
+  }
+
+  @Test
+  void testCqlIncludeLibrariesToIncludeLibrariesTypeForEmptyInput() {
+    assertThat(measureMapper.cqlIncludeLibrariesToIncludeLibrarysType(Set.of()), is(nullValue()));
+  }
+
+  @Test
+  void testCqlIncludeLibrariesToIncludeLibrariesTypeForNullInput() {
+    assertThat(measureMapper.cqlIncludeLibrariesToIncludeLibrarysType(null), is(nullValue()));
+  }
+
+  @Test
+  void testCqlIncludeLibrariesToIncludeLibrariesType() {
+    CQLIncludeLibrary includeLibrary =
+        CQLIncludeLibrary.builder()
+            .aliasName("Commons")
+            .cqlLibraryName("MADiECommonFunctions")
+            .version("1.0.000")
+            .qdmVersion("5.6")
+            .build();
+    IncludeLibrarysType librariesType =
+        measureMapper.cqlIncludeLibrariesToIncludeLibrarysType(Set.of(includeLibrary));
+    assertThat(librariesType, is(notNullValue()));
+    IncludeLibraryType includeLibraryType = librariesType.getIncludeLibrary().get(0);
+    assertThat(includeLibraryType.getName(), is(equalTo(includeLibrary.getAliasName())));
+    assertThat(
+        includeLibraryType.getCqlLibRefName(), is(equalTo(includeLibrary.getCqlLibraryName())));
+    assertThat(includeLibraryType.getCqlLibRefId(), is(equalTo(includeLibrary.getId())));
+  }
+
+  @Test
+  void testValueSetsToValueSetsTypeForNullInput() {
+    assertThat(measureMapper.valueSetsToValuesetsType(null), is(nullValue()));
+  }
+
+  @Test
+  void testValueSetsToValueSetsType() {
+    CQLValueSet cqlValueSet =
+        CQLValueSet.builder()
+            .name("Bilateral Mastectomy")
+            .oid("2.16.840.1.113883.3.464.1003.198.12.1005")
+            .build();
+    ValuesetsType valueSetsType = measureMapper.valueSetsToValuesetsType(Set.of(cqlValueSet));
+    assertThat(valueSetsType, is(notNullValue()));
+    assertThat(valueSetsType.getValueset().size(), is(equalTo(1)));
+    ValuesetType valueSetType = valueSetsType.getValueset().get(0);
+    assertThat(valueSetType.getName(), is(equalTo(cqlValueSet.getName())));
+    assertThat(valueSetType.getOid(), is(equalTo(cqlValueSet.getOid())));
+  }
+
+  @Test
+  void testCqlCodeSystemsToCodeSystemsTypeNullInput() {
+    assertThat(measureMapper.cqlCodeSystemsToCodeSystemsType(null), is(nullValue()));
+  }
+
+  @Test
+  void testCqlCodeSystemsToCodeSystemsType() {
+    CQLCodeSystem cqlCodeSystem =
+        CQLCodeSystem.builder()
+            .codeSystem("2.16.840.1.113883.6.96")
+            .codeSystemName("SNOMEDCT")
+            .codeSystemVersion("2023-01-12")
+            .build();
+    CodeSystemsType codeSystemsType =
+        measureMapper.cqlCodeSystemsToCodeSystemsType(Set.of(cqlCodeSystem));
+    assertThat(codeSystemsType, is(notNullValue()));
+    assertThat(codeSystemsType.getCodeSystem().size(), is(equalTo(1)));
+    CodeSystemType codeSystemType = codeSystemsType.getCodeSystem().get(0);
+    assertThat(codeSystemType.getCodeSystem(), is(equalTo(cqlCodeSystem.getCodeSystem())));
+    assertThat(codeSystemType.getCodeSystemName(), is(equalTo(cqlCodeSystem.getCodeSystemName())));
+    assertThat(
+        codeSystemType.getCodeSystemVersion(), is(equalTo(cqlCodeSystem.getCodeSystemVersion())));
+  }
+
+  @Test
+  void testCqlCodesToCodesTypeForNullInput() {
+    assertThat(measureMapper.cqlCodesToCodesType(null), is(nullValue()));
+  }
+
+  @Test
+  void testCqlCodesToCodesType() {
+    CQLCode cqlCode =
+        CQLCode.builder().id("225337009").codeSystemOID("2.16.840.1.113883.6.96").build();
+    CodesType codesType = measureMapper.cqlCodesToCodesType(Set.of(cqlCode));
+    assertThat(codesType, is(notNullValue()));
+    assertThat(codesType.getCode().size(), is(equalTo(1)));
+    CodeType codeType = codesType.getCode().get(0);
+    assertThat(codeType.getCodeOID(), is(equalTo(cqlCode.getId())));
+    assertThat(codeType.getCodeSystemOID(), is(equalTo(cqlCode.getCodeSystemOID())));
+    assertThat(codeType.getIsCodeSystemVersionIncluded(), is(equalTo("false")));
+  }
+
+  @Test
+  void testParametersTypeForNullInput() {
+    assertThat(measureMapper.cqlParametersToParametersType(null), is(nullValue()));
+  }
+
+  @Test
+  void testParametersTypeFor() {
+    CQLParameter cqlParameter =
+        CQLParameter.builder()
+            .parameterName("Measurement Period")
+            .parameterLogic("interval<DateTime>")
+            .build();
+    ParametersType parametersType =
+        measureMapper.cqlParametersToParametersType(Set.of(cqlParameter));
+    assertThat(parametersType, is(notNullValue()));
+    assertThat(parametersType.getParameter().size(), is(equalTo(1)));
+    ParameterType parameterType = parametersType.getParameter().get(0);
+    assertThat(parameterType.getName(), is(equalTo(cqlParameter.getParameterName())));
+    assertThat(parameterType.getLogic(), is(equalTo(cqlParameter.getParameterLogic())));
+  }
+
+  @Test
+  void testCqlDefinitionsToFunctionsTypeForNullInput() {
+    assertThat(measureMapper.cqlDefinitionsToFunctionsType(null), is(nullValue()));
+  }
+
+  @Test
+  void testCqlDefinitionsToFunctionsType() {
+    CQLDefinition cqlDefinition1 =
+        CQLDefinition.builder()
+            .id(UUID.randomUUID().toString())
+            .uuid(UUID.randomUUID().toString())
+            .definitionName("Measure Population")
+            .isFunction(false)
+            .build();
+    CQLFunctionArgument arg1 =
+        CQLFunctionArgument.builder()
+            .id("51e3a1669fad")
+            .argumentName("QualifyingEncounter")
+            .argumentType("QDM Datatype")
+            .qdmDataType("Encounter, Performed")
+            .build();
+    CQLDefinition cqlDefinition2 =
+        CQLDefinition.builder()
+            .id(UUID.randomUUID().toString())
+            .uuid(UUID.randomUUID().toString())
+            .definitionName("Measure Observation")
+            .functionArguments(List.of(arg1))
+            .definitionLogic("duration in days of QualifyingEncounter.relevantPeriod")
+            .isFunction(true)
+            .build();
+    Set<CQLDefinition> cqlDefinitions = Set.of(cqlDefinition1, cqlDefinition2);
+    FunctionsType functionsType = measureMapper.cqlDefinitionsToFunctionsType(cqlDefinitions);
+    assertThat(functionsType, is(notNullValue()));
+    assertThat(functionsType.getFunction().size(), is(equalTo(1)));
+    FunctionType functionType = functionsType.getFunction().get(0);
+    assertThat(functionType.getName(), is(equalTo(cqlDefinition2.getDefinitionName())));
+    assertThat(functionType.getLogic(), is(equalTo(cqlDefinition2.getDefinitionLogic())));
+    assertThat(functionType.getArguments().getArgument().size(), is(equalTo(1)));
+    List<ArgumentType> argumentTypes = functionType.getArguments().getArgument();
+    assertThat(argumentTypes.get(0).getQdmDataType(), is(equalTo(arg1.getQdmDataType())));
+    assertThat(argumentTypes.get(0).getArgumentName(), is(equalTo(arg1.getArgumentName())));
   }
 }

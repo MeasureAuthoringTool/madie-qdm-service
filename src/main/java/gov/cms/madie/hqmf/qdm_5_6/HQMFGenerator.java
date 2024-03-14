@@ -6,15 +6,9 @@ import gov.cms.madie.hqmf.XmlProcessor;
 import gov.cms.madie.hqmf.dto.MeasureExport;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-/**
- * The Class CQLbasedHQMFGenerator.
- *
- * @author jmeyer
- */
+/** The Class CQL based HQMFGenerator. */
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -22,8 +16,6 @@ public class HQMFGenerator implements Generator {
 
   private HQMFMeasureDetailsGenerator hqmfMeasureDetailsGenerator;
   private HQMFDataCriteriaGenerator hqmfDataCriteriaGenerator;
-
-  private final Logger logger = LoggerFactory.getLogger(HQMFDataCriteriaGenerator.class);
 
   /**
    * Generate hqmf for CQL Based measures (QDM version 5.6)
@@ -34,7 +26,7 @@ public class HQMFGenerator implements Generator {
   @Override
   public String generate(MeasureExport measureExport) throws Exception {
     try {
-      // MAT 6911: Export CQL based HQMF w/ Meta Data Section
+      // Prepare CQL based HQMF Meta Data Section
       String hqmfXML = hqmfMeasureDetailsGenerator.generate(measureExport);
       // Inline comments are added after the end of last componentOf tag.
       // This is removed in this method
@@ -45,12 +37,9 @@ public class HQMFGenerator implements Generator {
 
       XmlProcessor hqmfProcessor = new XmlProcessor(hqmfXML);
       measureExport.setHqmfXmlProcessor(hqmfProcessor);
-
-      // generateNarrative(me);
       return finalCleanUp(measureExport);
     } catch (Exception e) {
-      logger.error(
-          "Unable to generate HQMF for QDM v5.6. Exception Stack Strace is as followed : ");
+      log.error("Unable to generate HQMF for QDM v5.6. Exception Stack Strace is as followed : ");
       throw e;
     }
   }
