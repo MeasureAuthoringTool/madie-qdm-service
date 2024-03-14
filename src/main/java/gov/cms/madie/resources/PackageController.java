@@ -4,6 +4,7 @@ import gov.cms.madie.Exceptions.UnsupportedModelException;
 import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.services.HqmfService;
+import gov.cms.madie.services.HumanReadableService;
 import gov.cms.madie.services.PackagingService;
 import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.services.SimpleXmlService;
@@ -29,6 +30,7 @@ public class PackageController {
   private final SimpleXmlService simpleXmlService;
   private final HqmfService hqmfService;
   private final TranslationServiceClient translationServiceClient;
+  private final HumanReadableService humanReadableService;
 
   @PutMapping(
       value = "/package",
@@ -59,6 +61,23 @@ public class PackageController {
       QdmMeasure qdmMeasure = (QdmMeasure) measure;
       CqlLookups cqlLookups = translationServiceClient.getCqlLookups(qdmMeasure, accessToken);
       return simpleXmlService.measureToSimpleXml(qdmMeasure, cqlLookups);
+    }
+    throw new UnsupportedModelException("Unsupported model type: " + measure.getModel());
+  }
+
+  @PutMapping(
+      value = "/human-readable",
+      produces = {
+        MediaType.TEXT_HTML_VALUE,
+      },
+      consumes = {MediaType.APPLICATION_JSON_VALUE})
+  public String getMeasureHumanReadable(
+      @RequestBody @Validated(Measure.ValidationSequence.class) Measure measure,
+      @RequestHeader("Authorization") String accessToken) {
+    if (measure.getModel() != null && measure.getModel().contains("QDM")) {
+      QdmMeasure qdmMeasure = (QdmMeasure) measure;
+      CqlLookups cqlLookups = translationServiceClient.getCqlLookups(qdmMeasure, accessToken);
+      return humanReadableService.generate(qdmMeasure, cqlLookups);
     }
     throw new UnsupportedModelException("Unsupported model type: " + measure.getModel());
   }

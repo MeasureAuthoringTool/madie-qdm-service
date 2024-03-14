@@ -26,4 +26,12 @@ public class CQLDefinition {
   private String libraryVersion;
   private boolean isFunction;
   private List<CQLFunctionArgument> functionArguments;
+
+  public String getLogic() {
+    return getDefinitionLogic();
+  }
+
+  public void setLogic(String logic) {
+    setDefinitionLogic(logic);
+  }
 }
