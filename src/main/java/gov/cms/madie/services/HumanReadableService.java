@@ -2,11 +2,8 @@ package gov.cms.madie.services;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import gov.cms.madie.dto.CQLDefinition;
 import gov.cms.madie.dto.CqlLookups;
-import gov.cms.madie.models.measure.Group;
-import gov.cms.madie.models.measure.Measure;
-import gov.cms.madie.models.measure.PopulationType;
-import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.model.HumanReadable;
 import gov.cms.madie.model.HumanReadableCodeModel;
 import gov.cms.madie.model.HumanReadableExpressionModel;
@@ -14,11 +11,12 @@ import gov.cms.madie.model.HumanReadableMeasureInformationModel;
 import gov.cms.madie.model.HumanReadablePopulationCriteriaModel;
 import gov.cms.madie.model.HumanReadablePopulationModel;
 import gov.cms.madie.model.HumanReadableValuesetModel;
-// import gov.cms.mat.cql_elm_translation.dto.SourceDataCriteria;
+import gov.cms.madie.models.measure.Group;
+import gov.cms.madie.models.measure.Measure;
+import gov.cms.madie.models.measure.PopulationType;
+import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.util.HumanReadableDateUtil;
 import gov.cms.madie.util.HumanReadableUtil;
-import gov.cms.madie.dto.CQLCode;
-import gov.cms.madie.dto.CQLDefinition;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -48,9 +46,6 @@ import java.util.stream.Stream;
 public class HumanReadableService {
 
   private Template baseHumanReadableTemplate;
-
-  //  private final DataCriteriaService dataCriteriaService;
-  //  private final CqlParsingService cqlParsingService;
   private final Collator collator = Collator.getInstance(Locale.US);
 
   /**
@@ -73,9 +68,6 @@ public class HumanReadableService {
         watch.getLastTaskTimeMillis());
     watch.start("generate sourceDataCriteria");
 
-    //    List<SourceDataCriteria> sourceDataCriteria =
-    //        dataCriteriaService.getSourceDataCriteria(measure.getCql(), accessToken);
-
     watch.stop();
     log.info(
         "Generate for section [{}] took [{}ms]",
@@ -83,11 +75,6 @@ public class HumanReadableService {
         watch.getLastTaskTimeMillis());
     watch.start("generate getUsedCQLCodes");
 
-    //    Set<CQLCode> cqlCodes = dataCriteriaService.getUsedCQLCodes(measure.getCql(),
-    // accessToken);
-    Set<CQLCode> cqlCodes = cqlLookups.getCodes();
-    //    Set<CQLDefinition> allDefinitions =
-    //        cqlParsingService.getAllDefinitions(measure.getCql(), accessToken);
     Set<CQLDefinition> allDefinitions = cqlLookups.getDefinitions();
 
     watch.stop();
