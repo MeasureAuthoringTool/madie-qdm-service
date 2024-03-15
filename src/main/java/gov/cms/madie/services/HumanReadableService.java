@@ -2,7 +2,9 @@ package gov.cms.madie.services;
 
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import gov.cms.madie.dto.CQLCode;
 import gov.cms.madie.dto.CQLDefinition;
+import gov.cms.madie.dto.CQLValueSet;
 import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.model.HumanReadable;
 import gov.cms.madie.model.HumanReadableCodeModel;
@@ -10,6 +12,7 @@ import gov.cms.madie.model.HumanReadableExpressionModel;
 import gov.cms.madie.model.HumanReadableMeasureInformationModel;
 import gov.cms.madie.model.HumanReadablePopulationCriteriaModel;
 import gov.cms.madie.model.HumanReadablePopulationModel;
+import gov.cms.madie.model.HumanReadableTerminologyModel;
 import gov.cms.madie.model.HumanReadableValuesetModel;
 import gov.cms.madie.models.measure.Group;
 import gov.cms.madie.models.measure.Measure;
@@ -66,31 +69,16 @@ public class HumanReadableService {
         "Generate for section [{}] took [{}ms]",
         watch.getLastTaskName(),
         watch.getLastTaskTimeMillis());
-    watch.start("generate sourceDataCriteria");
-
-    watch.stop();
-    log.info(
-        "Generate for section [{}] took [{}ms]",
-        watch.getLastTaskName(),
-        watch.getLastTaskTimeMillis());
-    watch.start("generate getUsedCQLCodes");
-
-    Set<CQLDefinition> allDefinitions = cqlLookups.getDefinitions();
-
-    watch.stop();
-    log.info(
-        "Generate for section [{}] took [{}ms]",
-        watch.getLastTaskName(),
-        watch.getLastTaskTimeMillis());
     watch.start("HR model setup 1");
 
+    Set<CQLDefinition> allDefinitions = cqlLookups.getDefinitions();
     HumanReadable hr =
         HumanReadable.builder()
             .measureInformation(buildMeasureInfo(measure))
             .populationCriteria(buildPopCriteria(measure, allDefinitions))
             .definitions(buildDefinitions(allDefinitions))
             .functions(buildFunctions(allDefinitions))
-            // TODO: combine these two
+            // TODO: can we combine these two?
             .valuesetDataCriteriaList(buildValueSetDataCriteriaList(cqlLookups))
             .codeDataCriteriaList(buildCodeDataCriteriaList(cqlLookups))
             .build();
@@ -115,10 +103,8 @@ public class HumanReadableService {
         watch.getLastTaskName(),
         watch.getLastTaskTimeMillis());
     watch.start("HR model setup 3");
-    //TODO: this is incorrect. build from cqlLookups.getValueSets()
-    hr.setValuesetTerminologyList(new ArrayList<>(hr.getValuesetDataCriteriaList()));
-    //TODO: this is incorrect. build from cqlLookups.getCodes()
-    hr.setCodeTerminologyList(new ArrayList<>(hr.getCodeDataCriteriaList()));
+    hr.setValuesetTerminologyList(buildValueSetTerminology(cqlLookups.getValueSets()));
+    hr.setCodeTerminologyList(buildCodeTerminology(cqlLookups.getCodes()));
 
     watch.stop();
     log.info(
@@ -401,6 +387,43 @@ public class HumanReadableService {
                     .build())
         .sorted(Comparator.comparing(HumanReadableCodeModel::getDataCriteriaDisplay, collator))
         .toList();
+  }
+
+  List<HumanReadableTerminologyModel> buildValueSetTerminology(Set<CQLValueSet> cqlValueSets) {
+    if (CollectionUtils.isEmpty(cqlValueSets)) {
+      return null;
+    }
+    List<HumanReadableValuesetModel> valueSetTerminology =
+        cqlValueSets.stream()
+            .map(
+                cqlValueSet ->
+                    new HumanReadableValuesetModel(
+                        cqlValueSet.getName(), cqlValueSet.getOid(), cqlValueSet.getVersion(), ""))
+            .sorted(
+                Comparator.comparing(HumanReadableValuesetModel::getDataCriteriaDisplay, collator))
+            .toList();
+    return new ArrayList<>(valueSetTerminology);
+  }
+
+  List<HumanReadableTerminologyModel> buildCodeTerminology(Set<CQLCode> cqlCodes) {
+    if (CollectionUtils.isEmpty(cqlCodes)) {
+      return null;
+    }
+    List<HumanReadableCodeModel> codeTerminology =
+        cqlCodes.stream()
+            .map(
+                cqlCode ->
+                    HumanReadableCodeModel.builder()
+                        .name(cqlCode.getCodeName())
+                        .oid(cqlCode.getId())
+                        .codesystemName(cqlCode.getCodeSystemName())
+                        .codesystemVersion(cqlCode.getCodeSystemVersion())
+                        .isCodesystemVersionIncluded(
+                            StringUtils.isNotBlank(cqlCode.getCodeSystemVersion()))
+                        .build())
+            .sorted(Comparator.comparing(HumanReadableCodeModel::getDataCriteriaDisplay, collator))
+            .toList();
+    return new ArrayList<>(codeTerminology);
   }
 
   List<HumanReadableExpressionModel> buildSupplementalDataElements(
