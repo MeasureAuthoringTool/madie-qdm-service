@@ -101,17 +101,24 @@ public class HumanReadableService {
         watch.getLastTaskName(),
         watch.getLastTaskTimeMillis());
     watch.start("HR model setup 2");
-    // TODO: should add code criteria as well
-    hr.setValuesetAndCodeDataCriteriaList(new ArrayList<>(hr.getValuesetDataCriteriaList()));
-
+    // value sets criteria
+    if (!CollectionUtils.isEmpty(hr.getValuesetDataCriteriaList())) {
+      hr.setValuesetAndCodeDataCriteriaList(new ArrayList<>(hr.getValuesetDataCriteriaList()));
+    }
+    // code criteria
+    if (!CollectionUtils.isEmpty(hr.getCodeDataCriteriaList())) {
+      hr.getValuesetAndCodeDataCriteriaList().addAll(new ArrayList<>(hr.getCodeDataCriteriaList()));
+    }
     watch.stop();
     log.info(
         "Generate for section [{}] took [{}ms]",
         watch.getLastTaskName(),
         watch.getLastTaskTimeMillis());
     watch.start("HR model setup 3");
-
+    //TODO: this is incorrect. build from cqlLookups.getValueSets()
     hr.setValuesetTerminologyList(new ArrayList<>(hr.getValuesetDataCriteriaList()));
+    //TODO: this is incorrect. build from cqlLookups.getCodes()
+    hr.setCodeTerminologyList(new ArrayList<>(hr.getCodeDataCriteriaList()));
 
     watch.stop();
     log.info(
@@ -120,15 +127,6 @@ public class HumanReadableService {
         watch.getLastTaskTimeMillis());
     watch.start("HR model setup 4");
 
-    hr.setCodeTerminologyList(new ArrayList<>(hr.getCodeDataCriteriaList()));
-
-    watch.stop();
-    log.info(
-        "Generate for section [{}] took [{}ms]",
-        watch.getLastTaskName(),
-        watch.getLastTaskTimeMillis());
-    watch.start("HR model setup 5");
-
     hr.setSupplementalDataElements(buildSupplementalDataElements(measure, hr.getDefinitions()));
 
     watch.stop();
@@ -136,7 +134,7 @@ public class HumanReadableService {
         "Generate for section [{}] took [{}ms]",
         watch.getLastTaskName(),
         watch.getLastTaskTimeMillis());
-    watch.start("HR model setup 6");
+    watch.start("HR model setup 5");
 
     hr.setRiskAdjustmentVariables(buildRiskAdjustmentVariables(measure, hr.getDefinitions()));
 
