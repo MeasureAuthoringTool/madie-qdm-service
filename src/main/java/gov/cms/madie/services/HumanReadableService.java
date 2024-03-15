@@ -75,16 +75,15 @@ public class HumanReadableService {
             .build();
 
     // value sets criteria
-    if (!CollectionUtils.isEmpty(hr.getValuesetDataCriteriaList())) {
-      hr.setValuesetAndCodeDataCriteriaList(new ArrayList<>(hr.getValuesetDataCriteriaList()));
-    }
+    hr.setValuesetAndCodeDataCriteriaList(new ArrayList<>(hr.getValuesetDataCriteriaList()));
     // code criteria
-    if (!CollectionUtils.isEmpty(hr.getCodeDataCriteriaList())) {
-      hr.getValuesetAndCodeDataCriteriaList().addAll(new ArrayList<>(hr.getCodeDataCriteriaList()));
-    }
+    hr.getValuesetAndCodeDataCriteriaList().addAll(new ArrayList<>(hr.getCodeDataCriteriaList()));
 
+    //terminology
     hr.setValuesetTerminologyList(buildValueSetTerminology(cqlLookups.getValueSets()));
     hr.setCodeTerminologyList(buildCodeTerminology(cqlLookups.getCodes()));
+
+    //SDE & RAV
     hr.setSupplementalDataElements(buildSupplementalDataElements(measure, hr.getDefinitions()));
     hr.setRiskAdjustmentVariables(buildRiskAdjustmentVariables(measure, hr.getDefinitions()));
 
@@ -303,7 +302,7 @@ public class HumanReadableService {
 
   List<HumanReadableValuesetModel> buildValueSetDataCriteriaList(CqlLookups cqlLookups) {
     if (CollectionUtils.isEmpty(cqlLookups.getElementLookups())) {
-      return null;
+      return Collections.emptyList();
     }
     return cqlLookups.getElementLookups().stream()
         .filter(lookup -> !lookup.isCode() && StringUtils.isNotBlank(lookup.getDatatype()))
@@ -317,7 +316,7 @@ public class HumanReadableService {
 
   List<HumanReadableCodeModel> buildCodeDataCriteriaList(CqlLookups cqlLookups) {
     if (CollectionUtils.isEmpty(cqlLookups.getElementLookups())) {
-      return null;
+      return Collections.emptyList();
     }
     return cqlLookups.getElementLookups().stream()
         .filter(lookup -> lookup.isCode() && StringUtils.isNotBlank(lookup.getDatatype()))
@@ -338,7 +337,7 @@ public class HumanReadableService {
 
   List<HumanReadableTerminologyModel> buildValueSetTerminology(Set<CQLValueSet> cqlValueSets) {
     if (CollectionUtils.isEmpty(cqlValueSets)) {
-      return null;
+      return Collections.emptyList();
     }
     List<HumanReadableValuesetModel> valueSetTerminology =
         cqlValueSets.stream()
@@ -354,7 +353,7 @@ public class HumanReadableService {
 
   List<HumanReadableTerminologyModel> buildCodeTerminology(Set<CQLCode> cqlCodes) {
     if (CollectionUtils.isEmpty(cqlCodes)) {
-      return null;
+      return Collections.emptyList();
     }
     List<HumanReadableCodeModel> codeTerminology =
         cqlCodes.stream()
