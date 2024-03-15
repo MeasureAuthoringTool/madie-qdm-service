@@ -90,7 +90,7 @@ public interface MeasureMapper {
   @Mapping(target = "aggregation", source = "rateAggregation")
   @Mapping(target = "rationale", source = "measure.measureMetaData.rationale")
   @Mapping(target = "recommendations", source = "measure.measureMetaData.clinicalRecommendation")
-  @Mapping(target = "improvementNotations", source = "measure.improvementNotation")
+  @Mapping(target = "improvementNotations", expression = "java(getImprovementNotations(measure))")
   @Mapping(target = "references", source = "measure.measureMetaData.references")
   @Mapping(target = "definitions", source = "measure.measureMetaData.definition")
   @Mapping(target = "guidance", source = "measure.measureMetaData.guidance")
@@ -142,6 +142,13 @@ public interface MeasureMapper {
 
   @Mapping(target = "uuid", source = "measureSetId")
   QualityMeasureSetType measureToQualityMeasureSet(QdmMeasure measure);
+
+  default String getImprovementNotations(QdmMeasure measure) {
+    if ("Other".equals(measure.getImprovementNotation())) {
+      return measure.getImprovementNotationOther();
+    }
+    return measure.getImprovementNotation();
+  }
 
   // measureGrouping mappings
   default MeasureGroupingType measureToMeasureGroupingType(
