@@ -354,9 +354,8 @@ public class HumanReadableService {
 
   List<HumanReadableValuesetModel> buildValueSetDataCriteriaList(CqlLookups cqlLookups) {
     if (CollectionUtils.isEmpty(cqlLookups.getElementLookups())) {
-      return List.of();
+      return null;
     }
-
     return cqlLookups.getElementLookups().stream()
         .filter(lookup -> !lookup.isCode() && StringUtils.isNotBlank(lookup.getDatatype()))
         .map(
@@ -369,9 +368,8 @@ public class HumanReadableService {
 
   List<HumanReadableCodeModel> buildCodeDataCriteriaList(CqlLookups cqlLookups) {
     if (CollectionUtils.isEmpty(cqlLookups.getElementLookups())) {
-      return List.of();
+      return null;
     }
-
     return cqlLookups.getElementLookups().stream()
         .filter(lookup -> lookup.isCode() && StringUtils.isNotBlank(lookup.getDatatype()))
         .map(
@@ -431,7 +429,6 @@ public class HumanReadableService {
     if (CollectionUtils.isEmpty(measure.getSupplementalData())) {
       return null;
     }
-
     return measure.getSupplementalData().stream()
         .map(
             supplementalData ->
@@ -449,7 +446,6 @@ public class HumanReadableService {
     if (CollectionUtils.isEmpty(measure.getRiskAdjustments())) {
       return null;
     }
-
     return measure.getRiskAdjustments().stream()
         .map(
             riskAdjustment ->
