@@ -91,7 +91,9 @@ public class PackageController {
       @RequestHeader("Authorization") String accessToken) {
     // generate HQMF if the model type is QDM
     if (measure != null && measure.getModel() != null && measure.getModel().contains("QDM")) {
-      return ResponseEntity.ok().body(hqmfService.generateHqmf((QdmMeasure) measure, accessToken));
+      QdmMeasure qdmMeasure = (QdmMeasure) measure;
+      CqlLookups cqlLookups = translationServiceClient.getCqlLookups(qdmMeasure, accessToken);
+      return ResponseEntity.ok().body(hqmfService.generateHqmf((QdmMeasure) measure, cqlLookups));
     }
     throw new UnsupportedModelException(
         "Unsupported model type: "

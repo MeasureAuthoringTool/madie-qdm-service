@@ -3,6 +3,7 @@ package gov.cms.madie.resources;
 import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.services.HqmfService;
+import gov.cms.madie.services.HumanReadableService;
 import gov.cms.madie.services.PackagingService;
 import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.packaging.utils.ResourceFileUtil;
@@ -37,6 +38,7 @@ class PackageControllerMvcTest implements ResourceFileUtil {
   @MockBean private SimpleXmlService simpleXmlService;
   @MockBean private HqmfService hqmfService;
   @MockBean private TranslationServiceClient translationServiceClient;
+  @MockBean private HumanReadableService humanReadableService;
   @Autowired private MockMvc mockMvc;
 
   private static final String TEST_USER_ID = "john_doe";
@@ -124,8 +126,10 @@ class PackageControllerMvcTest implements ResourceFileUtil {
   @Test
   void testGetMeasureHqmf() throws Exception {
     String measureJson = getStringFromTestResource("/measures/qdm-test-measure.json");
-    Mockito.when(hqmfService.generateHqmf(any(QdmMeasure.class), anyString()))
+    Mockito.when(hqmfService.generateHqmf(any(QdmMeasure.class), any(CqlLookups.class)))
         .thenReturn("<QualityMeasureDocument></QualityMeasureDocument>");
+    Mockito.when(translationServiceClient.getCqlLookups(any(QdmMeasure.class), anyString()))
+            .thenReturn(CqlLookups.builder().build());
     MvcResult mvcResult =
         mockMvc
             .perform(
@@ -139,7 +143,8 @@ class PackageControllerMvcTest implements ResourceFileUtil {
             .andReturn();
     assertThat(
         mvcResult.getResponse().getContentType(), is(equalTo("application/xml;charset=UTF-8")));
-    verify(hqmfService, times(1)).generateHqmf(any(QdmMeasure.class), anyString());
+    verify(translationServiceClient, times(1)).getCqlLookups(any(QdmMeasure.class), anyString());
+    verify(hqmfService, times(1)).generateHqmf(any(QdmMeasure.class), any(CqlLookups.class));
   }
 
   @Test
