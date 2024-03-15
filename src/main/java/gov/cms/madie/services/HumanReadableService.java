@@ -26,7 +26,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StopWatch;
 
 import java.io.IOException;
 import java.text.Collator;
@@ -58,18 +57,10 @@ public class HumanReadableService {
    * @return QDM Human Readable HTML
    */
   public String generate(Measure measure, CqlLookups cqlLookups) {
-    StopWatch watch = new StopWatch();
-    watch.start("prelim");
     collator.setStrength(Collator.PRIMARY);
     if (measure == null) {
       throw new IllegalArgumentException("Measure cannot be null.");
     }
-    watch.stop();
-    log.info(
-        "Generate for section [{}] took [{}ms]",
-        watch.getLastTaskName(),
-        watch.getLastTaskTimeMillis());
-    watch.start("HR model setup 1");
 
     Set<CQLDefinition> allDefinitions = cqlLookups.getDefinitions();
     HumanReadable hr =
@@ -83,12 +74,6 @@ public class HumanReadableService {
             .codeDataCriteriaList(buildCodeDataCriteriaList(cqlLookups))
             .build();
 
-    watch.stop();
-    log.info(
-        "Generate for section [{}] took [{}ms]",
-        watch.getLastTaskName(),
-        watch.getLastTaskTimeMillis());
-    watch.start("HR model setup 2");
     // value sets criteria
     if (!CollectionUtils.isEmpty(hr.getValuesetDataCriteriaList())) {
       hr.setValuesetAndCodeDataCriteriaList(new ArrayList<>(hr.getValuesetDataCriteriaList()));
@@ -97,49 +82,13 @@ public class HumanReadableService {
     if (!CollectionUtils.isEmpty(hr.getCodeDataCriteriaList())) {
       hr.getValuesetAndCodeDataCriteriaList().addAll(new ArrayList<>(hr.getCodeDataCriteriaList()));
     }
-    watch.stop();
-    log.info(
-        "Generate for section [{}] took [{}ms]",
-        watch.getLastTaskName(),
-        watch.getLastTaskTimeMillis());
-    watch.start("HR model setup 3");
+
     hr.setValuesetTerminologyList(buildValueSetTerminology(cqlLookups.getValueSets()));
     hr.setCodeTerminologyList(buildCodeTerminology(cqlLookups.getCodes()));
-
-    watch.stop();
-    log.info(
-        "Generate for section [{}] took [{}ms]",
-        watch.getLastTaskName(),
-        watch.getLastTaskTimeMillis());
-    watch.start("HR model setup 4");
-
     hr.setSupplementalDataElements(buildSupplementalDataElements(measure, hr.getDefinitions()));
-
-    watch.stop();
-    log.info(
-        "Generate for section [{}] took [{}ms]",
-        watch.getLastTaskName(),
-        watch.getLastTaskTimeMillis());
-    watch.start("HR model setup 5");
-
     hr.setRiskAdjustmentVariables(buildRiskAdjustmentVariables(measure, hr.getDefinitions()));
 
-    watch.stop();
-    log.info(
-        "Generate for section [{}] took [{}ms]",
-        watch.getLastTaskName(),
-        watch.getLastTaskTimeMillis());
-    watch.start("generate HR string");
-
-    String output = generate(hr);
-
-    watch.stop();
-    log.info(
-        "Generate for section [{}] took [{}ms]",
-        watch.getLastTaskName(),
-        watch.getLastTaskTimeMillis());
-
-    return output;
+    return generate(hr);
   }
 
   private String generate(HumanReadable model) {
