@@ -1,12 +1,14 @@
 package gov.cms.madie.resources;
 
 import gov.cms.madie.Exceptions.UnsupportedModelException;
+import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.services.HqmfService;
 import gov.cms.madie.services.PackagingService;
 import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.services.SimpleXmlService;
+import gov.cms.madie.services.TranslationServiceClient;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,6 +30,8 @@ class PackageControllerTest {
   @Mock private PackagingService packagingService;
   @Mock private SimpleXmlService simpleXmlService;
   @Mock private HqmfService hqmfService;
+
+  @Mock private TranslationServiceClient translationServiceClient;
   @InjectMocks private PackageController packageController;
 
   private static final String TOKEN = "test token";
@@ -132,7 +136,8 @@ class PackageControllerTest {
             .ecqmTitle("test")
             .model(String.valueOf(ModelType.QDM_5_6))
             .build();
-    when(hqmfService.generateHqmf(any(QdmMeasure.class), anyString()))
+    when(translationServiceClient.getCqlLookups(any(QdmMeasure.class), anyString())).thenReturn(CqlLookups.builder().build());
+    when(hqmfService.generateHqmf(any(QdmMeasure.class), any(CqlLookups.class)))
         .thenReturn("<QualityMeasureDocument></QualityMeasureDocument>");
     String hqmf = packageController.generateHqmf(measure, TOKEN).getBody();
     assertThat(hqmf, is(equalTo("<QualityMeasureDocument></QualityMeasureDocument>")));

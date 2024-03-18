@@ -50,15 +50,14 @@ class HqmfServiceTest {
   void generateHqmf() throws Exception {
     when(simpleXmlService.measureToSimpleXml(any(QdmMeasure.class), any(CqlLookups.class)))
         .thenReturn("<measure></measure>");
-    when(translationServiceClient.getCqlLookups(any(QdmMeasure.class), anyString()))
-        .thenReturn(CqlLookups.builder().build());
+    CqlLookups cqlLookups = CqlLookups.builder().build();
 
     HQMFGenerator generator = mock(HQMFGenerator.class);
     when(factory.getHQMFGenerator()).thenReturn(generator);
     when(generator.generate(any(MeasureExport.class)))
         .thenReturn("<QualityMeasureDocument></QualityMeasureDocument>");
 
-    String output = hqmfService.generateHqmf(measure, TOKEN);
+    String output = hqmfService.generateHqmf(measure, cqlLookups);
     assertThat(output, is(equalTo("<QualityMeasureDocument></QualityMeasureDocument>")));
   }
 
@@ -68,12 +67,13 @@ class HqmfServiceTest {
         .thenReturn("<measure></measure>");
     String message = "An issue occurred while generating the HQMF for measure";
     HQMFGenerator generator = mock(HQMFGenerator.class);
+    CqlLookups cqlLookups = CqlLookups.builder().build();
     when(factory.getHQMFGenerator()).thenReturn(generator);
     doThrow(new Exception(message)).when(generator).generate(any(MeasureExport.class));
     Exception ex =
         assertThrows(
             PackagingException.class,
-            () -> hqmfService.generateHqmf(measure, TOKEN),
+            () -> hqmfService.generateHqmf(measure, cqlLookups),
             "Exception occurred");
     assertThat(ex.getMessage(), containsString(message));
   }

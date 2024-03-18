@@ -1,8 +1,10 @@
 package gov.cms.madie.services;
 
 import gov.cms.madie.Exceptions.TranslationServiceException;
+import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.dto.TranslatedLibrary;
+import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.models.measure.QdmMeasure;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +21,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -26,6 +29,7 @@ import static org.mockito.Mockito.when;
 class PackagingServiceTest {
   @Mock private TranslationServiceClient translationServiceClient;
   @Mock private HqmfService hqmfService;
+  @Mock private HumanReadableService humanReadableService;
   @InjectMocks private PackagingService packagingService;
 
   private static final String TOKEN = "test token";
@@ -66,10 +70,13 @@ class PackagingServiceTest {
             .elmXml("elm xml")
             .cql("cql")
             .build();
+    CqlLookups cqlLookups = CqlLookups.builder().build();
     when(translationServiceClient.getTranslatedLibraries(measure.getCql(), TOKEN))
         .thenReturn(List.of(library1, library2));
-    when(hqmfService.generateHqmf(measure, TOKEN)).thenReturn("<hqmf>this is a test hqmf</hqmf>");
-    when(translationServiceClient.getHumanReadable(measure, TOKEN)).thenReturn("success");
+    when(translationServiceClient.getCqlLookups(any(QdmMeasure.class), anyString()))
+            .thenReturn(CqlLookups.builder().build());
+    when(hqmfService.generateHqmf(measure, cqlLookups)).thenReturn("<hqmf>this is a test hqmf</hqmf>");
+    when(humanReadableService.generate(any(Measure.class), any(CqlLookups.class))).thenReturn("success");
     byte[] packageContents = packagingService.createMeasurePackage(measure, TOKEN);
     String packageString = new String(packageContents);
     String library1FileName = library1.getName() + "-" + library1.getVersion();
