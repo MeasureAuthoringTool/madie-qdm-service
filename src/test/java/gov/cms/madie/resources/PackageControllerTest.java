@@ -2,6 +2,7 @@ package gov.cms.madie.resources;
 
 import gov.cms.madie.Exceptions.UnsupportedModelException;
 import gov.cms.madie.dto.CqlLookups;
+import gov.cms.madie.models.measure.FhirMeasure;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.services.HqmfService;
 import gov.cms.madie.services.HumanReadableService;
@@ -24,6 +25,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -193,5 +196,21 @@ class PackageControllerTest {
         .thenReturn("test human Readable");
     var result = packageController.getMeasureHumanReadable(measure, "accessToken");
     assertThat(result, is(equalTo("test human Readable")));
+  }
+
+  @Test
+  void testGenerateHumanReadableUnsupportedModel() {
+    measure =
+        FhirMeasure.builder()
+            .id("1")
+            .ecqmTitle("test")
+            .model(String.valueOf(ModelType.QI_CORE))
+            .build();
+
+    Assertions.assertThrows(
+            UnsupportedModelException.class,
+            () -> packageController.getMeasureHumanReadable(measure, "accessToken"));
+    verifyNoInteractions(translationServiceClient);
+    verifyNoInteractions(humanReadableService);
   }
 }
