@@ -129,7 +129,7 @@ class PackageControllerMvcTest implements ResourceFileUtil {
     Mockito.when(hqmfService.generateHqmf(any(QdmMeasure.class), any(CqlLookups.class)))
         .thenReturn("<QualityMeasureDocument></QualityMeasureDocument>");
     Mockito.when(translationServiceClient.getCqlLookups(any(QdmMeasure.class), anyString()))
-            .thenReturn(CqlLookups.builder().build());
+        .thenReturn(CqlLookups.builder().build());
     MvcResult mvcResult =
         mockMvc
             .perform(

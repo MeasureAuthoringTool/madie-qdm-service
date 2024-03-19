@@ -74,9 +74,11 @@ class PackagingServiceTest {
     when(translationServiceClient.getTranslatedLibraries(measure.getCql(), TOKEN))
         .thenReturn(List.of(library1, library2));
     when(translationServiceClient.getCqlLookups(any(QdmMeasure.class), anyString()))
-            .thenReturn(CqlLookups.builder().build());
-    when(hqmfService.generateHqmf(measure, cqlLookups)).thenReturn("<hqmf>this is a test hqmf</hqmf>");
-    when(humanReadableService.generate(any(Measure.class), any(CqlLookups.class))).thenReturn("success");
+        .thenReturn(CqlLookups.builder().build());
+    when(hqmfService.generateHqmf(measure, cqlLookups))
+        .thenReturn("<hqmf>this is a test hqmf</hqmf>");
+    when(humanReadableService.generate(any(Measure.class), any(CqlLookups.class)))
+        .thenReturn("success");
     byte[] packageContents = packagingService.createMeasurePackage(measure, TOKEN);
     String packageString = new String(packageContents);
     String library1FileName = library1.getName() + "-" + library1.getVersion();

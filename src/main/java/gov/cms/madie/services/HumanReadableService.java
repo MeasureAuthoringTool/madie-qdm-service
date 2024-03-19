@@ -54,6 +54,7 @@ public class HumanReadableService {
    * Generates the QDM Human Readable HTML from a MADiE Measure.
    *
    * @param measure MADiE Measure
+   * @param cqlLookups Object holding information from the translator about the CQL
    * @return QDM Human Readable HTML
    */
   public String generate(Measure measure, CqlLookups cqlLookups) {
@@ -79,11 +80,11 @@ public class HumanReadableService {
     // code criteria
     hr.getValuesetAndCodeDataCriteriaList().addAll(new ArrayList<>(hr.getCodeDataCriteriaList()));
 
-    //terminology
+    // terminology
     hr.setValuesetTerminologyList(buildValueSetTerminology(cqlLookups.getValueSets()));
     hr.setCodeTerminologyList(buildCodeTerminology(cqlLookups.getCodes()));
 
-    //SDE & RAV
+    // SDE & RAV
     hr.setSupplementalDataElements(buildSupplementalDataElements(measure, hr.getDefinitions()));
     hr.setRiskAdjustmentVariables(buildRiskAdjustmentVariables(measure, hr.getDefinitions()));
 

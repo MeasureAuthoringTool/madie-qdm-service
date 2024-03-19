@@ -4,6 +4,7 @@ import gov.cms.madie.Exceptions.UnsupportedModelException;
 import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.services.HqmfService;
+import gov.cms.madie.services.HumanReadableService;
 import gov.cms.madie.services.PackagingService;
 import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.measure.Measure;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -30,7 +32,7 @@ class PackageControllerTest {
   @Mock private PackagingService packagingService;
   @Mock private SimpleXmlService simpleXmlService;
   @Mock private HqmfService hqmfService;
-
+  @Mock private HumanReadableService humanReadableService;
   @Mock private TranslationServiceClient translationServiceClient;
   @InjectMocks private PackageController packageController;
 
@@ -136,7 +138,8 @@ class PackageControllerTest {
             .ecqmTitle("test")
             .model(String.valueOf(ModelType.QDM_5_6))
             .build();
-    when(translationServiceClient.getCqlLookups(any(QdmMeasure.class), anyString())).thenReturn(CqlLookups.builder().build());
+    when(translationServiceClient.getCqlLookups(any(QdmMeasure.class), anyString()))
+        .thenReturn(CqlLookups.builder().build());
     when(hqmfService.generateHqmf(any(QdmMeasure.class), any(CqlLookups.class)))
         .thenReturn("<QualityMeasureDocument></QualityMeasureDocument>");
     String hqmf = packageController.generateHqmf(measure, TOKEN).getBody();
@@ -173,5 +176,22 @@ class PackageControllerTest {
             () -> packageController.getQRDA(measure, TOKEN),
             errorMessage);
     assertThat(ex.getMessage(), is(equalTo(errorMessage)));
+  }
+
+  @Test
+  void testGenerateHumanReadable() {
+    CqlLookups cqlLookups = CqlLookups.builder().build();
+    measure =
+        QdmMeasure.builder()
+            .id("1")
+            .ecqmTitle("test")
+            .model(String.valueOf(ModelType.QDM_5_6))
+            .build();
+    when(translationServiceClient.getCqlLookups(any(QdmMeasure.class), anyString()))
+        .thenReturn(cqlLookups);
+    when(humanReadableService.generate(any(), any(CqlLookups.class)))
+        .thenReturn("test human Readable");
+    var result = packageController.getMeasureHumanReadable(measure, "accessToken");
+    assertThat(result, is(equalTo("test human Readable")));
   }
 }
