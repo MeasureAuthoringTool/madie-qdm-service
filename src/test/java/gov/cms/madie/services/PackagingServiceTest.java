@@ -74,9 +74,11 @@ class PackagingServiceTest {
     when(translationServiceClient.getTranslatedLibraries(measure.getCql(), TOKEN))
         .thenReturn(List.of(library1, library2));
     when(translationServiceClient.getCqlLookups(any(QdmMeasure.class), anyString()))
-            .thenReturn(CqlLookups.builder().build());
-    when(hqmfService.generateHqmf(measure, cqlLookups)).thenReturn("<hqmf>this is a test hqmf</hqmf>");
-    when(humanReadableService.generate(any(Measure.class), any(CqlLookups.class))).thenReturn("success");
+        .thenReturn(CqlLookups.builder().build());
+    when(hqmfService.generateHqmf(measure, cqlLookups))
+        .thenReturn("<hqmf>this is a test hqmf</hqmf>");
+    when(humanReadableService.generate(any(Measure.class), any(CqlLookups.class)))
+        .thenReturn("success");
     byte[] packageContents = packagingService.createMeasurePackage(measure, TOKEN);
     String packageString = new String(packageContents);
     String library1FileName = library1.getName() + "-" + library1.getVersion();
@@ -107,6 +109,43 @@ class PackagingServiceTest {
             () -> packagingService.createMeasurePackage(measure, TOKEN),
             msg);
     assertThat(exception.getMessage(), containsString(msg));
+  }
+
+  @Test
+  void testCreateMeasurePackageWhenHqmfGenerationFailed() {
+    TranslatedLibrary library1 =
+            TranslatedLibrary.builder()
+                    .name("Lib one")
+                    .version("0.0.000")
+                    .elmJson("elm xml")
+                    .elmXml("elm xml")
+                    .cql("cql")
+                    .build();
+    TranslatedLibrary library2 =
+            TranslatedLibrary.builder()
+                    .name("Lib two")
+                    .version("0.0.001")
+                    .elmJson("elm xml")
+                    .elmXml("elm xml")
+                    .cql("cql")
+                    .build();
+    when(translationServiceClient.getTranslatedLibraries(measure.getCql(), TOKEN))
+            .thenReturn(List.of(library1, library2));
+    CqlLookups cqlLookups = CqlLookups.builder().build();
+    when(translationServiceClient.getCqlLookups(any(QdmMeasure.class), anyString()))
+            .thenReturn(cqlLookups);
+    when(humanReadableService.generate(any(Measure.class), any(CqlLookups.class)))
+            .thenReturn("success");
+    Mockito.doThrow(new RuntimeException("Test Exception"))
+                    .when(hqmfService).generateHqmf(any(QdmMeasure.class), any(CqlLookups.class));
+    byte[] packageContents = packagingService.createMeasurePackage(measure, TOKEN);
+    String packageString = new String(packageContents);
+    String library1FileName = library1.getName() + "-" + library1.getVersion();
+    assertThat(packageString, containsString(library1FileName + ".cql"));
+    assertThat(packageString, containsString(library1FileName + ".xml"));
+    assertThat(packageString, containsString(library1FileName + ".json"));
+    assertThat(packageString, containsString("test-v1.2.003-QDM.html"));
+    assertThat(packageString, containsString("test-v1.2.003-QDM-ERROR.xml"));
   }
 
   @Test
