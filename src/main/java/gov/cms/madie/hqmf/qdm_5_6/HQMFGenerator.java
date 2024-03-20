@@ -39,7 +39,8 @@ public class HQMFGenerator implements Generator {
       measureExport.setHqmfXmlProcessor(hqmfProcessor);
       return finalCleanUp(measureExport);
     } catch (Exception e) {
-      log.error("Unable to generate HQMF for QDM v5.6. Exception Stack Strace is as followed : ", e);
+      log.error(
+          "Unable to generate HQMF for QDM v5.6. Exception Stack Strace is as followed : ", e);
       throw e;
     }
   }

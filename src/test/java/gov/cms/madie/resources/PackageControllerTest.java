@@ -19,13 +19,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
@@ -208,8 +206,8 @@ class PackageControllerTest {
             .build();
 
     Assertions.assertThrows(
-            UnsupportedModelException.class,
-            () -> packageController.getMeasureHumanReadable(measure, "accessToken"));
+        UnsupportedModelException.class,
+        () -> packageController.getMeasureHumanReadable(measure, "accessToken"));
     verifyNoInteractions(translationServiceClient);
     verifyNoInteractions(humanReadableService);
   }
