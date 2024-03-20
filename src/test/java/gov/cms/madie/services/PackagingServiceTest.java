@@ -114,30 +114,31 @@ class PackagingServiceTest {
   @Test
   void testCreateMeasurePackageWhenHqmfGenerationFailed() {
     TranslatedLibrary library1 =
-            TranslatedLibrary.builder()
-                    .name("Lib one")
-                    .version("0.0.000")
-                    .elmJson("elm xml")
-                    .elmXml("elm xml")
-                    .cql("cql")
-                    .build();
+        TranslatedLibrary.builder()
+            .name("Lib one")
+            .version("0.0.000")
+            .elmJson("elm xml")
+            .elmXml("elm xml")
+            .cql("cql")
+            .build();
     TranslatedLibrary library2 =
-            TranslatedLibrary.builder()
-                    .name("Lib two")
-                    .version("0.0.001")
-                    .elmJson("elm xml")
-                    .elmXml("elm xml")
-                    .cql("cql")
-                    .build();
+        TranslatedLibrary.builder()
+            .name("Lib two")
+            .version("0.0.001")
+            .elmJson("elm xml")
+            .elmXml("elm xml")
+            .cql("cql")
+            .build();
     when(translationServiceClient.getTranslatedLibraries(measure.getCql(), TOKEN))
-            .thenReturn(List.of(library1, library2));
+        .thenReturn(List.of(library1, library2));
     CqlLookups cqlLookups = CqlLookups.builder().build();
     when(translationServiceClient.getCqlLookups(any(QdmMeasure.class), anyString()))
-            .thenReturn(cqlLookups);
+        .thenReturn(cqlLookups);
     when(humanReadableService.generate(any(Measure.class), any(CqlLookups.class)))
-            .thenReturn("success");
+        .thenReturn("success");
     Mockito.doThrow(new RuntimeException("Test Exception"))
-                    .when(hqmfService).generateHqmf(any(QdmMeasure.class), any(CqlLookups.class));
+        .when(hqmfService)
+        .generateHqmf(any(QdmMeasure.class), any(CqlLookups.class));
     byte[] packageContents = packagingService.createMeasurePackage(measure, TOKEN);
     String packageString = new String(packageContents);
     String library1FileName = library1.getName() + "-" + library1.getVersion();

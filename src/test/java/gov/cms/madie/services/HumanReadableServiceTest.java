@@ -394,7 +394,7 @@ class HumanReadableServiceTest {
 
     Group group = measure.getGroups().get(0);
     HumanReadablePopulationCriteriaModel popCriteriaModel = populationCriteriaModels.get(0);
-    assertThat(popCriteriaModel.getName(), is(equalTo(group.getGroupDescription())));
+    assertThat(popCriteriaModel.getName(), is(equalTo("Population Criteria 1")));
     assertThat(
         popCriteriaModel.getPopulations().size(),
         is(

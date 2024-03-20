@@ -39,6 +39,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -188,12 +189,13 @@ public class HumanReadableService {
 
   List<HumanReadablePopulationCriteriaModel> buildPopCriteria(
       Measure measure, Set<CQLDefinition> allDefinitions) {
+    AtomicInteger indexHolder = new AtomicInteger(1);
     return measure.getGroups().stream()
         .map(
             group ->
                 HumanReadablePopulationCriteriaModel.builder()
                     .id(group.getId())
-                    .name(group.getGroupDescription())
+                    .name("Population Criteria " + indexHolder.getAndIncrement())
                     .populations(
                         Stream.concat(
                                 Stream.concat(
