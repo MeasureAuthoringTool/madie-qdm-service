@@ -39,7 +39,7 @@ public final class MappingUtil {
       case PROCESS -> MadieConstants.MeasureType.PROCESS;
       case STRUCTURE -> MadieConstants.MeasureType.STRUCTURE;
       default -> throw new PackagingException(
-          "Unexpected base configuration: " + baseConfigurationType);
+          "Unsupported base configuration: " + baseConfigurationType);
     };
   }
 

@@ -115,7 +115,7 @@ class MappingUtilTest {
             PackagingException.class,
             () -> MappingUtil.getMeasureTypeId(BaseConfigurationTypes.PATIENT_REPORTED_OUTCOME));
     assertThat(
-        ex.getMessage(), is(equalTo("Unexpected base configuration: Patient Reported Outcome")));
+        ex.getMessage(), is(equalTo("Unsupported base configuration: Patient Reported Outcome")));
   }
 
   @Test
