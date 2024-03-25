@@ -34,6 +34,7 @@ import java.util.Set;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -273,6 +274,34 @@ class HumanReadableServiceTest {
     CqlLookups cqlLookups = CqlLookups.builder().definitions(allDefinitions).build();
     var result = humanReadableService.generate(measure, cqlLookups);
     assertNotNull(result);
+  }
+
+  @Test
+  void testGetEcqmIdentifierReturnsNullForNullMeasure() {
+    var output = humanReadableService.getEcqmIdentifier(null);
+    assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void testGetEcqmIdentifierReturnsNullForNullMeasureSet() {
+    var output = humanReadableService.getEcqmIdentifier(Measure.builder().measureSet(null).build());
+    assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void testGetEcqmIdentifierReturnsNullForNullMeasureSetCmsId() {
+    var output =
+        humanReadableService.getEcqmIdentifier(
+            Measure.builder().measureSet(MeasureSet.builder().cmsId(null).build()).build());
+    assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void testGetEcqmIdentifierReturnsNullForZeroMeasureSetCmsId() {
+    var output =
+        humanReadableService.getEcqmIdentifier(
+            Measure.builder().measureSet(MeasureSet.builder().cmsId(0).build()).build());
+    assertThat(output, is(nullValue()));
   }
 
   @Test
