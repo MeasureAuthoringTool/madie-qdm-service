@@ -1,6 +1,7 @@
 package gov.cms.madie.util;
 
 import com.nimbusds.oauth2.sdk.util.CollectionUtils;
+import gov.cms.madie.Exceptions.PackagingException;
 import gov.cms.madie.models.measure.BaseConfigurationTypes;
 import gov.cms.madie.models.measure.Group;
 import gov.cms.madie.models.measure.Measure;
@@ -32,10 +33,13 @@ public final class MappingUtil {
       case OUTCOME -> MadieConstants.MeasureType.OUTCOME;
       case PATIENT_ENGAGEMENT_OR_EXPERIENCE -> MadieConstants.MeasureType
           .PATIENT_ENGAGEMENT_OR_EXPERIENCE;
-      case PATIENT_REPORTED_OUTCOME -> MadieConstants.MeasureType.PATIENT_REPORTED_OUTCOME;
+      case PATIENT_REPORTED_OUTCOME_PERFORMANCE -> MadieConstants.MeasureType
+          .PATIENT_REPORTED_OUTCOME;
       case PERFORMANCE -> MadieConstants.MeasureType.PERFORMANCE;
       case PROCESS -> MadieConstants.MeasureType.PROCESS;
       case STRUCTURE -> MadieConstants.MeasureType.STRUCTURE;
+      default -> throw new PackagingException(
+          "Unexpected base configuration: " + baseConfigurationType);
     };
   }
 
