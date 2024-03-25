@@ -54,12 +54,12 @@ public final class MappingUtil {
     return switch (populationType) {
       case INITIAL_POPULATION -> "initialPopulation";
       case DENOMINATOR -> "denominator";
-      case DENOMINATOR_EXCLUSION -> "denominatorExclusion";
-      case DENOMINATOR_EXCEPTION -> "denominatorException";
+      case DENOMINATOR_EXCLUSION -> "denominatorExclusions";
+      case DENOMINATOR_EXCEPTION -> "denominatorExceptions";
       case NUMERATOR -> "numerator";
-      case NUMERATOR_EXCLUSION -> "numeratorExclusion";
+      case NUMERATOR_EXCLUSION -> "numeratorExclusions";
       case MEASURE_POPULATION -> "measurePopulation";
-      case MEASURE_POPULATION_EXCLUSION -> "measurePopulationExclusion";
+      case MEASURE_POPULATION_EXCLUSION -> "measurePopulationExclusions";
       default -> "?";
     };
   }
