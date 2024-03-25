@@ -118,7 +118,7 @@ public class HumanReadableService {
     HumanReadableMeasureInformationModel modelTemp =
         HumanReadableMeasureInformationModel.builder()
             .qdmVersion(5.6) // TODO Replace hardcode
-            .ecqmTitle(measure.getEcqmTitle())
+            .ecqmTitle(measure.getMeasureName())
             .ecqmVersionNumber(measure.getVersion().toString())
             .calendarYear(false) // Unsupported MAT feature, default to false
             .guid(measure.getMeasureSetId())

@@ -290,7 +290,7 @@ class HumanReadableServiceTest {
         humanReadableService.buildMeasureInfo(measure);
 
     assertThat(measureInfoModel.getQdmVersion(), equalTo(5.6));
-    assertThat(measureInfoModel.getEcqmTitle(), equalTo(measure.getEcqmTitle()));
+    assertThat(measureInfoModel.getEcqmTitle(), equalTo(measure.getMeasureName()));
     assertThat(measureInfoModel.getEcqmVersionNumber(), equalTo(measure.getVersion().toString()));
     assertThat(measureInfoModel.isCalendarYear(), equalTo(false));
     assertThat(measureInfoModel.getGuid(), equalTo(measure.getMeasureSetId()));
