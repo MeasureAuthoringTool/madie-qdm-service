@@ -274,7 +274,7 @@ class MeasureMapperTest {
                                 Population.builder()
                                     .id("id91")
                                     .name(PopulationType.NUMERATOR_EXCLUSION)
-                                  .definition("Numerator Exclusion")
+                                  .definition("numer exclusion")
                                   .description("")
                                   .build(),
                                 Population.builder()
