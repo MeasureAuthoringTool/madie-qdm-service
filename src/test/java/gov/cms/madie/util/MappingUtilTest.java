@@ -1,5 +1,6 @@
 package gov.cms.madie.util;
 
+import gov.cms.madie.Exceptions.PackagingException;
 import gov.cms.madie.models.measure.BaseConfigurationTypes;
 import gov.cms.madie.models.measure.Group;
 import gov.cms.madie.models.measure.Measure;
@@ -8,6 +9,7 @@ import gov.cms.madie.models.measure.MeasureScoring;
 import gov.cms.madie.models.measure.Population;
 import gov.cms.madie.models.measure.PopulationType;
 import gov.cms.madie.models.measure.Stratification;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -83,7 +85,8 @@ class MappingUtilTest {
 
   @Test
   void getMeasureTypeIdProPm() {
-    String output = MappingUtil.getMeasureTypeId(BaseConfigurationTypes.PATIENT_REPORTED_OUTCOME);
+    String output =
+        MappingUtil.getMeasureTypeId(BaseConfigurationTypes.PATIENT_REPORTED_OUTCOME_PERFORMANCE);
     assertThat(output, is(equalTo(MadieConstants.MeasureType.PATIENT_REPORTED_OUTCOME)));
   }
 
@@ -103,6 +106,16 @@ class MappingUtilTest {
   void getMeasureTypeIdStructure() {
     String output = MappingUtil.getMeasureTypeId(BaseConfigurationTypes.STRUCTURE);
     assertThat(output, is(equalTo(MadieConstants.MeasureType.STRUCTURE)));
+  }
+
+  @Test
+  void getMeasureTypeIdStructureForUnsupportedType() {
+    Exception ex =
+        Assertions.assertThrows(
+            PackagingException.class,
+            () -> MappingUtil.getMeasureTypeId(BaseConfigurationTypes.PATIENT_REPORTED_OUTCOME));
+    assertThat(
+        ex.getMessage(), is(equalTo("Unsupported base configuration: Patient Reported Outcome")));
   }
 
   @Test

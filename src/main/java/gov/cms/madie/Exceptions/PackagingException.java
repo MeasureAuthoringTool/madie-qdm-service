@@ -4,4 +4,8 @@ public class PackagingException extends RuntimeException {
   public PackagingException(String message, Exception cause) {
     super(message, cause);
   }
+
+  public PackagingException(String message) {
+    super(message);
+  }
 }
