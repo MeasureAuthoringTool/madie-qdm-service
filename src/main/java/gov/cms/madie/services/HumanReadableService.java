@@ -113,7 +113,7 @@ public class HumanReadableService {
             isCalendarYear, measurementPeriodStartDate, measurementPeriodEndDate));
   }
 
-  private String getEcqmIdentifier(Measure measure) {
+  String getEcqmIdentifier(Measure measure) {
     return measure == null
             || measure.getMeasureSet() == null
             || measure.getMeasureSet().getCmsId() == null
