@@ -282,7 +282,7 @@ public class HumanReadableService {
   List<HumanReadableExpressionModel> buildDefinitions(Set<CQLDefinition> allDefinitions) {
     List<CQLDefinition> definitions =
         allDefinitions.stream()
-            .filter(definition -> definition.getParentLibrary() == null && !definition.isFunction())
+            .filter(definition -> !definition.isFunction())
             .toList();
 
     return definitions.stream()
@@ -290,7 +290,7 @@ public class HumanReadableService {
             definition ->
                 HumanReadableExpressionModel.builder()
                     .id(definition.getId())
-                    .name(definition.getDefinitionName())
+                    .name(getDefinitionName(definition))
                     .logic(definition.getLogic().substring(definition.getLogic().indexOf('\n') + 1))
                     .build())
         .sorted(Comparator.comparing(HumanReadableExpressionModel::getName))
@@ -306,7 +306,7 @@ public class HumanReadableService {
             definition ->
                 HumanReadableExpressionModel.builder()
                     .id(definition.getId())
-                    .name(definition.getDefinitionName())
+                    .name(getDefinitionName(definition))
                     .logic(definition.getLogic().substring(definition.getLogic().indexOf('\n') + 1))
                     .build())
         .sorted(Comparator.comparing(HumanReadableExpressionModel::getName))
@@ -421,5 +421,12 @@ public class HumanReadableService {
                             + "]")
                     .build())
         .collect(Collectors.toList());
+  }
+
+  private String getDefinitionName(CQLDefinition definition) {
+    if (definition.getLibraryDisplayName() == null) {
+      return definition.getDefinitionName();
+    }
+    return definition.getLibraryDisplayName() + "." + definition.getDefinitionName();
   }
 }
