@@ -6,17 +6,7 @@ import gov.cms.madie.dto.ElementLookup;
 import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.common.Organization;
 import gov.cms.madie.models.common.Version;
-import gov.cms.madie.models.measure.BaseConfigurationTypes;
-import gov.cms.madie.models.measure.DefDescPair;
-import gov.cms.madie.models.measure.Endorsement;
-import gov.cms.madie.models.measure.Group;
-import gov.cms.madie.models.measure.MeasureMetaData;
-import gov.cms.madie.models.measure.MeasureObservation;
-import gov.cms.madie.models.measure.Population;
-import gov.cms.madie.models.measure.PopulationType;
-import gov.cms.madie.models.measure.QdmMeasure;
-import gov.cms.madie.models.measure.Reference;
-import gov.cms.madie.models.measure.Stratification;
+import gov.cms.madie.models.measure.*;
 import gov.cms.madie.model.HumanReadableCodeModel;
 import gov.cms.madie.model.HumanReadableExpressionModel;
 import gov.cms.madie.model.HumanReadableMeasureInformationModel;
@@ -44,6 +34,7 @@ import java.util.Set;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -79,6 +70,7 @@ class HumanReadableServiceTest {
             .version(Version.parse("0.0.000"))
             .measurementPeriodStart(now)
             .measurementPeriodEnd(now)
+            .measureSet(MeasureSet.builder().cmsId(88).build())
             .measureMetaData(
                 MeasureMetaData.builder()
                     .draft(true)
@@ -285,13 +277,42 @@ class HumanReadableServiceTest {
   }
 
   @Test
+  void testGetEcqmIdentifierReturnsNullForNullMeasure() {
+    var output = humanReadableService.getEcqmIdentifier(null);
+    assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void testGetEcqmIdentifierReturnsNullForNullMeasureSet() {
+    var output = humanReadableService.getEcqmIdentifier(Measure.builder().measureSet(null).build());
+    assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void testGetEcqmIdentifierReturnsNullForNullMeasureSetCmsId() {
+    var output =
+        humanReadableService.getEcqmIdentifier(
+            Measure.builder().measureSet(MeasureSet.builder().cmsId(null).build()).build());
+    assertThat(output, is(nullValue()));
+  }
+
+  @Test
+  void testGetEcqmIdentifierReturnsNullForZeroMeasureSetCmsId() {
+    var output =
+        humanReadableService.getEcqmIdentifier(
+            Measure.builder().measureSet(MeasureSet.builder().cmsId(0).build()).build());
+    assertThat(output, is(nullValue()));
+  }
+
+  @Test
   public void canBuildMeasureInfoFromMeasure() {
     HumanReadableMeasureInformationModel measureInfoModel =
         humanReadableService.buildMeasureInfo(measure);
 
     assertThat(measureInfoModel.getQdmVersion(), equalTo(5.6));
-    assertThat(measureInfoModel.getEcqmTitle(), equalTo(measure.getEcqmTitle()));
+    assertThat(measureInfoModel.getEcqmTitle(), equalTo(measure.getMeasureName()));
     assertThat(measureInfoModel.getEcqmVersionNumber(), equalTo(measure.getVersion().toString()));
+    assertThat(measureInfoModel.getEcqmIdentifier(), is(equalTo("88")));
     assertThat(measureInfoModel.isCalendarYear(), equalTo(false));
     assertThat(measureInfoModel.getGuid(), equalTo(measure.getMeasureSetId()));
     assertThat(
