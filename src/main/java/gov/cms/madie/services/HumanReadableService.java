@@ -113,7 +113,7 @@ public class HumanReadableService {
             isCalendarYear, measurementPeriodStartDate, measurementPeriodEndDate));
   }
 
-  String getEcqmIdentifier(Measure measure) {
+  String getCmsId(Measure measure) {
     return measure == null
             || measure.getMeasureSet() == null
             || measure.getMeasureSet().getCmsId() == null
@@ -128,7 +128,7 @@ public class HumanReadableService {
         HumanReadableMeasureInformationModel.builder()
             .qdmVersion(5.6) // TODO Replace hardcode
             .ecqmTitle(measure.getMeasureName())
-            .ecqmIdentifier(getEcqmIdentifier(measure))
+            .cmsId(getCmsId(measure))
             .ecqmVersionNumber(measure.getVersion().toString())
             .calendarYear(false) // Unsupported MAT feature, default to false
             .guid(measure.getMeasureSetId())
