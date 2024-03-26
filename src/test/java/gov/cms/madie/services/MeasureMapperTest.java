@@ -274,9 +274,9 @@ class MeasureMapperTest {
                                 Population.builder()
                                     .id("id91")
                                     .name(PopulationType.NUMERATOR_EXCLUSION)
-                                  .definition("numer exclusion")
-                                  .description("")
-                                  .build(),
+                                    .definition("numer exclusion")
+                                    .description("")
+                                    .build(),
                                 Population.builder()
                                     .id("id92")
                                     .name(PopulationType.DENOMINATOR_EXCEPTION)
@@ -313,10 +313,10 @@ class MeasureMapperTest {
                         .id(UUID.randomUUID().toString())
                         .definitionName("numer")
                         .build(),
-                  CQLDefinition.builder()
-                    .id(UUID.randomUUID().toString())
-                    .definitionName("numer exclusion")
-                    .build()))
+                    CQLDefinition.builder()
+                        .id(UUID.randomUUID().toString())
+                        .definitionName("numer exclusion")
+                        .build()))
             .build();
     MeasureGroupingType output = measureMapper.measureToMeasureGroupingType(measure, cqlLookups);
     assertThat(output, is(notNullValue()));
@@ -335,12 +335,10 @@ class MeasureMapperTest {
     assertThat(firstGroup.getClause().get(2).getIsInGrouping(), is(equalTo("false")));
     assertThat(
         firstGroup.getClause().get(2).getDisplayName(), is(equalTo("Denominator Exclusion")));
-    assertThat(
-        firstGroup.getClause().get(2).getType(), is(equalTo("denominatorExclusions")));
-    assertThat(
-        firstGroup.getClause().get(4).getDisplayName(), is(equalTo("Numerator Exclusion")));
-    assertThat(
-        firstGroup.getClause().get(4).getType(), is(equalTo("numeratorExclusions")));
+    assertThat(firstGroup.getClause().get(2).getType(), is(equalTo("denominatorExclusions")));
+    assertThat(firstGroup.getClause().get(2).getCqldefinition(), is(equalTo(null)));
+    assertThat(firstGroup.getClause().get(4).getDisplayName(), is(equalTo("Numerator Exclusion")));
+    assertThat(firstGroup.getClause().get(4).getType(), is(equalTo("numeratorExclusions")));
     assertThat(firstGroup.getClause().get(6).getIsInGrouping(), is(equalTo("true")));
     assertThat(firstGroup.getClause().get(6).getDisplayName(), is(equalTo("Stratum")));
     assertThat(firstGroup.getClause().get(6).getType(), is(equalTo("stratum")));
