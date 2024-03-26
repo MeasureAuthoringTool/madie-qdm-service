@@ -16,7 +16,7 @@ public class HumanReadableMeasureInformationModel {
 
   private double qdmVersion;
   private String ecqmTitle;
-  private String ecqmIdentifier;
+  private String cmsId;
   private String ecqmVersionNumber;
   private String cbeNumber;
   private String guid;
