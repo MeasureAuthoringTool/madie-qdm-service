@@ -245,7 +245,8 @@ public interface MeasureMapper {
   @Mapping(target = "uuid", source = "population.id")
   @Mapping(
       target = "cqldefinition",
-      expression = "java(populationToCqlDefinition(population, cqlDefinition))")
+      expression =
+          "java(cqlDefinition == null ? null : populationToCqlDefinition(population, cqlDefinition))")
   @Mapping(
       target = "type",
       expression = "java(gov.cms.madie.util.MappingUtil.getPopulationType(population.getName()))")
@@ -293,7 +294,8 @@ public interface MeasureMapper {
   @Mapping(target = "displayName", constant = "Stratum")
   @Mapping(
       target = "cqldefinition",
-      expression = "java(getStratificationDefinition(stratification, cqlDefinition))")
+      expression =
+          "java(cqlDefinition == null ? null : getStratificationDefinition(stratification, cqlDefinition))")
   ClauseType stratificationToClauseType(Stratification stratification, CQLDefinition cqlDefinition);
 
   @Mapping(target = "displayName", source = "stratification.cqlDefinition")
