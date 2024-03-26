@@ -277,29 +277,29 @@ class HumanReadableServiceTest {
   }
 
   @Test
-  void testGetEcqmIdentifierReturnsNullForNullMeasure() {
-    var output = humanReadableService.getEcqmIdentifier(null);
+  void testGetCmsIdReturnsNullForNullMeasure() {
+    var output = humanReadableService.getCmsId(null);
     assertThat(output, is(nullValue()));
   }
 
   @Test
-  void testGetEcqmIdentifierReturnsNullForNullMeasureSet() {
-    var output = humanReadableService.getEcqmIdentifier(Measure.builder().measureSet(null).build());
+  void testGetCmsIdReturnsNullForNullMeasureSet() {
+    var output = humanReadableService.getCmsId(Measure.builder().measureSet(null).build());
     assertThat(output, is(nullValue()));
   }
 
   @Test
-  void testGetEcqmIdentifierReturnsNullForNullMeasureSetCmsId() {
+  void testGetCmsIdReturnsNullForNullMeasureSetCmsId() {
     var output =
-        humanReadableService.getEcqmIdentifier(
+        humanReadableService.getCmsId(
             Measure.builder().measureSet(MeasureSet.builder().cmsId(null).build()).build());
     assertThat(output, is(nullValue()));
   }
 
   @Test
-  void testGetEcqmIdentifierReturnsNullForZeroMeasureSetCmsId() {
+  void testGetCmsIdReturnsNullForZeroMeasureSetCmsId() {
     var output =
-        humanReadableService.getEcqmIdentifier(
+        humanReadableService.getCmsId(
             Measure.builder().measureSet(MeasureSet.builder().cmsId(0).build()).build());
     assertThat(output, is(nullValue()));
   }
@@ -312,7 +312,7 @@ class HumanReadableServiceTest {
     assertThat(measureInfoModel.getQdmVersion(), equalTo(5.6));
     assertThat(measureInfoModel.getEcqmTitle(), equalTo(measure.getMeasureName()));
     assertThat(measureInfoModel.getEcqmVersionNumber(), equalTo(measure.getVersion().toString()));
-    assertThat(measureInfoModel.getEcqmIdentifier(), is(equalTo("88")));
+    assertThat(measureInfoModel.getCmsId(), is(equalTo("88")));
     assertThat(measureInfoModel.isCalendarYear(), equalTo(false));
     assertThat(measureInfoModel.getGuid(), equalTo(measure.getMeasureSetId()));
     assertThat(

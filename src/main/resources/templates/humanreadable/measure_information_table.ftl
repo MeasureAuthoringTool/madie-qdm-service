@@ -6,8 +6,8 @@
             <td style="width:80%" colspan="3"><h1 style="font-size:10px">${model.measureInformation.ecqmTitle}</h1></td>
         </tr>
         <tr>
-            <th scope="row" class="row-header"><span class="td_label">eCQM Identifier</span></th>
-            <td style="width:30%">${model.measureInformation.ecqmIdentifier!""}</td>
+            <th scope="row" class="row-header"><span class="td_label">CMS ID</span></th>
+            <td style="width:30%">${model.measureInformation.cmsId!""}</td>
 
             <th scope="row" class="row-header"><span class="td_label">eCQM Version Number</span></th>
             <td style="width:30%">${model.measureInformation.ecqmVersionNumber}</td>
