@@ -336,6 +336,7 @@ class MeasureMapperTest {
     assertThat(
         firstGroup.getClause().get(2).getDisplayName(), is(equalTo("Denominator Exclusion")));
     assertThat(firstGroup.getClause().get(2).getType(), is(equalTo("denominatorExclusions")));
+    assertThat(firstGroup.getClause().get(2).getCqldefinition(), is(equalTo(null)));
     assertThat(firstGroup.getClause().get(4).getDisplayName(), is(equalTo("Numerator Exclusion")));
     assertThat(firstGroup.getClause().get(4).getType(), is(equalTo("numeratorExclusions")));
     assertThat(firstGroup.getClause().get(6).getIsInGrouping(), is(equalTo("true")));
