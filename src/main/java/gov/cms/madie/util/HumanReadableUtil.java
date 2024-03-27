@@ -194,7 +194,7 @@ public class HumanReadableUtil {
     return definition.getLibraryDisplayName() + "." + definition.getDefinitionName();
   }
 
-  public static String getFunctionName(CQLDefinition definition) {
+  public static String getFunctionSignature(CQLDefinition definition) {
     if (definition == null) {
       return null;
     }

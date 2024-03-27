@@ -316,7 +316,7 @@ public class HumanReadableService {
             definition ->
                 HumanReadableExpressionModel.builder()
                     .id(definition.getId())
-                    .name(HumanReadableUtil.getFunctionName(definition))
+                    .name(HumanReadableUtil.getFunctionSignature(definition))
                     .logic(definition.getLogic().substring(definition.getLogic().indexOf('\n') + 1))
                     .build())
         .sorted(Comparator.comparing(HumanReadableExpressionModel::getName))
