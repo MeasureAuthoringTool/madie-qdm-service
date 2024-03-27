@@ -1,6 +1,7 @@
 package gov.cms.madie.services;
 
 import freemarker.template.Template;
+import gov.cms.madie.dto.CQLFunctionArgument;
 import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.dto.ElementLookup;
 import gov.cms.madie.models.common.ModelType;
@@ -199,6 +200,17 @@ class HumanReadableServiceTest {
                 "define function \"NormalizeInterval\"(pointInTime DateTime, period Interval<DateTime> ):\n  if pointInTime is not null then Interval[pointInTime, pointInTime]\n    else if period is not null then period \n    else null as Interval<DateTime>")
             .parentLibrary("MATGlobalCommonFunctionsQDM")
             .libraryDisplayName("Global")
+            .functionArguments(
+                List.of(
+                    CQLFunctionArgument.builder()
+                        .argumentName("pointInTime")
+                        .argumentType("DateTime")
+                        .build(),
+                    CQLFunctionArgument.builder()
+                        .argumentName("period")
+                        .argumentType("Others")
+                        .otherType("Interval<DateTime>")
+                        .build()))
             .isFunction(true)
             .build();
 
@@ -207,8 +219,15 @@ class HumanReadableServiceTest {
             .id("Local Function")
             .definitionName("Local Function")
             .definitionLogic(
-                "define function \"Local Function\"(pointInTime DateTime, period Interval<DateTime> ):\n  if pointInTime is not null then Interval[pointInTime, pointInTime]\n    else if period is not null then period \n    else null as Interval<DateTime>")
+                "define function \"Local Function\"(MedDispense \"Medication, Dispensed\"):\n  date from Coalesce(MedDispense.relevantPeriod.low, MedDispense.relevantDatetime, MedDispense.authorDatetime)")
             .isFunction(true)
+            .functionArguments(
+                List.of(
+                    CQLFunctionArgument.builder()
+                        .argumentName("MedDispense")
+                        .argumentType("QDM Datatype")
+                        .qdmDataType("Medication, Dispensed")
+                        .build()))
             .build();
     onlyDefinitions =
         new HashSet<>(Arrays.asList(definition1, definition2, definition3, definition4));
@@ -434,8 +453,10 @@ class HumanReadableServiceTest {
     assertThat(functions.get(0), is(notNullValue()));
     assertThat(
         functions.get(0).getName(),
-        is(equalTo(function1.getLibraryDisplayName() + "." + function1.getDefinitionName())));
-    assertThat(functions.get(1).getName(), is(equalTo(function2.getDefinitionName())));
+        is(equalTo("Global.NormalizeInterval(pointInTime DateTime, period Interval<DateTime>)")));
+    assertThat(
+        functions.get(1).getName(),
+        is(equalTo("Local Function(MedDispense \"Medication, Dispensed\")")));
   }
 
   @Test
