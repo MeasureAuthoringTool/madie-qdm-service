@@ -22,6 +22,10 @@ public class CqlElmTranslatorClientConfig {
   @Value("${madie.cql-elm.service.cql-lookups}")
   private String cqlLookups;
 
+  //TODO waiting for SME feedback
+//  @Value("${madie.cql-elm.service.relevant-data-elements}")
+//  private String relevantDataElements;
+
   @Bean
   public RestTemplate elmTranslatorRestTemplate() {
     return new RestTemplate();

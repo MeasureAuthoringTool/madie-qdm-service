@@ -1,5 +1,5 @@
 server:
-  port: 8086
+  port: 8087
   servlet:
     context-path: /api
 
@@ -11,6 +11,11 @@ madie:
       cql-elm-urn: /cql/elm
       human-readable: /human-readable
       cql-lookups: /cql/lookups
+      relevant-data-elements: /qdm/relevant-elements
+  qrda:
+    service:
+      base-url: ${QRDA_SERVICE_URL:http://localhost:4567/api}
+      qrda: /qrda
 
 management:
   endpoints:
