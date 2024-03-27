@@ -16,6 +16,7 @@ import gov.cms.madie.model.HumanReadableTerminologyModel;
 import gov.cms.madie.model.HumanReadableValuesetModel;
 import gov.cms.madie.models.measure.Group;
 import gov.cms.madie.models.measure.Measure;
+import gov.cms.madie.models.measure.Population;
 import gov.cms.madie.models.measure.PopulationType;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.util.HumanReadableDateUtil;
@@ -265,20 +266,28 @@ public class HumanReadableService {
 
     return group.getMeasureObservations().stream()
         .map(
-            measureObservation ->
-                HumanReadablePopulationModel.builder()
-                    .name(measureObservation.getDefinition())
-                    .id(measureObservation.getId())
-                    .display(measureObservation.getDefinition())
-                    .logic(
-                        measureObservation.getAggregateMethod()
-                            + " (\n"
-                            + HumanReadableUtil.getCQLDefinitionLogic(
-                                measureObservation.getDefinition(), allDefinitions)
-                            + "\n)")
-                    .expressionName(measureObservation.getDefinition())
-                    .inGroup(!StringUtils.isBlank(measureObservation.getDefinition()))
-                    .build())
+            measureObservation -> {
+              String display = measureObservation.getDefinition();
+              if ("Ratio".equals(group.getScoring())) {
+                Population population =
+                    HumanReadableUtil.getObservationAssociation(
+                        measureObservation.getCriteriaReference(), group.getPopulations());
+                display = display + " (Association: " + population.getName().getDisplay() + ")";
+              }
+              return HumanReadablePopulationModel.builder()
+                  .name(measureObservation.getDefinition())
+                  .id(measureObservation.getId())
+                  .display(display)
+                  .logic(
+                      measureObservation.getAggregateMethod()
+                          + " (\n"
+                          + HumanReadableUtil.getCQLDefinitionLogic(
+                              measureObservation.getDefinition(), allDefinitions)
+                          + "\n)")
+                  .expressionName(measureObservation.getDefinition())
+                  .inGroup(!StringUtils.isBlank(measureObservation.getDefinition()))
+                  .build();
+            })
         .collect(Collectors.toList());
   }
 
@@ -291,7 +300,7 @@ public class HumanReadableService {
             definition ->
                 HumanReadableExpressionModel.builder()
                     .id(definition.getId())
-                    .name(getDefinitionName(definition))
+                    .name(HumanReadableUtil.getDefinitionName(definition))
                     .logic(definition.getLogic().substring(definition.getLogic().indexOf('\n') + 1))
                     .build())
         .sorted(Comparator.comparing(HumanReadableExpressionModel::getName))
@@ -307,7 +316,7 @@ public class HumanReadableService {
             definition ->
                 HumanReadableExpressionModel.builder()
                     .id(definition.getId())
-                    .name(getFunctionName(definition))
+                    .name(HumanReadableUtil.getFunctionName(definition))
                     .logic(definition.getLogic().substring(definition.getLogic().indexOf('\n') + 1))
                     .build())
         .sorted(Comparator.comparing(HumanReadableExpressionModel::getName))
@@ -422,40 +431,5 @@ public class HumanReadableService {
                             + "]")
                     .build())
         .collect(Collectors.toList());
-  }
-
-  private String getDefinitionName(CQLDefinition definition) {
-    if (StringUtils.isBlank(definition.getLibraryDisplayName())) {
-      return definition.getDefinitionName();
-    }
-    return definition.getLibraryDisplayName() + "." + definition.getDefinitionName();
-  }
-
-  private String getFunctionName(CQLDefinition definition) {
-    String functionName = getDefinitionName(definition);
-    if (CollectionUtils.isEmpty(definition.getFunctionArguments())) {
-      return functionName;
-    }
-    String parameters =
-        definition.getFunctionArguments().stream()
-            .map(
-                functionArgument -> {
-                  if ("Others".equals(functionArgument.getArgumentType())) {
-                    return functionArgument.getArgumentName()
-                        + " "
-                        + functionArgument.getOtherType();
-                  } else if ("QDM Datatype".equals(functionArgument.getArgumentType())) {
-                    return functionArgument.getArgumentName()
-                        + " \""
-                        + functionArgument.getQdmDataType()
-                        + "\"";
-                  } else {
-                    return functionArgument.getArgumentName()
-                        + " "
-                        + functionArgument.getArgumentType();
-                  }
-                })
-            .collect(Collectors.joining(", "));
-    return functionName + "(" + parameters + ")";
   }
 }

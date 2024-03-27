@@ -1,5 +1,6 @@
 package gov.cms.madie.util;
 
+import gov.cms.madie.dto.CQLDefinition;
 import gov.cms.madie.models.measure.Group;
 import gov.cms.madie.models.measure.MeasureMetaData;
 import gov.cms.madie.models.measure.MeasureObservation;
@@ -14,6 +15,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -176,5 +178,50 @@ public class HumanReadableUtilTest {
     String humanreadabledescription =
         HumanReadableUtil.getMeasureObservationDescriptions(testMeasure);
     assertEquals("G1M1\nG2M2", humanreadabledescription);
+  }
+
+  @Test
+  void testGetObservationAssociationForNullObservation() {
+    List<Population> populationList = List.of(Population.builder().build());
+    assertThat(HumanReadableUtil.getObservationAssociation(null, populationList), is(nullValue()));
+  }
+
+  @Test
+  void testGetObservationAssociationForNullPopulations() {
+    List<Population> populationList = List.of();
+    assertThat(HumanReadableUtil.getObservationAssociation("1", populationList), is(nullValue()));
+  }
+
+  @Test
+  void testGetObservationAssociation() {
+    List<Population> populationList =
+        List.of(Population.builder().name(PopulationType.DENOMINATOR).id("1").build());
+    Population population = HumanReadableUtil.getObservationAssociation("1", populationList);
+    assertThat(population.getName().getDisplay(), is(PopulationType.DENOMINATOR.getDisplay()));
+  }
+
+  @Test
+  void testGetDefinitionNameForNullInput() {
+    assertThat(HumanReadableUtil.getDefinitionName(null), is(nullValue()));
+  }
+
+  @Test
+  void testGetDefinitionName() {
+    CQLDefinition cqlDefinition =
+        CQLDefinition.builder().definitionName("test").definitionLogic("Sum(1 + 5)").build();
+    assertThat(
+        HumanReadableUtil.getDefinitionName(cqlDefinition),
+        is(equalTo(cqlDefinition.getDefinitionName())));
+  }
+
+  @Test
+  void testGetDefinitionNameForIncludedLibraryDefinition() {
+    CQLDefinition cqlDefinition =
+        CQLDefinition.builder()
+            .definitionName("add")
+            .definitionLogic("Sum(1 + 5)")
+            .libraryDisplayName("Math")
+            .build();
+    assertThat(HumanReadableUtil.getDefinitionName(cqlDefinition), is(equalTo("Math.add")));
   }
 }
