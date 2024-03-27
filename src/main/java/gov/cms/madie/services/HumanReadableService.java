@@ -304,7 +304,7 @@ public class HumanReadableService {
             definition ->
                 HumanReadableExpressionModel.builder()
                     .id(definition.getId())
-                    .name(getDefinitionName(definition))
+                    .name(getFunctionName(definition))
                     .logic(definition.getLogic().substring(definition.getLogic().indexOf('\n') + 1))
                     .build())
         .sorted(Comparator.comparing(HumanReadableExpressionModel::getName))
@@ -426,5 +426,33 @@ public class HumanReadableService {
       return definition.getDefinitionName();
     }
     return definition.getLibraryDisplayName() + "." + definition.getDefinitionName();
+  }
+
+  private String getFunctionName(CQLDefinition definition) {
+    String functionName = getDefinitionName(definition);
+    if (CollectionUtils.isEmpty(definition.getFunctionArguments())) {
+      return functionName;
+    }
+    String parameters =
+        definition.getFunctionArguments().stream()
+            .map(
+                functionArgument -> {
+                  if ("Others".equals(functionArgument.getArgumentType())) {
+                    return functionArgument.getArgumentName()
+                        + " "
+                        + functionArgument.getOtherType();
+                  } else if ("QDM Datatype".equals(functionArgument.getArgumentType())) {
+                    return functionArgument.getArgumentName()
+                        + " \""
+                        + functionArgument.getQdmDataType()
+                        + "\"";
+                  } else {
+                    return functionArgument.getArgumentName()
+                        + " "
+                        + functionArgument.getArgumentType();
+                  }
+                })
+            .collect(Collectors.joining(", "));
+    return functionName + "(" + parameters + ")";
   }
 }
