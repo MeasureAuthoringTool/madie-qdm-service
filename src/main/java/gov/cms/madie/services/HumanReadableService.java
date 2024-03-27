@@ -422,7 +422,7 @@ public class HumanReadableService {
   }
 
   private String getDefinitionName(CQLDefinition definition) {
-    if (definition.getLibraryDisplayName() == null) {
+    if (StringUtils.isBlank(definition.getLibraryDisplayName())) {
       return definition.getDefinitionName();
     }
     return definition.getLibraryDisplayName() + "." + definition.getDefinitionName();
