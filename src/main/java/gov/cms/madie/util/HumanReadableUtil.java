@@ -5,6 +5,7 @@ import gov.cms.madie.models.measure.Group;
 import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.models.measure.MeasureMetaData;
 import gov.cms.madie.models.measure.MeasureObservation;
+import gov.cms.madie.models.measure.Population;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.models.measure.Reference;
 import gov.cms.madie.models.measure.Stratification;
@@ -13,6 +14,7 @@ import gov.cms.madie.dto.CQLDefinition;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -168,5 +170,59 @@ public class HumanReadableUtil {
     return cqlDefinition != null
         ? cqlDefinition.getLogic().substring(cqlDefinition.getLogic().indexOf('\n') + 1)
         : "";
+  }
+
+  public static Population getObservationAssociation(
+      String observation, List<Population> populations) {
+    if (CollectionUtils.isEmpty(populations) || StringUtils.isBlank(observation)) {
+      return null;
+    }
+    return populations.stream()
+        .filter(population -> Objects.equals(population.getId(), observation))
+        .findFirst()
+        .orElse(null);
+  }
+
+  public static String getDefinitionName(CQLDefinition definition) {
+    if (definition == null) {
+      return null;
+    }
+
+    if (StringUtils.isBlank(definition.getLibraryDisplayName())) {
+      return definition.getDefinitionName();
+    }
+    return definition.getLibraryDisplayName() + "." + definition.getDefinitionName();
+  }
+
+  public static String getFunctionSignature(CQLDefinition definition) {
+    if (definition == null) {
+      return null;
+    }
+
+    String functionName = getDefinitionName(definition);
+    if (org.springframework.util.CollectionUtils.isEmpty(definition.getFunctionArguments())) {
+      return functionName;
+    }
+    String parameters =
+        definition.getFunctionArguments().stream()
+            .map(
+                functionArgument -> {
+                  if ("Others".equals(functionArgument.getArgumentType())) {
+                    return functionArgument.getArgumentName()
+                        + " "
+                        + functionArgument.getOtherType();
+                  } else if ("QDM Datatype".equals(functionArgument.getArgumentType())) {
+                    return functionArgument.getArgumentName()
+                        + " \""
+                        + functionArgument.getQdmDataType()
+                        + "\"";
+                  } else {
+                    return functionArgument.getArgumentName()
+                        + " "
+                        + functionArgument.getArgumentType();
+                  }
+                })
+            .collect(Collectors.joining(", "));
+    return functionName + "(" + parameters + ")";
   }
 }
