@@ -281,9 +281,7 @@ public class HumanReadableService {
 
   List<HumanReadableExpressionModel> buildDefinitions(Set<CQLDefinition> allDefinitions) {
     List<CQLDefinition> definitions =
-        allDefinitions.stream()
-            .filter(definition -> !definition.isFunction())
-            .toList();
+        allDefinitions.stream().filter(definition -> !definition.isFunction()).toList();
 
     return definitions.stream()
         .map(
