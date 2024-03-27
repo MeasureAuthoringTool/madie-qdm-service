@@ -136,9 +136,9 @@ class HumanReadableServiceTest {
                         .measureObservations(
                             List.of(
                                 MeasureObservation.builder()
-                                    .definition(PopulationType.INITIAL_POPULATION.name())
-                                    .build(),
-                                MeasureObservation.builder().build()))
+                                    .definition("Local Function")
+                                    .aggregateMethod("Average")
+                                    .build()))
                         .build()))
             .baseConfigurationTypes(List.of(BaseConfigurationTypes.OUTCOME))
             .riskAdjustmentDescription("test risk adjustment")

@@ -271,8 +271,11 @@ public class HumanReadableService {
                     .id(measureObservation.getId())
                     .display(measureObservation.getDefinition())
                     .logic(
-                        HumanReadableUtil.getCQLDefinitionLogic(
-                            measureObservation.getDefinition(), allDefinitions))
+                        measureObservation.getAggregateMethod()
+                            + " (\n"
+                            + HumanReadableUtil.getCQLDefinitionLogic(
+                                measureObservation.getDefinition(), allDefinitions)
+                            + "\n)")
                     .expressionName(measureObservation.getDefinition())
                     .inGroup(!StringUtils.isBlank(measureObservation.getDefinition()))
                     .build())
