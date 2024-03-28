@@ -1,6 +1,7 @@
 package gov.cms.madie.services;
 
 import freemarker.template.Template;
+import gov.cms.madie.dto.CQLFunctionArgument;
 import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.dto.ElementLookup;
 import gov.cms.madie.models.common.ModelType;
@@ -52,8 +53,8 @@ class HumanReadableServiceTest {
   private final Date now = new Date();
   private Set<CQLDefinition> allDefinitions;
   private Set<CQLDefinition> onlyDefinitions;
-  private CQLDefinition function;
-  private Set<String> usedFunctionIds;
+  private CQLDefinition function1;
+  private CQLDefinition function2;
 
   @BeforeEach
   void setUp() {
@@ -135,9 +136,9 @@ class HumanReadableServiceTest {
                         .measureObservations(
                             List.of(
                                 MeasureObservation.builder()
-                                    .definition(PopulationType.INITIAL_POPULATION.name())
-                                    .build(),
-                                MeasureObservation.builder().build()))
+                                    .definition("Local Function")
+                                    .aggregateMethod("Average")
+                                    .build()))
                         .build()))
             .baseConfigurationTypes(List.of(BaseConfigurationTypes.OUTCOME))
             .riskAdjustmentDescription("test risk adjustment")
@@ -184,62 +185,56 @@ class HumanReadableServiceTest {
             .build();
     CQLDefinition definition4 =
         CQLDefinition.builder()
-            .id("Fake")
+            .id("MATGlobalCommonFunctionsQDM-1.0.000|Global|Fake")
             .definitionName("Fake")
             .definitionLogic(
                 "define \"Fake\":\n  [\"Patient Characteristic Ethnicity\": \"Ethnicity\"]")
             .parentLibrary("MATGlobalCommonFunctionsQDM")
+            .libraryDisplayName("Global")
             .build();
-    function =
+    function1 =
         CQLDefinition.builder()
             .id("MATGlobalCommonFunctionsQDM-1.0.000|Global|NormalizeInterval")
             .definitionName("NormalizeInterval")
             .definitionLogic(
                 "define function \"NormalizeInterval\"(pointInTime DateTime, period Interval<DateTime> ):\n  if pointInTime is not null then Interval[pointInTime, pointInTime]\n    else if period is not null then period \n    else null as Interval<DateTime>")
             .parentLibrary("MATGlobalCommonFunctionsQDM")
+            .libraryDisplayName("Global")
+            .functionArguments(
+                List.of(
+                    CQLFunctionArgument.builder()
+                        .argumentName("pointInTime")
+                        .argumentType("DateTime")
+                        .build(),
+                    CQLFunctionArgument.builder()
+                        .argumentName("period")
+                        .argumentType("Others")
+                        .otherType("Interval<DateTime>")
+                        .build()))
             .isFunction(true)
+            .build();
+
+    function2 =
+        CQLDefinition.builder()
+            .id("Local Function")
+            .definitionName("Local Function")
+            .definitionLogic(
+                "define function \"Local Function\"(MedDispense \"Medication, Dispensed\"):\n  date from Coalesce(MedDispense.relevantPeriod.low, MedDispense.relevantDatetime, MedDispense.authorDatetime)")
+            .isFunction(true)
+            .functionArguments(
+                List.of(
+                    CQLFunctionArgument.builder()
+                        .argumentName("MedDispense")
+                        .argumentType("QDM Datatype")
+                        .qdmDataType("Medication, Dispensed")
+                        .build()))
             .build();
     onlyDefinitions =
         new HashSet<>(Arrays.asList(definition1, definition2, definition3, definition4));
     allDefinitions =
-        new HashSet<>(Arrays.asList(definition1, definition2, function, definition3, definition4));
-    usedFunctionIds = new HashSet<>(Arrays.asList(function.getId()));
-    /*
-       sourceDataCriteria1 =
-           SourceDataCriteria.builder()
-               .oid("2.16.840.1.113762.1.4.1248.119")
-               .title("Opioid Antagonist")
-               .description("Medication, Administered: Opioid Antagonist")
-               .type("MedicationAdministered")
-               .name("Opioid Antagonist")
-               .build();
-       sourceDataCriteria2 =
-           SourceDataCriteria.builder()
-               .oid("2.16.840.1.113883.3.666.5.307")
-               .title("Encounter Inpatient")
-               .description("Encounter, Performed: Encounter Inpatient")
-               .type("EncounterPerformed")
-               .name("Encounter Inpatient")
-               .build();
-       sourceDataCriteria3 =
-           SourceDataCriteria.builder()
-               .oid("1096-7")
-               .title("Operating Room/Suite")
-               .description("Operating Room/Suite")
-               .type("EncounterPerformed")
-               .name("Encounter Inpatient")
-               .codeId("testCodeId")
-               .build();
-       sourceDataCriteria4 =
-           SourceDataCriteria.builder()
-               .oid("2.16.840.1.114222.4.11.837")
-               .title("Ethnicity")
-               .description("Patient Characteristic Ethnicity: Ethnicity")
-               .type("PatientCharacteristicEthnicity")
-               .name("Ethnicity")
-               .build();
-
-    */
+        new HashSet<>(
+            Arrays.asList(
+                definition1, definition2, function1, function2, definition3, definition4));
   }
 
   @Test
@@ -436,23 +431,32 @@ class HumanReadableServiceTest {
   public void testBuildDefinitions() {
     List<HumanReadableExpressionModel> definitions =
         humanReadableService.buildDefinitions(onlyDefinitions);
-    assertThat(definitions.size(), is(equalTo(3)));
+    assertThat(definitions.size(), is(equalTo(4)));
   }
 
   @Test
   public void testBuildDefinitionsWithFunctionsRemoved() {
     List<HumanReadableExpressionModel> definitions =
         humanReadableService.buildDefinitions(allDefinitions);
-    assertThat(definitions.size(), is(equalTo(3)));
+    assertThat(definitions.size(), is(equalTo(4)));
+    assertThat(definitions.get(0).getName(), is(equalTo("Global.Fake")));
+    assertThat(definitions.get(1).getName(), is(equalTo("Initial Population")));
+    assertThat(definitions.get(2).getName(), is(equalTo("Opioid Administration")));
+    assertThat(definitions.get(3).getName(), is(equalTo("SDE Ethnicity")));
   }
 
   @Test
   public void testBuildFunctions() {
     List<HumanReadableExpressionModel> functions =
         humanReadableService.buildFunctions(allDefinitions);
-    assertThat(functions.size(), is(equalTo(1)));
+    assertThat(functions.size(), is(equalTo(2)));
     assertThat(functions.get(0), is(notNullValue()));
-    assertThat(functions.get(0).getName(), is(equalTo(function.getDefinitionName())));
+    assertThat(
+        functions.get(0).getName(),
+        is(equalTo("Global.NormalizeInterval(pointInTime DateTime, period Interval<DateTime>)")));
+    assertThat(
+        functions.get(1).getName(),
+        is(equalTo("Local Function(MedDispense \"Medication, Dispensed\")")));
   }
 
   @Test
