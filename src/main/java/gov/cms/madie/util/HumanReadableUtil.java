@@ -200,7 +200,7 @@ public class HumanReadableUtil {
     }
 
     String functionName = getDefinitionName(definition);
-    if (org.springframework.util.CollectionUtils.isEmpty(definition.getFunctionArguments())) {
+    if (CollectionUtils.isEmpty(definition.getFunctionArguments())) {
       return functionName;
     }
     String parameters =
