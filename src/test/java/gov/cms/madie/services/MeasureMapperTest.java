@@ -1030,23 +1030,4 @@ class MeasureMapperTest {
     assertThat(argumentTypes.get(0).getQdmDataType(), is(equalTo(arg1.getQdmDataType())));
     assertThat(argumentTypes.get(0).getArgumentName(), is(equalTo(arg1.getArgumentName())));
   }
-
-  @Test
-  void testGetImprovementNotationsForOther() {
-    String customNotation = "Custom improvement notation";
-    QdmMeasure measure =
-        QdmMeasure.builder()
-            .improvementNotation("Other")
-            .improvementNotationOther(customNotation)
-            .build();
-    assertThat(measureMapper.getImprovementNotations(measure), is(equalTo(customNotation)));
-  }
-
-  @Test
-  void testGetImprovementNotationsForIncreaseScore() {
-    String notation = "Increased score indicates improvement";
-    QdmMeasure measure =
-        QdmMeasure.builder().improvementNotation(notation).improvementNotationOther("").build();
-    assertThat(measureMapper.getImprovementNotations(measure), is(equalTo(notation)));
-  }
 }

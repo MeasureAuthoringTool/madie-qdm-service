@@ -21,6 +21,7 @@ import gov.cms.madie.models.measure.PopulationType;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.util.HumanReadableDateUtil;
 import gov.cms.madie.util.HumanReadableUtil;
+import gov.cms.madie.util.MeasureUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -160,7 +161,7 @@ public class HumanReadableService {
             .riskAdjustment(measure.getRiskAdjustmentDescription())
             .supplementalDataElements(measure.getSupplementalDataDescription())
             .rateAggregation(((QdmMeasure) measure).getRateAggregation())
-            .improvementNotation(((QdmMeasure) measure).getImprovementNotation())
+            .improvementNotation(MeasureUtils.getImprovementNotation((QdmMeasure) measure))
             .guidance(measure.getMeasureMetaData().getGuidance())
             .transmissionFormat(measure.getMeasureMetaData().getTransmissionFormat())
             .definition(
