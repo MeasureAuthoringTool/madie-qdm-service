@@ -92,4 +92,46 @@ class MeasureUtilsTest {
     Set<String> output = MeasureUtils.getMeasureDefinitions(measure);
     assertThat(output.size(), is(equalTo(5)));
   }
+
+  @Test
+  void testGetImprovementNotationForNullMeasure() {
+    assertThat(MeasureUtils.getImprovementNotation(null), is(equalTo(null)));
+  }
+
+  @Test
+  void testGetImprovementNotationForNullImprovement() {
+    QdmMeasure measure = QdmMeasure.builder().build();
+    assertThat(MeasureUtils.getImprovementNotation(measure), is(equalTo(null)));
+  }
+
+  @Test
+  void testGetImprovementNotationForOther() {
+    QdmMeasure measure =
+        QdmMeasure.builder()
+            .improvementNotation("Other")
+            .improvementNotationDescription("Test notation")
+            .build();
+    assertThat(MeasureUtils.getImprovementNotation(measure), is(equalTo("Test notation")));
+  }
+
+  @Test
+  void testGetImprovementNotationForIncreasedScoreWithNoDescription() {
+    QdmMeasure measure =
+        QdmMeasure.builder().improvementNotation("Increased score indicates improvement").build();
+    assertThat(
+        MeasureUtils.getImprovementNotation(measure),
+        is(equalTo("Increased score indicates improvement")));
+  }
+
+  @Test
+  void testGetImprovementNotationForIncreasedScoreWithDescription() {
+    QdmMeasure measure =
+        QdmMeasure.builder()
+            .improvementNotation("Increased score indicates improvement")
+            .improvementNotationDescription("Test notation")
+            .build();
+    assertThat(
+        MeasureUtils.getImprovementNotation(measure),
+        is(equalTo("Increased score indicates improvement - Test notation")));
+  }
 }
