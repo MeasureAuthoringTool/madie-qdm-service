@@ -143,6 +143,7 @@ public interface MeasureMapper {
   MeasureDetailsType measureToMeasureDetailsType(QdmMeasure measure);
 
   @Mapping(target = "uuid", source = "measureSetId")
+  @Mapping(target = "value", source = "measure.measureMetaData.measureSetTitle")
   QualityMeasureSetType measureToQualityMeasureSet(QdmMeasure measure);
 
   // measureGrouping mappings
