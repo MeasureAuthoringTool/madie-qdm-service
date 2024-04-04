@@ -46,7 +46,10 @@ public class QrdaClient {
       String result =
           qrdaRestTemplate.exchange(uri, HttpMethod.PUT, entity, responseType).getBody();
 
-      return Arrays.stream(result.split("</ClinicalDocument>")).map(s -> s + "\n</ClinicalDocument>" ).toList();
+      // Splits the individual documents apart for packaging
+      return Arrays.stream(result.split("</ClinicalDocument>"))
+          .map(s -> s + "\n</ClinicalDocument>")
+          .toList();
     } catch (Exception ex) {
       String msg = "An issue occurred while fetching the qrda for measure";
       log.error(msg, ex);

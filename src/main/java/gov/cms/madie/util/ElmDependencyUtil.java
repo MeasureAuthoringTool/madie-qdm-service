@@ -6,7 +6,7 @@ import gov.cms.madie.qrda.StatementDependency;
 import gov.cms.madie.qrda.StatementReference;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
-//TODO waiting for SME feedback
+
 @Slf4j
 public class ElmDependencyUtil {
 
@@ -125,7 +125,6 @@ public class ElmDependencyUtil {
                         .statement_references(new ArrayList<>())
                         .build());
       }
-      //                JSONObject jsonObj = (JSONObject) obj;
       for (String key : jsonObj.keySet()) {
         if (!key.equals("annotation")) {
           generateStatementDepsForElmHelper(

@@ -4,6 +4,7 @@ import gov.cms.madie.Exceptions.TranslationServiceException;
 import gov.cms.madie.config.CqlElmTranslatorClientConfig;
 import gov.cms.madie.dto.CqlLookupRequest;
 import gov.cms.madie.dto.CqlLookups;
+import gov.cms.madie.dto.SourceDataCriteria;
 import gov.cms.madie.models.dto.TranslatedLibrary;
 import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.models.measure.QdmMeasure;
@@ -86,6 +87,27 @@ public record TranslationServiceClient(
           .getBody();
     } catch (Exception ex) {
       String msg = "An issue occurred while fetching CQL Lookups for measure: " + measure.getId();
+      log.error(msg, ex);
+      throw new TranslationServiceException(msg, ex);
+    }
+  }
+
+  public List<SourceDataCriteria> getRelevantDataElements(Measure measure, String accessToken) {
+    URI uri =
+        URI.create(
+            translatorClientConfig.getBaseUrl() + translatorClientConfig.getRelevantDataElements());
+    HttpHeaders headers = new HttpHeaders();
+    headers.set(HttpHeaders.AUTHORIZATION, accessToken);
+    HttpEntity<Measure> entity = new HttpEntity<>(measure, headers);
+    ParameterizedTypeReference<List<SourceDataCriteria>> responseType =
+        new ParameterizedTypeReference<>() {};
+    try {
+      log.info("fetching the relevant data elements for measure");
+      return elmTranslatorRestTemplate
+          .exchange(uri, HttpMethod.PUT, entity, responseType)
+          .getBody();
+    } catch (Exception ex) {
+      String msg = "An issue occurred while fetching the relevant data elements for measure";
       log.error(msg, ex);
       throw new TranslationServiceException(msg, ex);
     }

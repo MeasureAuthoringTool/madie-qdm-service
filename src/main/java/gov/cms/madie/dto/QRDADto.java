@@ -16,7 +16,7 @@ public class QRDADto {
 
   String measure;
   List<TestCase> testCases;
-  //TODO waiting for SME feedback
-  List<String> sourceDataCriteria;
+  // TODO waiting for SME feedback
+  List<SourceDataCriteria> sourceDataCriteria;
   Object options;
 }

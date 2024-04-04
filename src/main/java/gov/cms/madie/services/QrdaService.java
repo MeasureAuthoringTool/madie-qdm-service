@@ -2,6 +2,7 @@ package gov.cms.madie.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gov.cms.madie.Exceptions.QrdaServiceException;
 import gov.cms.madie.dto.QRDADto;
 import gov.cms.madie.dto.SourceDataCriteria;
 import gov.cms.madie.models.dto.TranslatedLibrary;
@@ -25,6 +26,7 @@ public class QrdaService {
   private final CqmMeasureMapper mapper;
   private final TranslationServiceClient translationServiceClient;
   private final QrdaClient client;
+  private final ObjectMapper objectMapper;
 
   public List<String> generateQrda(QdmMeasure measure, String accessToken) {
     // get Libraries
@@ -35,49 +37,54 @@ public class QrdaService {
             .map(translatedLibrary -> translatedLibrary.getElmJson())
             .collect(Collectors.toList());
 
-    //TODO waiting for SME feedback
     List<SourceDataCriteria> dataCriteria =
         translationServiceClient.getRelevantDataElements(measure, accessToken);
 
-    ObjectMapper objectMapper = new ObjectMapper();
     QRDADto dto = null;
     try {
 
-      Long startTime =
-          Long.parseLong(
-              measure
-                  .getMeasurementPeriodStart()
-                  .toInstant()
-                  .atZone(ZoneId.systemDefault())
-                  .toLocalDateTime()
-                  .format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")));
-
-      Long endTime =
-          Long.parseLong(
-              measure
-                  .getMeasurementPeriodEnd()
-                  .toInstant()
-                  .atZone(ZoneId.systemDefault())
-                  .toLocalDateTime()
-                  .format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")));
-
-      Map<String, Long> options = new HashMap<>();
-      options.put("start_time", startTime);
-      options.put("end_time", endTime);
       dto =
           QRDADto.builder()
               .measure(
                   objectMapper.writeValueAsString(
-                      mapper.measureToCqmMeasure(measure, elms, dataCriteria)))
+                      mapper.measureToCqmMeasure(measure, elms)))
               .testCases(measure.getTestCases())
-              .sourceDataCriteria(null)
-              .options(options)
+              .sourceDataCriteria(dataCriteria)
+              .options(buildOptions(measure))
               .build();
     } catch (JsonProcessingException e) {
-      throw new RuntimeException(e);
+      throw new QrdaServiceException("Problem mapping the measure for QRDA generation", e);
     }
 
     // send to qrda
     return client.getQRDA(dto, accessToken);
+  }
+
+  private Map<String, Object> buildOptions(QdmMeasure measure) {
+    Long startTime =
+            Long.parseLong(
+                    measure
+                            .getMeasurementPeriodStart()
+                            .toInstant()
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDateTime()
+                            .format(DateTimeFormatter.ofPattern("yyyyMMddHH")));
+
+    Long endTime =
+            Long.parseLong(
+                    measure
+                            .getMeasurementPeriodEnd()
+                            .toInstant()
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDateTime()
+                            .format(DateTimeFormatter.ofPattern("yyyyMMddHH")));
+
+    Map<String, Object> options = new HashMap<>();
+    options.put("start_time", startTime);
+    options.put("end_time", endTime);
+    // This is required for QRDA, but is not gathered in MADIE, so it has been defaulted
+    options.put("submission_program", "HQR_IQR");
+
+    return options;
   }
 }
