@@ -39,9 +39,8 @@ public class ElmDependencyUtil {
               statements
                   .getStatement_references()
                   .forEach(
-                      reference -> {
-                        deepAddExternalLibraryDeps(reference, neededElmDepsMap, allElmsDepMap);
-                      });
+                      reference ->
+                          deepAddExternalLibraryDeps(reference, neededElmDepsMap, allElmsDepMap));
             });
     return neededElmDepsMap.get(mainCqlLibraryName);
   }
@@ -81,8 +80,7 @@ public class ElmDependencyUtil {
               el ->
                   generateStatementDepsForElmHelper(
                       el, libraryId, parentName, elmDeps, includedLibrariesMap));
-    } else if (obj instanceof JSONObject) {
-      JSONObject jsonObj = (JSONObject) obj;
+    } else if (obj instanceof JSONObject jsonObj) {
       List<String> ref = List.of("ExpressionRef", "FunctionRef");
       if (jsonObj.has("type")
           && ref.contains(jsonObj.getString("type"))
@@ -95,18 +93,13 @@ public class ElmDependencyUtil {
               .map(
                   statementDependency -> {
                     if (parentName.equals(statementDependency.getStatement_name())) {
-                      if (!includedLibrariesMap.containsKey(jsonObj.getString("libraryName"))) {
-                        statementDependency
-                            .getStatement_references()
-                            .add(buildStatementReference(libraryId, jsonObj));
-                      } else {
-                        statementDependency
-                            .getStatement_references()
-                            .add(
-                                buildStatementReference(
-                                    includedLibrariesMap.get(jsonObj.getString("libraryName")),
-                                    jsonObj));
-                      }
+                      statementDependency
+                          .getStatement_references()
+                          .add(
+                              buildStatementReference(
+                                  includedLibrariesMap.getOrDefault(
+                                      jsonObj.getString("libraryName"), libraryId),
+                                  jsonObj));
                     }
                     return statementDependency;
                   });
@@ -147,8 +140,8 @@ public class ElmDependencyUtil {
     if (!allElmsDepMap.containsKey(statementLibrary)) {
       throw new RuntimeException("Elm library " + statementLibrary + " referenced but not found.");
     }
-    if (!allElmsDepMap.get(statementLibrary).stream()
-        .anyMatch(
+    if (allElmsDepMap.get(statementLibrary).stream()
+        .noneMatch(
             statementDependency -> statementName.equals(statementDependency.getStatement_name()))) {
       throw new RuntimeException(
           "Elm statement '"
