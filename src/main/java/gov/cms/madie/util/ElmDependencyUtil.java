@@ -28,13 +28,7 @@ public class ElmDependencyUtil {
         throw new QrdaServiceException("library or identifier missing");
       }
       String elmId = elmJson.getJSONObject("library").getJSONObject("identifier").getString("id");
-      neededElmDepsMap.put(
-          elmId,
-          List.of(
-              StatementDependency.builder()
-                  .statement_name(elmId)
-                  .statement_references(new ArrayList<>())
-                  .build()));
+      neededElmDepsMap.put(elmId, List.of(buildStatementDependency(elmId, null, null)));
       allElmsDepMap.put(elmId, makeStatementDepsForElm(elmJson));
     }
     neededElmDepsMap.put(mainCqlLibraryName, allElmsDepMap.get(mainCqlLibraryName));
@@ -95,18 +89,8 @@ public class ElmDependencyUtil {
           && !"Patient".equals(parentName)
           && null != parentName) {
         if (elmDeps.isEmpty()) {
-          elmDeps.add(
-              StatementDependency.builder()
-                  .statement_name(parentName)
-                  .statement_references(
-                      List.of(
-                          StatementReference.builder()
-                              .library_name(libraryId)
-                              .statement_name(jsonObj.getString("name"))
-                              .build()))
-                  .build());
+          elmDeps.add(buildStatementDependency(parentName, libraryId, jsonObj));
         } else {
-
           elmDeps.stream()
               .map(
                   statementDependency -> {
@@ -114,20 +98,14 @@ public class ElmDependencyUtil {
                       if (!includedLibrariesMap.containsKey(jsonObj.getString("libraryName"))) {
                         statementDependency
                             .getStatement_references()
-                            .add(
-                                StatementReference.builder()
-                                    .library_name(libraryId)
-                                    .statement_name(jsonObj.getString("name"))
-                                    .build());
+                            .add(buildStatementReference(libraryId, jsonObj));
                       } else {
                         statementDependency
                             .getStatement_references()
                             .add(
-                                StatementReference.builder()
-                                    .library_name(
-                                        includedLibrariesMap.get(jsonObj.getString("libraryName")))
-                                    .statement_name(jsonObj.getString("name"))
-                                    .build());
+                                buildStatementReference(
+                                    includedLibrariesMap.get(jsonObj.getString("libraryName")),
+                                    jsonObj));
                       }
                     }
                     return statementDependency;
@@ -141,12 +119,7 @@ public class ElmDependencyUtil {
                     statementDependency ->
                         newParentName.equals(statementDependency.getStatement_name()))
                 .findAny()
-                .orElseGet(
-                    () ->
-                        StatementDependency.builder()
-                            .statement_name(newParentName)
-                            .statement_references(new ArrayList<>())
-                            .build());
+                .orElseGet(() -> buildStatementDependency(newParentName, null, null));
         elmDeps.add(dep);
       }
       for (String key : jsonObj.keySet()) {
@@ -201,5 +174,24 @@ public class ElmDependencyUtil {
                 .statement_references(depsToAdd)
                 .build());
     depsToAdd.forEach(dep -> deepAddExternalLibraryDeps(dep, neededElmDepsMap, allElmsDepMap));
+  }
+
+  private static StatementDependency buildStatementDependency(
+      String parentName, String libraryId, JSONObject jsonObj) {
+    List<StatementReference> statementReferences = new ArrayList<>();
+    if (jsonObj != null) {
+      statementReferences = List.of(buildStatementReference(libraryId, jsonObj));
+    }
+    return StatementDependency.builder()
+        .statement_name(parentName)
+        .statement_references(statementReferences)
+        .build();
+  }
+
+  private static StatementReference buildStatementReference(String libraryId, JSONObject jsonObj) {
+    return StatementReference.builder()
+        .library_name(libraryId)
+        .statement_name(jsonObj.getString("name"))
+        .build();
   }
 }
