@@ -2,13 +2,9 @@ package gov.cms.madie.resources;
 
 import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.models.measure.QdmMeasure;
-import gov.cms.madie.services.HqmfService;
-import gov.cms.madie.services.HumanReadableService;
-import gov.cms.madie.services.PackagingService;
+import gov.cms.madie.services.*;
 import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.packaging.utils.ResourceFileUtil;
-import gov.cms.madie.services.SimpleXmlService;
-import gov.cms.madie.services.TranslationServiceClient;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +35,7 @@ class PackageControllerMvcTest implements ResourceFileUtil {
   @MockBean private HqmfService hqmfService;
   @MockBean private TranslationServiceClient translationServiceClient;
   @MockBean private HumanReadableService humanReadableService;
+  @MockBean private QrdaService qrdaService;
   @Autowired private MockMvc mockMvc;
 
   private static final String TEST_USER_ID = "john_doe";

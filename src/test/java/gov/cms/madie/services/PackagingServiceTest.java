@@ -30,6 +30,7 @@ class PackagingServiceTest {
   @Mock private TranslationServiceClient translationServiceClient;
   @Mock private HqmfService hqmfService;
   @Mock private HumanReadableService humanReadableService;
+  @Mock private QrdaService qrdaService;
   @InjectMocks private PackagingService packagingService;
 
   private static final String TOKEN = "test token";
@@ -151,7 +152,10 @@ class PackagingServiceTest {
 
   @Test
   void testCreateQRDA() {
+    when(qrdaService.generateQrda(any(QdmMeasure.class), any(String.class)))
+        .thenReturn(List.of("test qrda"));
     byte[] qrda = packagingService.createQRDA(measure, TOKEN);
-    assertThat(new String(qrda), is(equalTo("test qrda")));
+    assertThat(new String(qrda), containsString("qrda/"));
+    assertThat(new String(qrda), containsString("0_test.xml"));
   }
 }

@@ -43,7 +43,7 @@ class CqmMeasureMapperTest implements ResourceFileUtil {
     CqmMeasure result = mapper.measureToCqmMeasure(measure, List.of(elm, elm2));
     System.out.println(result);
     assertEquals("65f1ba66df0e11775088e5e0", result.getId());
-    assertEquals("7bec3519-c428-4b6f-a483-f01fe9799c85", result.getHqmf_id());
+    assertEquals("7bec3519-c428-4b6f-a483-f01fe9799c85", result.getHqmf_set_id());
     assertEquals("c32e60ac-3118-4bf6-965e-ea2906289f27", result.getHqmf_version_number());
     assertEquals("CMS771", result.getTitle());
     assertEquals(false, result.isComponent());
