@@ -45,9 +45,7 @@ public class QrdaService {
 
       dto =
           QRDADto.builder()
-              .measure(
-                  objectMapper.writeValueAsString(
-                      mapper.measureToCqmMeasure(measure, elms)))
+              .measure(objectMapper.writeValueAsString(mapper.measureToCqmMeasure(measure, elms)))
               .testCases(measure.getTestCases())
               .sourceDataCriteria(dataCriteria)
               .options(buildOptions(measure))
@@ -62,22 +60,22 @@ public class QrdaService {
 
   private Map<String, Object> buildOptions(QdmMeasure measure) {
     Long startTime =
-            Long.parseLong(
-                    measure
-                            .getMeasurementPeriodStart()
-                            .toInstant()
-                            .atZone(ZoneId.systemDefault())
-                            .toLocalDateTime()
-                            .format(DateTimeFormatter.ofPattern("yyyyMMddHH")));
+        Long.parseLong(
+            measure
+                .getMeasurementPeriodStart()
+                .toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime()
+                .format(DateTimeFormatter.ofPattern("yyyyMMddHH")));
 
     Long endTime =
-            Long.parseLong(
-                    measure
-                            .getMeasurementPeriodEnd()
-                            .toInstant()
-                            .atZone(ZoneId.systemDefault())
-                            .toLocalDateTime()
-                            .format(DateTimeFormatter.ofPattern("yyyyMMddHH")));
+        Long.parseLong(
+            measure
+                .getMeasurementPeriodEnd()
+                .toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime()
+                .format(DateTimeFormatter.ofPattern("yyyyMMddHH")));
 
     Map<String, Object> options = new HashMap<>();
     options.put("start_time", startTime);

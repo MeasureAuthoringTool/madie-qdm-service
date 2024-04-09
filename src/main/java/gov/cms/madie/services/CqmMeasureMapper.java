@@ -1,6 +1,5 @@
 package gov.cms.madie.services;
 
-import gov.cms.madie.dto.SourceDataCriteria;
 import gov.cms.madie.models.measure.*;
 import gov.cms.madie.qrda.*;
 import gov.cms.madie.util.ElmDependencyUtil;
@@ -28,8 +27,7 @@ public interface CqmMeasureMapper {
   @Mapping(target = "calculation_method", expression = "java(getCalculationMethod(measure))")
   @Mapping(target = "measure_period", expression = "java(getMeasurePeriod(measure))")
   @Mapping(target = "cql_libraries", expression = "java(getCqlLibraries(measure, elms))")
-  CqmMeasure measureToCqmMeasure(
-      QdmMeasure measure, List<String> elms);
+  CqmMeasure measureToCqmMeasure(QdmMeasure measure, List<String> elms);
 
   default String getCalculationMethod(QdmMeasure measure) {
     return measure.isPatientBasis() ? "PATIENT" : "EPISODE_OF_CARE";
@@ -61,12 +59,7 @@ public interface CqmMeasureMapper {
 
   default List<CQLLibrary> getCqlLibraries(QdmMeasure measure, List<String> elms) {
 
-    List<StatementDependency> statements = new ArrayList<>();
-    try {
-      statements = ElmDependencyUtil.findDependencies(elms, measure.getCqlLibraryName());
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+    List<StatementDependency> statements = ElmDependencyUtil.findDependencies(elms, measure.getCqlLibraryName());
 
     List<StatementDependency> finalStatements = statements;
     return elms.stream()

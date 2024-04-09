@@ -31,5 +31,4 @@ public class CqmMeasure {
   private MeasurePeriod measure_period;
   private List<DataElement> source_data_criteria;
   private List<PopulationSet> population_sets;
-
 }
