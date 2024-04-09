@@ -77,8 +77,9 @@ public class PackagingService {
     String zipName = measure.getEcqmTitle() + "-" + measure.getVersion() + "QDM-TestCases";
 
     log.info("Adding measure package artifacts to the measure package");
-    String htmlDir = zipName + "html/";
-    String qrdaDir = zipName + "qrda/";
+    //TODO add html files into html directory
+    //String htmlDir = zipName + "html/";
+    String qrdaDir = zipName + "/qrda/";
     Map<String, byte[]> entries = new HashMap<>();
     for (int i = 0; i < qrdas.size(); i++) {
       String entryName = i + "_test";
