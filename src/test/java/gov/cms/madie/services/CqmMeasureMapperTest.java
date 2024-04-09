@@ -3,12 +3,7 @@ package gov.cms.madie.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import gov.cms.madie.models.common.ModelType;
-import gov.cms.madie.models.common.Organization;
-import gov.cms.madie.models.measure.DefDescPair;
-import gov.cms.madie.models.measure.MeasureMetaData;
 import gov.cms.madie.models.measure.QdmMeasure;
-import gov.cms.madie.models.measure.Reference;
 import gov.cms.madie.packaging.utils.ResourceFileUtil;
 import gov.cms.madie.qrda.CqmMeasure;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,8 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.sql.Date;
-import java.time.Instant;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,6 +51,7 @@ class CqmMeasureMapperTest implements ResourceFileUtil {
     assertEquals("PROPORTION", result.getMeasure_scoring());
     assertEquals("PATIENT", result.getCalculation_method());
     assertEquals(2, result.getCql_libraries().size());
-    assertEquals("UrinarySymptomScoreChangeAfterBenignProstaticHyperplasia", result.getMain_cql_library());
+    assertEquals(
+        "UrinarySymptomScoreChangeAfterBenignProstaticHyperplasia", result.getMain_cql_library());
   }
 }

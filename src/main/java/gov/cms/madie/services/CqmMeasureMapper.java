@@ -59,7 +59,8 @@ public interface CqmMeasureMapper {
 
   default List<CQLLibrary> getCqlLibraries(QdmMeasure measure, List<String> elms) {
 
-    List<StatementDependency> statements = ElmDependencyUtil.findDependencies(elms, measure.getCqlLibraryName());
+    List<StatementDependency> statements =
+        ElmDependencyUtil.findDependencies(elms, measure.getCqlLibraryName());
 
     List<StatementDependency> finalStatements = statements;
     return elms.stream()

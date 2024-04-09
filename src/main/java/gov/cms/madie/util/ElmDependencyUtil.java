@@ -1,7 +1,6 @@
 package gov.cms.madie.util;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import gov.cms.madie.Exceptions.QrdaServiceException;
 import gov.cms.madie.qrda.StatementDependency;
@@ -18,7 +17,7 @@ public class ElmDependencyUtil {
     Map<String, List<StatementDependency>> neededElmDepsMap = new HashMap<>();
     Map<String, List<StatementDependency>> allElmsDepMap = new HashMap<>();
 
-    if(cqlLibraryElms == null || cqlLibraryElms.isEmpty()) {
+    if (cqlLibraryElms == null || cqlLibraryElms.isEmpty()) {
       throw new QrdaServiceException("elm json missing");
     }
 
@@ -94,56 +93,60 @@ public class ElmDependencyUtil {
       if (jsonObj.has("type")
           && ref.contains(jsonObj.getString("type"))
           && !"Patient".equals(parentName)
-      && null != parentName) {
-        if(elmDeps.isEmpty()) {
-          elmDeps.add(StatementDependency.builder()
+          && null != parentName) {
+        if (elmDeps.isEmpty()) {
+          elmDeps.add(
+              StatementDependency.builder()
                   .statement_name(parentName)
-                  .statement_references(List.of(StatementReference.builder()
-                          .library_name(libraryId)
-                          .statement_name(jsonObj.getString("name"))
-                          .build()))
+                  .statement_references(
+                      List.of(
+                          StatementReference.builder()
+                              .library_name(libraryId)
+                              .statement_name(jsonObj.getString("name"))
+                              .build()))
                   .build());
         } else {
 
           elmDeps.stream()
-                  .map(
-                          statementDependency -> {
-                            if (parentName.equals(statementDependency.getStatement_name())) {
-                              if (!includedLibrariesMap.containsKey(jsonObj.getString("libraryName"))) {
-                                statementDependency
-                                        .getStatement_references()
-                                        .add(
-                                                StatementReference.builder()
-                                                        .library_name(libraryId)
-                                                        .statement_name(jsonObj.getString("name"))
-                                                        .build());
-                              } else {
-                                statementDependency
-                                        .getStatement_references()
-                                        .add(
-                                                StatementReference.builder()
-                                                        .library_name(
-                                                                includedLibrariesMap.get(jsonObj.getString("libraryName")))
-                                                        .statement_name(jsonObj.getString("name"))
-                                                        .build());
-                              }
-                            }
-                            return statementDependency;
-                          });
+              .map(
+                  statementDependency -> {
+                    if (parentName.equals(statementDependency.getStatement_name())) {
+                      if (!includedLibrariesMap.containsKey(jsonObj.getString("libraryName"))) {
+                        statementDependency
+                            .getStatement_references()
+                            .add(
+                                StatementReference.builder()
+                                    .library_name(libraryId)
+                                    .statement_name(jsonObj.getString("name"))
+                                    .build());
+                      } else {
+                        statementDependency
+                            .getStatement_references()
+                            .add(
+                                StatementReference.builder()
+                                    .library_name(
+                                        includedLibrariesMap.get(jsonObj.getString("libraryName")))
+                                    .statement_name(jsonObj.getString("name"))
+                                    .build());
+                      }
+                    }
+                    return statementDependency;
+                  });
         }
       } else if (jsonObj.has("name") && jsonObj.has("expression")) {
         String newParentName = jsonObj.getString("name");
-        StatementDependency dep = elmDeps.stream()
-            .filter(
-                statementDependency ->
-                    newParentName.equals(statementDependency.getStatement_name()))
-            .findAny()
-            .orElseGet(
-                () ->
-                    StatementDependency.builder()
-                        .statement_name(newParentName)
-                        .statement_references(new ArrayList<>())
-                        .build());
+        StatementDependency dep =
+            elmDeps.stream()
+                .filter(
+                    statementDependency ->
+                        newParentName.equals(statementDependency.getStatement_name()))
+                .findAny()
+                .orElseGet(
+                    () ->
+                        StatementDependency.builder()
+                            .statement_name(newParentName)
+                            .statement_references(new ArrayList<>())
+                            .build());
         elmDeps.add(dep);
       }
       for (String key : jsonObj.keySet()) {
@@ -165,7 +168,7 @@ public class ElmDependencyUtil {
         && neededElmDepsMap.get(statementLibrary).stream()
             .anyMatch(
                 statementDependency ->
-                        statementName.equals(statementDependency.getStatement_name()))) {
+                    statementName.equals(statementDependency.getStatement_name()))) {
       return; // Return if key already exists
     }
     if (!allElmsDepMap.containsKey(statementLibrary)) {

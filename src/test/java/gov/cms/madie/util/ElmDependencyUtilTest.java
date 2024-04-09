@@ -19,7 +19,8 @@ class ElmDependencyUtilTest implements ResourceFileUtil {
     String elms = getStringFromTestResource("/elm/libraryElm.json");
     String elms2 = getStringFromTestResource("/elm/libraryElm2.json");
     List<StatementDependency> dependencies =
-        ElmDependencyUtil.findDependencies(List.of(elms, elms2), "UrinarySymptomScoreChangeAfterBenignProstaticHyperplasia");
+        ElmDependencyUtil.findDependencies(
+            List.of(elms, elms2), "UrinarySymptomScoreChangeAfterBenignProstaticHyperplasia");
 
     assertEquals(25, dependencies.size());
   }
@@ -27,9 +28,11 @@ class ElmDependencyUtilTest implements ResourceFileUtil {
   @Test
   void findDependenciesNullElm() throws Exception {
     Exception ex =
-            assertThrows(
-                    QrdaServiceException.class,
-                    () -> ElmDependencyUtil.findDependencies(null, "UrinarySymptomScoreChangeAfterBenignProstaticHyperplasia"));
+        assertThrows(
+            QrdaServiceException.class,
+            () ->
+                ElmDependencyUtil.findDependencies(
+                    null, "UrinarySymptomScoreChangeAfterBenignProstaticHyperplasia"));
 
     assertThat(ex.getMessage(), containsString("elm json missing"));
   }
@@ -37,24 +40,26 @@ class ElmDependencyUtilTest implements ResourceFileUtil {
   @Test
   void findDependenciesEmptyElm() throws Exception {
     Exception ex =
-            assertThrows(
-                    QrdaServiceException.class,
-                    () -> ElmDependencyUtil.findDependencies(Collections.emptyList(), "UrinarySymptomScoreChangeAfterBenignProstaticHyperplasia"));
+        assertThrows(
+            QrdaServiceException.class,
+            () ->
+                ElmDependencyUtil.findDependencies(
+                    Collections.emptyList(),
+                    "UrinarySymptomScoreChangeAfterBenignProstaticHyperplasia"));
 
     assertThat(ex.getMessage(), containsString("elm json missing"));
   }
 
-
   @Test
   void findDependenciesMalformedElm() throws Exception {
-    String elm = "{\n" +
-            "    \"library\": {}}";
+    String elm = "{\n" + "    \"library\": {}}";
     Exception ex =
-            assertThrows(
-                    QrdaServiceException.class,
-                    () -> ElmDependencyUtil.findDependencies(List.of(elm), "UrinarySymptomScoreChangeAfterBenignProstaticHyperplasia"));
+        assertThrows(
+            QrdaServiceException.class,
+            () ->
+                ElmDependencyUtil.findDependencies(
+                    List.of(elm), "UrinarySymptomScoreChangeAfterBenignProstaticHyperplasia"));
 
     assertThat(ex.getMessage(), containsString("library or identifier missing"));
   }
-
 }
