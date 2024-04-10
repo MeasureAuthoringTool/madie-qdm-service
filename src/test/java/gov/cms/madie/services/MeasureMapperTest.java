@@ -161,6 +161,7 @@ class MeasureMapperTest {
             .model(ModelType.QDM_5_6.getValue())
             .rateAggregation("Rate Aggr")
             .improvementNotation("Improvement Notation")
+            .measureSetId("1-1-1-1")
             .measureMetaData(
                 MeasureMetaData.builder()
                     .description("Measure Description")
@@ -177,8 +178,9 @@ class MeasureMapperTest {
                     .steward(
                         Organization.builder().id("org2Id").oid("222.333.444").name("ICF").build())
                     .endorsements(List.of(Endorsement.builder().endorsementId("cbe13").build()))
+                    .measureSetTitle("This is a test QDM measure")
                     .build())
-            .measureSet(MeasureSet.builder().cmsId(144).build())
+            .measureSet(MeasureSet.builder().cmsId(144).measureSetId("1-1-1-1").build())
             .build();
     MeasureDetailsType output = measureMapper.measureToMeasureDetailsType(measure);
     assertThat(output, is(notNullValue()));
@@ -192,6 +194,8 @@ class MeasureMapperTest {
     assertThat(output.getCopyright(), is(equalTo(measure.getMeasureMetaData().getCopyright())));
     assertThat(output.getEmeasureid(), is(equalTo("144")));
     assertThat(output.getCbeid(), is(equalTo("cbe13")));
+    assertThat(output.getQualityMeasureSet().getUuid(), is(equalTo("1-1-1-1")));
+    assertThat(output.getQualityMeasureSet().getValue(), is(equalTo("This is a test QDM measure")));
   }
 
   @Test
@@ -1029,24 +1033,5 @@ class MeasureMapperTest {
     List<ArgumentType> argumentTypes = functionType.getArguments().getArgument();
     assertThat(argumentTypes.get(0).getQdmDataType(), is(equalTo(arg1.getQdmDataType())));
     assertThat(argumentTypes.get(0).getArgumentName(), is(equalTo(arg1.getArgumentName())));
-  }
-
-  @Test
-  void testGetImprovementNotationsForOther() {
-    String customNotation = "Custom improvement notation";
-    QdmMeasure measure =
-        QdmMeasure.builder()
-            .improvementNotation("Other")
-            .improvementNotationOther(customNotation)
-            .build();
-    assertThat(measureMapper.getImprovementNotations(measure), is(equalTo(customNotation)));
-  }
-
-  @Test
-  void testGetImprovementNotationsForIncreaseScore() {
-    String notation = "Increased score indicates improvement";
-    QdmMeasure measure =
-        QdmMeasure.builder().improvementNotation(notation).improvementNotationOther("").build();
-    assertThat(measureMapper.getImprovementNotations(measure), is(equalTo(notation)));
   }
 }

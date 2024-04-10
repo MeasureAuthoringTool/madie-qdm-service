@@ -16,9 +16,6 @@ public class CqlElmTranslatorClientConfig {
   @Value("${madie.cql-elm.service.cql-elm-urn}")
   private String cqlElmUrn;
 
-  @Value("${madie.cql-elm.service.human-readable}")
-  private String humanReadableUrl;
-
   @Value("${madie.cql-elm.service.cql-lookups}")
   private String cqlLookups;
 

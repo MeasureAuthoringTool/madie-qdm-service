@@ -1,6 +1,7 @@
 package gov.cms.madie.util;
 
 import gov.cms.madie.models.measure.Measure;
+import gov.cms.madie.models.measure.QdmMeasure;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
@@ -53,5 +54,18 @@ public class MeasureUtils {
         .getRiskAdjustments()
         .forEach(defDescPair -> measureDefinitions.add(defDescPair.getDefinition()));
     return measureDefinitions;
+  }
+
+  public static String getImprovementNotation(QdmMeasure measure) {
+    if (measure == null || StringUtils.isBlank(measure.getImprovementNotation())) {
+      return null;
+    }
+    if ("Other".equals(measure.getImprovementNotation())) {
+      return measure.getImprovementNotationDescription();
+    }
+    if (StringUtils.isBlank(measure.getImprovementNotationDescription())) {
+      return measure.getImprovementNotation();
+    }
+    return measure.getImprovementNotation() + " - " + measure.getImprovementNotationDescription();
   }
 }
