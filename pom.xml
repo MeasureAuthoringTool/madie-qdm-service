@@ -73,6 +73,12 @@
       <groupId>gov.cms.madie.packaging</groupId>
       <artifactId>packaging-utility</artifactId>
       <version>0.2.2</version>
+      <exclusions>
+        <exclusion>
+          <groupId>gov.cms.madie</groupId>
+          <artifactId>madie-java-models</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>

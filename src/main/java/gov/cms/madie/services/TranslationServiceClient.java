@@ -6,6 +6,7 @@ import gov.cms.madie.dto.CqlLookupRequest;
 import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.dto.SourceDataCriteria;
 import gov.cms.madie.models.dto.TranslatedLibrary;
+import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.util.MeasureUtils;
 import lombok.extern.slf4j.Slf4j;

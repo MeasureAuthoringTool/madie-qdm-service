@@ -18,7 +18,7 @@ public interface CqmMeasureMapper {
 
   @Mapping(target = "hqmf_set_id", source = "measure.measureSetId")
   @Mapping(target = "hqmf_version_number", source = "measure.versionId")
-  @Mapping(target = "cms_id", source = "measure.cmsId")
+  @Mapping(target = "cms_id", source = "measure.measureSet.cmsId")
   @Mapping(target = "title", source = "measure.measureName")
   @Mapping(target = "description", source = "measure.measureMetaData.description")
   @Mapping(target = "measure_scoring", expression = "java(measure.getScoring().toUpperCase())")
