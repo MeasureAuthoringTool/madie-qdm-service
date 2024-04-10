@@ -27,7 +27,6 @@ public class PackageController {
   private final HqmfService hqmfService;
   private final TranslationServiceClient translationServiceClient;
   private final HumanReadableService humanReadableService;
-  private final QrdaService qrdaService;
 
   @PutMapping(
       value = "/package",

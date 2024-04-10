@@ -35,7 +35,6 @@ class PackageControllerMvcTest implements ResourceFileUtil {
   @MockBean private HqmfService hqmfService;
   @MockBean private TranslationServiceClient translationServiceClient;
   @MockBean private HumanReadableService humanReadableService;
-  @MockBean private QrdaService qrdaService;
   @Autowired private MockMvc mockMvc;
 
   private static final String TEST_USER_ID = "john_doe";
