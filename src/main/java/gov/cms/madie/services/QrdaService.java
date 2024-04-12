@@ -64,7 +64,7 @@ public class QrdaService {
             measure
                 .getMeasurementPeriodStart()
                 .toInstant()
-                .atZone(ZoneId.systemDefault())
+                .atZone(ZoneId.of("UTC"))
                 .toLocalDateTime()
                 .format(DateTimeFormatter.ofPattern("yyyyMMddHH")));
 
@@ -73,7 +73,7 @@ public class QrdaService {
             measure
                 .getMeasurementPeriodEnd()
                 .toInstant()
-                .atZone(ZoneId.systemDefault())
+                .atZone(ZoneId.of("UTC"))
                 .toLocalDateTime()
                 .format(DateTimeFormatter.ofPattern("yyyyMMddHH")));
 

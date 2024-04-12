@@ -86,7 +86,9 @@ public record TranslationServiceClient(
           .exchange(uri, HttpMethod.PUT, entity, responseType)
           .getBody();
     } catch (Exception ex) {
-      String msg = "An issue occurred while fetching the relevant data elements for measure " + measure.getId();
+      String msg =
+          "An issue occurred while fetching the relevant data elements for measure "
+              + measure.getId();
       log.error(msg, ex);
       throw new TranslationServiceException(msg, ex);
     }

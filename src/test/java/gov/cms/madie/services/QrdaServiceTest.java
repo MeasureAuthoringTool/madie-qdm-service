@@ -27,6 +27,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -43,6 +44,7 @@ class QrdaServiceTest {
   void setUp() {
     qdmMeasure =
         QdmMeasure.builder()
+            .id("testId")
             .measureName("Measure1")
             .cqlLibraryName("MeasureLib1")
             .ecqmTitle("MLib1")
@@ -67,7 +69,8 @@ class QrdaServiceTest {
     when(objectMapper.writeValueAsString(any(CqmMeasure.class))).thenReturn(cqmMeasure.toString());
 
     ArgumentCaptor<QRDADto> captor = ArgumentCaptor.forClass(QRDADto.class);
-    when(client.getQRDA(captor.capture(), any(String.class))).thenReturn(List.of("success"));
+    when(client.getQRDA(captor.capture(), eq("testToken"), eq("testId")))
+        .thenReturn(List.of("success"));
 
     List<String> result = qrdaService.generateQrda(qdmMeasure, "testToken");
 

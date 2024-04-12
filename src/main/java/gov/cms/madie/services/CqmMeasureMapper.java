@@ -40,7 +40,7 @@ public interface CqmMeasureMapper {
         measure
             .getMeasurementPeriodStart()
             .toInstant()
-            .atZone(ZoneId.systemDefault())
+            .atZone(ZoneId.of("UTC"))
             .toLocalDateTime()
             .format(DateTimeFormatter.ofPattern("yyyyMMddHH")));
 
@@ -50,7 +50,7 @@ public interface CqmMeasureMapper {
         measure
             .getMeasurementPeriodEnd()
             .toInstant()
-            .atZone(ZoneId.systemDefault())
+            .atZone(ZoneId.of("UTC"))
             .toLocalDateTime()
             .format(DateTimeFormatter.ofPattern("yyyyMMddHH")));
 
