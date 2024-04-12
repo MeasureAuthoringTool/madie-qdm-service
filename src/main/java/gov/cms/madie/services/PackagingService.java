@@ -22,6 +22,7 @@ public class PackagingService {
   private final TranslationServiceClient translationServiceClient;
   private final HqmfService hqmfService;
   private final HumanReadableService humanReadableService;
+  private final QrdaService qrdaService;
 
   public byte[] createMeasurePackage(Measure measure, String accessToken) {
     log.info("Creating the measure package for measure [{}]", measure.getId());
@@ -67,7 +68,25 @@ public class PackagingService {
 
   public byte[] createQRDA(Measure measure, String accessToken) {
     log.info("Creating QRDA for measure [{}]", measure.getId());
-    // to be implemented: calling back end QRDA Service
-    return "test qrda".getBytes();
+
+    List<String> qrdas = qrdaService.generateQrda((QdmMeasure) measure, accessToken);
+    if (CollectionUtils.isEmpty(qrdas)) {
+      return new byte[0];
+    }
+
+    String zipName = measure.getEcqmTitle() + "-" + measure.getVersion() + "QDM-TestCases";
+
+    log.info(
+        "Adding measure package artifacts to the measure package for measure {}", measure.getId());
+    // TODO add html files into html directory
+    // String htmlDir = zipName + "html/";
+    String qrdaDir = zipName + "/qrda/";
+    Map<String, byte[]> entries = new HashMap<>();
+    for (int i = 0; i < qrdas.size(); i++) {
+      String entryName = i + "_test";
+      entries.put(qrdaDir + entryName + ".xml", qrdas.get(i).getBytes());
+    }
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+    return new ZipUtility().zipEntries(entries, outputStream);
   }
 }
