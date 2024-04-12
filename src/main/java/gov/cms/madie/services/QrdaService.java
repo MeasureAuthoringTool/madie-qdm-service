@@ -55,7 +55,7 @@ public class QrdaService {
     }
 
     // send to qrda
-    return client.getQRDA(dto, accessToken);
+    return client.getQRDA(dto, accessToken, measure.getId());
   }
 
   private Map<String, Object> buildOptions(QdmMeasure measure) {

@@ -29,7 +29,7 @@ public class QrdaClient {
 
   @Autowired private ObjectMapper mapper;
 
-  public List<String> getQRDA(QRDADto dto, String accessToken) {
+  public List<String> getQRDA(QRDADto dto, String accessToken, String measureId) {
     URI uri = URI.create(qrdaClientConfig.getBaseUrl() + qrdaClientConfig.getQrda());
     HttpHeaders headers = new HttpHeaders();
     headers.set(HttpHeaders.AUTHORIZATION, accessToken);
@@ -42,7 +42,7 @@ public class QrdaClient {
     }
     ParameterizedTypeReference<String> responseType = new ParameterizedTypeReference<>() {};
     try {
-      log.info("fetching the qrda for measure");
+      log.info("fetching the qrda for measure {}", measureId);
       String result =
           qrdaRestTemplate.exchange(uri, HttpMethod.PUT, entity, responseType).getBody();
 
@@ -51,7 +51,7 @@ public class QrdaClient {
           .map(s -> s + "\n</ClinicalDocument>")
           .toList();
     } catch (Exception ex) {
-      String msg = "An issue occurred while fetching the qrda for measure";
+      String msg = "An issue occurred while fetching the qrda for measure " + measureId;
       log.error(msg, ex);
       throw new TranslationServiceException(msg, ex);
     }

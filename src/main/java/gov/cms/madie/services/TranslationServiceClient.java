@@ -81,12 +81,12 @@ public record TranslationServiceClient(
     ParameterizedTypeReference<List<SourceDataCriteria>> responseType =
         new ParameterizedTypeReference<>() {};
     try {
-      log.info("fetching the relevant data elements for measure");
+      log.info("fetching the relevant data elements for measure {}", measure.getId());
       return elmTranslatorRestTemplate
           .exchange(uri, HttpMethod.PUT, entity, responseType)
           .getBody();
     } catch (Exception ex) {
-      String msg = "An issue occurred while fetching the relevant data elements for measure";
+      String msg = "An issue occurred while fetching the relevant data elements for measure " + measure.getId();
       log.error(msg, ex);
       throw new TranslationServiceException(msg, ex);
     }
