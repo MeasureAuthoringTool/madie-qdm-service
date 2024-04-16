@@ -41,7 +41,9 @@ public class QrdaClient {
 
     try {
       log.info("fetching the qrda for measure {}", measureId);
-       return qrdaRestTemplate.exchange(uri, HttpMethod.PUT, entity, QrdaResponseDto[].class).getBody();
+      return qrdaRestTemplate
+          .exchange(uri, HttpMethod.PUT, entity, QrdaResponseDto[].class)
+          .getBody();
     } catch (Exception ex) {
       String msg = "An issue occurred while fetching the qrda for measure " + measureId;
       log.error(msg, ex);
