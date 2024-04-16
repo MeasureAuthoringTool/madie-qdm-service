@@ -5,10 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.cms.madie.Exceptions.TranslationServiceException;
 import gov.cms.madie.config.QrdaClientConfig;
 import gov.cms.madie.dto.QRDADto;
+import gov.cms.madie.dto.QrdaResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -16,8 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
-import java.util.Arrays;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -29,7 +27,7 @@ public class QrdaClient {
 
   @Autowired private ObjectMapper mapper;
 
-  public List<String> getQRDA(QRDADto dto, String accessToken, String measureId) {
+  public QrdaResponseDto[] getQRDA(QRDADto dto, String accessToken, String measureId) {
     URI uri = URI.create(qrdaClientConfig.getBaseUrl() + qrdaClientConfig.getQrda());
     HttpHeaders headers = new HttpHeaders();
     headers.set(HttpHeaders.AUTHORIZATION, accessToken);
@@ -40,16 +38,10 @@ public class QrdaClient {
     } catch (JsonProcessingException e) {
       throw new RuntimeException(e);
     }
-    ParameterizedTypeReference<String> responseType = new ParameterizedTypeReference<>() {};
+
     try {
       log.info("fetching the qrda for measure {}", measureId);
-      String result =
-          qrdaRestTemplate.exchange(uri, HttpMethod.PUT, entity, responseType).getBody();
-
-      // Splits the individual documents apart for packaging
-      return Arrays.stream(result.split("</ClinicalDocument>"))
-          .map(s -> s + "\n</ClinicalDocument>")
-          .toList();
+       return qrdaRestTemplate.exchange(uri, HttpMethod.PUT, entity, QrdaResponseDto[].class).getBody();
     } catch (Exception ex) {
       String msg = "An issue occurred while fetching the qrda for measure " + measureId;
       log.error(msg, ex);

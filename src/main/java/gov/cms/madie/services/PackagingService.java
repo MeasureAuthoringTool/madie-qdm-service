@@ -1,6 +1,7 @@
 package gov.cms.madie.services;
 
 import gov.cms.madie.dto.CqlLookups;
+import gov.cms.madie.dto.QrdaResponseDto;
 import gov.cms.madie.models.dto.TranslatedLibrary;
 import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.models.measure.QdmMeasure;
@@ -69,7 +70,7 @@ public class PackagingService {
   public byte[] createQRDA(Measure measure, String accessToken) {
     log.info("Creating QRDA for measure [{}]", measure.getId());
 
-    List<String> qrdas = qrdaService.generateQrda((QdmMeasure) measure, accessToken);
+    List<QrdaResponseDto> qrdas = qrdaService.generateQrda((QdmMeasure) measure, accessToken);
     if (CollectionUtils.isEmpty(qrdas)) {
       return new byte[0];
     }
@@ -78,13 +79,12 @@ public class PackagingService {
 
     log.info(
         "Adding measure package artifacts to the measure package for measure {}", measure.getId());
-    // TODO add html files into html directory
-    // String htmlDir = zipName + "html/";
+    String htmlDir = zipName + "/html/";
     String qrdaDir = zipName + "/qrda/";
     Map<String, byte[]> entries = new HashMap<>();
-    for (int i = 0; i < qrdas.size(); i++) {
-      String entryName = i + "_test";
-      entries.put(qrdaDir + entryName + ".xml", qrdas.get(i).getBytes());
+    for(QrdaResponseDto qrda : qrdas) {
+      entries.put(qrdaDir + qrda.getFilename() + ".xml", qrda.getQrda().getBytes());
+      entries.put(htmlDir + qrda.getFilename() + ".html", qrda.getReport().getBytes());
     }
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     return new ZipUtility().zipEntries(entries, outputStream);
