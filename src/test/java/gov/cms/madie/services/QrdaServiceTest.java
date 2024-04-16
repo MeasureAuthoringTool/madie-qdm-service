@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.cms.madie.Exceptions.QrdaServiceException;
 import gov.cms.madie.dto.QRDADto;
+import gov.cms.madie.dto.QrdaResponseDto;
 import gov.cms.madie.dto.SourceDataCriteria;
 import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.dto.TranslatedLibrary;
@@ -69,10 +70,12 @@ class QrdaServiceTest {
     when(objectMapper.writeValueAsString(any(CqmMeasure.class))).thenReturn(cqmMeasure.toString());
 
     ArgumentCaptor<QRDADto> captor = ArgumentCaptor.forClass(QRDADto.class);
+    QrdaResponseDto clientResponse =
+        QrdaResponseDto.builder().qrda("qrda").filename("1_test").report("report").build();
     when(client.getQRDA(captor.capture(), eq("testToken"), eq("testId")))
-        .thenReturn(List.of("success"));
+        .thenReturn(new QrdaResponseDto[] {clientResponse});
 
-    List<String> result = qrdaService.generateQrda(qdmMeasure, "testToken");
+    List<QrdaResponseDto> result = qrdaService.generateQrda(qdmMeasure, "testToken");
 
     QRDADto dto = captor.getValue();
     assertTrue(dto.getMeasure().contains("test"));
@@ -86,7 +89,7 @@ class QrdaServiceTest {
     assertEquals("HQR_IQR", options.get("submission_program"));
     assertEquals(1, dto.getSourceDataCriteria().size());
     assertEquals(1, result.size());
-    assertEquals("success", result.get(0));
+    assertEquals(clientResponse, result.get(0));
   }
 
   @Test
