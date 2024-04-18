@@ -1,7 +1,8 @@
 package gov.cms.madie.services;
 
 import gov.cms.madie.dto.CqlLookups;
-import gov.cms.madie.dto.QrdaResponseDto;
+import gov.cms.madie.dto.QrdaExportResponseDto;
+import gov.cms.madie.dto.QrdaReportDto;
 import gov.cms.madie.models.dto.TranslatedLibrary;
 import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.models.measure.QdmMeasure;
@@ -70,8 +71,8 @@ public class PackagingService {
   public byte[] createQRDA(Measure measure, String accessToken) {
     log.info("Creating QRDA for measure [{}]", measure.getId());
 
-    List<QrdaResponseDto> qrdas = qrdaService.generateQrda((QdmMeasure) measure, accessToken);
-    if (CollectionUtils.isEmpty(qrdas)) {
+    QrdaExportResponseDto qrdaExport = qrdaService.generateQrda((QdmMeasure) measure, accessToken);
+    if (CollectionUtils.isEmpty(qrdaExport.getIndividualReports())) {
       return new byte[0];
     }
 
@@ -82,7 +83,10 @@ public class PackagingService {
     String htmlDir = zipName + "/html/";
     String qrdaDir = zipName + "/qrda/";
     Map<String, byte[]> entries = new HashMap<>();
-    for(QrdaResponseDto qrda : qrdas) {
+    entries.put(
+        "/" + measure.getEcqmTitle() + "_patients_results.html",
+        qrdaExport.getSummaryReport().getBytes());
+    for (QrdaReportDto qrda : qrdaExport.getIndividualReports()) {
       entries.put(qrdaDir + qrda.getFilename() + ".xml", qrda.getQrda().getBytes());
       entries.put(htmlDir + qrda.getFilename() + ".html", qrda.getReport().getBytes());
     }
