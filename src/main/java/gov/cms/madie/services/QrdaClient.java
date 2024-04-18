@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.cms.madie.Exceptions.TranslationServiceException;
 import gov.cms.madie.config.QrdaClientConfig;
 import gov.cms.madie.dto.QRDADto;
-import gov.cms.madie.dto.QrdaResponseDto;
+import gov.cms.madie.dto.QrdaExportResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class QrdaClient {
 
   @Autowired private ObjectMapper mapper;
 
-  public QrdaResponseDto[] getQRDA(QRDADto dto, String accessToken, String measureId) {
+  public QrdaExportResponseDto getQRDA(QRDADto dto, String accessToken, String measureId) {
     URI uri = URI.create(qrdaClientConfig.getBaseUrl() + qrdaClientConfig.getQrda());
     HttpHeaders headers = new HttpHeaders();
     headers.set(HttpHeaders.AUTHORIZATION, accessToken);
@@ -42,7 +42,7 @@ public class QrdaClient {
     try {
       log.info("fetching the qrda for measure {}", measureId);
       return qrdaRestTemplate
-          .exchange(uri, HttpMethod.PUT, entity, QrdaResponseDto[].class)
+          .exchange(uri, HttpMethod.PUT, entity, QrdaExportResponseDto.class)
           .getBody();
     } catch (Exception ex) {
       String msg = "An issue occurred while fetching the qrda for measure " + measureId;

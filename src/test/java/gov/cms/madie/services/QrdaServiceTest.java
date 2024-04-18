@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.cms.madie.Exceptions.QrdaServiceException;
 import gov.cms.madie.dto.QRDADto;
-import gov.cms.madie.dto.QrdaResponseDto;
+import gov.cms.madie.dto.QrdaExportResponseDto;
+import gov.cms.madie.dto.QrdaReportDto;
 import gov.cms.madie.dto.SourceDataCriteria;
 import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.dto.TranslatedLibrary;
@@ -70,12 +71,17 @@ class QrdaServiceTest {
     when(objectMapper.writeValueAsString(any(CqmMeasure.class))).thenReturn(cqmMeasure.toString());
 
     ArgumentCaptor<QRDADto> captor = ArgumentCaptor.forClass(QRDADto.class);
-    QrdaResponseDto clientResponse =
-        QrdaResponseDto.builder().qrda("qrda").filename("1_test").report("report").build();
+    List<QrdaReportDto> qrdaExport =
+        List.of(QrdaReportDto.builder().qrda("qrda").filename("1_test").report("report").build());
+    QrdaExportResponseDto clientResponse =
+        QrdaExportResponseDto.builder()
+            .summaryReport("summaryReport")
+            .individualReports(qrdaExport)
+            .build();
     when(client.getQRDA(captor.capture(), eq("testToken"), eq("testId")))
-        .thenReturn(new QrdaResponseDto[] {clientResponse});
+        .thenReturn(clientResponse);
 
-    List<QrdaResponseDto> result = qrdaService.generateQrda(qdmMeasure, "testToken");
+    QrdaExportResponseDto result = qrdaService.generateQrda(qdmMeasure, "testToken");
 
     QRDADto dto = captor.getValue();
     assertTrue(dto.getMeasure().contains("test"));
@@ -88,8 +94,9 @@ class QrdaServiceTest {
     assertTrue(options.containsKey("end_time"));
     assertEquals("HQR_IQR", options.get("submission_program"));
     assertEquals(1, dto.getSourceDataCriteria().size());
-    assertEquals(1, result.size());
-    assertEquals(clientResponse, result.get(0));
+    assertEquals(1, result.getIndividualReports().size());
+    assertEquals(clientResponse.getIndividualReports(), result.getIndividualReports());
+    assertEquals(clientResponse.getSummaryReport(), result.getSummaryReport());
   }
 
   @Test

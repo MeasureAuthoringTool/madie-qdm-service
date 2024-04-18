@@ -2,7 +2,8 @@ package gov.cms.madie.services;
 
 import gov.cms.madie.Exceptions.TranslationServiceException;
 import gov.cms.madie.dto.CqlLookups;
-import gov.cms.madie.dto.QrdaResponseDto;
+import gov.cms.madie.dto.QrdaExportResponseDto;
+import gov.cms.madie.dto.QrdaReportDto;
 import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.dto.TranslatedLibrary;
 import gov.cms.madie.models.measure.Measure;
@@ -155,12 +156,16 @@ class PackagingServiceTest {
   void testCreateQRDA() {
     when(qrdaService.generateQrda(any(QdmMeasure.class), any(String.class)))
         .thenReturn(
-            List.of(
-                QrdaResponseDto.builder()
-                    .qrda("qrda")
-                    .filename("1_test")
-                    .report("report")
-                    .build()));
+            QrdaExportResponseDto.builder()
+                .summaryReport("summaryReport")
+                .individualReports(
+                    List.of(
+                        QrdaReportDto.builder()
+                            .qrda("qrda")
+                            .filename("1_test")
+                            .report("report")
+                            .build()))
+                .build());
     byte[] qrda = packagingService.createQRDA(measure, TOKEN);
     assertThat(new String(qrda), containsString("qrda/"));
     assertThat(new String(qrda), containsString("1_test.xml"));

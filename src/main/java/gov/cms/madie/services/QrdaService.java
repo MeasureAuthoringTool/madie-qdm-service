@@ -4,17 +4,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.cms.madie.Exceptions.QrdaServiceException;
 import gov.cms.madie.dto.QRDADto;
-import gov.cms.madie.dto.QrdaResponseDto;
+import gov.cms.madie.dto.QrdaExportResponseDto;
 import gov.cms.madie.dto.SourceDataCriteria;
 import gov.cms.madie.models.dto.TranslatedLibrary;
 import gov.cms.madie.models.measure.QdmMeasure;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +30,7 @@ public class QrdaService {
   private final QrdaClient client;
   private final ObjectMapper objectMapper;
 
-  public List<QrdaResponseDto> generateQrda(QdmMeasure measure, String accessToken) {
+  public QrdaExportResponseDto generateQrda(QdmMeasure measure, String accessToken) {
     // get Libraries
     List<TranslatedLibrary> translatedLibraries =
         translationServiceClient.getTranslatedLibraries(measure.getCql(), accessToken);
@@ -57,7 +57,11 @@ public class QrdaService {
     }
 
     // send to qrda
-    return Arrays.asList(client.getQRDA(dto, accessToken, measure.getId()));
+    QrdaExportResponseDto response = client.getQRDA(dto, accessToken, measure.getId());
+    if (CollectionUtils.isEmpty(response.getIndividualReports())) {
+      throw new QrdaServiceException("No individual reports found for QRDA generation");
+    }
+    return response;
   }
 
   private Map<String, Object> buildOptions(QdmMeasure measure) {
