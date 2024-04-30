@@ -32,15 +32,7 @@ import org.springframework.util.CollectionUtils;
 import java.io.IOException;
 import java.text.Collator;
 import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -65,8 +57,15 @@ public class HumanReadableService {
     if (measure == null) {
       throw new IllegalArgumentException("Measure cannot be null.");
     }
-
+    if (cqlLookups == null){
+      cqlLookups =
+              CqlLookups.builder().build();
+    }
     Set<CQLDefinition> allDefinitions = cqlLookups.getDefinitions();
+    if (allDefinitions == null){
+      allDefinitions = new HashSet<>();
+    }
+
     HumanReadable hr =
         HumanReadable.builder()
             .measureInformation(buildMeasureInfo(measure))
@@ -125,7 +124,14 @@ public class HumanReadableService {
   }
 
   HumanReadableMeasureInformationModel buildMeasureInfo(Measure measure) {
-    // TODO Needs safety checks
+    boolean patientBased = false;
+    String measureScoring = "";
+    if (!measure.getGroups().isEmpty()) {
+      // safety check.
+      patientBased = measure.getGroups().get(0).getPopulationBasis().equals("boolean");
+      measureScoring = measure.getGroups().get(0).getScoring();
+    }
+
     HumanReadableMeasureInformationModel modelTemp =
         HumanReadableMeasureInformationModel.builder()
             .qdmVersion(5.6) // TODO Replace hardcode
@@ -137,13 +143,12 @@ public class HumanReadableService {
             .cbeNumber(HumanReadableUtil.getCbeNumber(measure))
             .endorsedBy(HumanReadableUtil.getEndorsedBy(measure))
             // TODO needs safety check
-            .patientBased(measure.getGroups().get(0).getPopulationBasis().equals("boolean"))
+            .patientBased(patientBased)
             .measurementPeriodStartDate(
                 DateFormat.getDateInstance().format(measure.getMeasurementPeriodStart()))
             .measurementPeriodEndDate(
                 DateFormat.getDateInstance().format(measure.getMeasurementPeriodEnd()))
-            .measureScoring(
-                measure.getGroups().get(0).getScoring()) // All groups expected to have same scoring
+            .measureScoring(measureScoring) // All groups expected to have same scoring
             .description(measure.getMeasureMetaData().getDescription())
             .copyright(measure.getMeasureMetaData().getCopyright())
             .disclaimer(measure.getMeasureMetaData().getDisclaimer())
