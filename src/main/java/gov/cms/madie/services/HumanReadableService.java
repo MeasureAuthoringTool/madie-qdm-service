@@ -126,8 +126,15 @@ public class HumanReadableService {
   HumanReadableMeasureInformationModel buildMeasureInfo(Measure measure) {
     boolean patientBased = false;
     String measureScoring = "";
+    measure.setGroups(null);
+    // edge case for testers
+    if (measure.getGroups() == null){
+      Group emptyGroup = Group.builder().populationBasis("").build();
+      List<Group> groupList = new ArrayList<>();
+      groupList.add(emptyGroup);
+      measure.setGroups(groupList);
+    }
     if (!CollectionUtils.isEmpty(measure.getGroups())) {
-      // safety check.
       patientBased = measure.getGroups().get(0).getPopulationBasis().equals("boolean");
       measureScoring = measure.getGroups().get(0).getScoring();
     }
@@ -226,20 +233,23 @@ public class HumanReadableService {
 
   List<HumanReadablePopulationModel> buildPopulations(
       Group group, Set<CQLDefinition> allDefinitions) {
-    return group.getPopulations().stream()
-        .map(
-            population ->
-                HumanReadablePopulationModel.builder()
-                    .name(population.getName().name())
-                    .id(population.getId())
-                    .display(population.getName().getDisplay())
-                    .logic(
-                        HumanReadableUtil.getCQLDefinitionLogic(
-                            population.getDefinition(), allDefinitions))
-                    .expressionName(population.getDefinition())
-                    .inGroup(!StringUtils.isBlank(population.getDefinition()))
-                    .build())
-        .collect(Collectors.toList());
+
+      return (group.getPopulations() != null)
+            ? group.getPopulations().stream()
+            .map(
+                    population ->
+                            HumanReadablePopulationModel.builder()
+                                    .name(population.getName().name())
+                                    .id(population.getId())
+                                    .display(population.getName().getDisplay())
+                                    .logic(
+                                            HumanReadableUtil.getCQLDefinitionLogic(
+                                                    population.getDefinition(), allDefinitions))
+                                    .expressionName(population.getDefinition())
+                                    .inGroup(!StringUtils.isBlank(population.getDefinition()))
+                                    .build())
+            .collect(Collectors.toList())
+            : Collections.emptyList();
   }
 
   List<HumanReadablePopulationModel> buildStratification(

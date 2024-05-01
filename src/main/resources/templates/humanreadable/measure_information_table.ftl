@@ -118,7 +118,7 @@
                 </td>
             </tr>
         </#if>
-        <#if model.measureInformation.measureScoring?lower_case != "ratio" || model.measureInformation.qdmVersion < 5.5 >
+        <#if model.measureInformation.measureScoring?? && (model.measureInformation.measureScoring?lower_case != "ratio" || model.measureInformation.qdmVersion < 5.5)>
             <tr>
                 <th scope="row" class="row-header"><span class="td_label">Stratification</span></th>
                 <td style="width:80%" colspan="3">
@@ -223,7 +223,7 @@
                 </div>
             </td>
         </tr>
-        <#if model.measureInformation.measureScoring?lower_case == "proportion" || model.measureInformation.measureScoring?lower_case == "ratio">
+        <#if model.measureInformation.measureScoring?? && (model.measureInformation.measureScoring?lower_case == "proportion" || model.measureInformation.measureScoring?lower_case == "ratio")>
             <tr>
                 <th scope="row" class="row-header"><span class="td_label">Denominator</span></th>
                 <td style="width:80%" colspan="3">
@@ -233,7 +233,7 @@
                 </td>
             </tr>
         </#if>
-        <#if model.measureInformation.measureScoring?lower_case == "proportion" || model.measureInformation.measureScoring?lower_case == "ratio">
+        <#if model.measureInformation.measureScoring?? && (model.measureInformation.measureScoring?lower_case == "proportion" || model.measureInformation.measureScoring?lower_case == "ratio")>
             <tr>
                 <th scope="row" class="row-header"><span class="td_label">Denominator Exclusions</span></th>
                 <td style="width:80%" colspan="3">
@@ -243,7 +243,7 @@
                 </td>
             </tr>
         </#if>
-        <#if model.measureInformation.measureScoring?lower_case == "continuous variable">
+        <#if model.measureInformation.measureScoring?? && (model.measureInformation.measureScoring?lower_case == "continuous variable")>
             <tr>
                 <th scope="row" class="row-header"><span class="td_label">Measure Population</span></th>
                 <td style="width:80%" colspan="3">
@@ -253,7 +253,7 @@
                 </td>
             </tr>
         </#if>
-        <#if model.measureInformation.measureScoring?lower_case == "continuous variable">
+        <#if model.measureInformation.measureScoring?? && (model.measureInformation.measureScoring?lower_case == "continuous variable")>
             <tr>
                 <th scope="row" class="row-header"><span class="td_label">Measure Population Exclusions</span></th>
                 <td style="width:80%" colspan="3">
@@ -263,7 +263,7 @@
                 </td>
             </tr>
         </#if>
-        <#if model.measureInformation.measureScoring?lower_case == "continuous variable" || model.measureInformation.measureScoring?lower_case == "ratio">
+        <#if model.measureInformation.measureScoring?? && (model.measureInformation.measureScoring?lower_case == "continuous variable" || model.measureInformation.measureScoring?lower_case == "ratio")>
             <tr>
                 <th scope="row" class="row-header"><span class="td_label">Measure Observations</span></th>
                 <td style="width:80%" colspan="3">
@@ -273,7 +273,7 @@
                 </td>
             </tr>
         </#if>
-        <#if model.measureInformation.measureScoring?lower_case == "proportion" || model.measureInformation.measureScoring?lower_case == "ratio">
+        <#if model.measureInformation.measureScoring?? && (model.measureInformation.measureScoring?lower_case == "proportion" || model.measureInformation.measureScoring?lower_case == "ratio")>
             <tr>
                 <th scope="row" class="row-header"><span class="td_label">Numerator</span></th>
                 <td style="width:80%" colspan="3">
@@ -283,7 +283,7 @@
                 </td>
             </tr>
         </#if>
-        <#if model.measureInformation.measureScoring?lower_case == "proportion" || model.measureInformation.measureScoring?lower_case == "ratio">
+        <#if model.measureInformation.measureScoring?? && (model.measureInformation.measureScoring?? (model.measureInformation.measureScoring?lower_case == "proportion" || model.measureInformation.measureScoring?lower_case == "ratio"))>
             <tr>
                 <th scope="row" class="row-header"><span class="td_label">Numerator Exclusions</span></th>
                 <td style="width:80%" colspan="3">
@@ -293,7 +293,7 @@
                 </td>
             </tr>
         </#if>
-        <#if model.measureInformation.measureScoring?lower_case == "proportion">
+        <#if model.measureInformation.measureScoring?? && (model.measureInformation.measureScoring?lower_case == "proportion")>
             <tr>
                 <th scope="row" class="row-header"><span class="td_label">Denominator Exceptions</span></th>
                 <td style="width:80%" colspan="3">
