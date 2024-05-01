@@ -126,7 +126,7 @@ public class HumanReadableService {
   HumanReadableMeasureInformationModel buildMeasureInfo(Measure measure) {
     boolean patientBased = false;
     String measureScoring = "";
-    if (!measure.getGroups().isEmpty()) {
+    if (measure.getGroups() == null || !measure.getGroups().isEmpty()) {
       // safety check.
       patientBased = measure.getGroups().get(0).getPopulationBasis().equals("boolean");
       measureScoring = measure.getGroups().get(0).getScoring();
