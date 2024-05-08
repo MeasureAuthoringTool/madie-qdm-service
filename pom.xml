@@ -67,7 +67,7 @@
     <dependency>
       <groupId>gov.cms.madie</groupId>
       <artifactId>madie-java-models</artifactId>
-      <version>0.6.30-SNAPSHOT</version>
+      <version>0.6.34-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>gov.cms.madie.packaging</groupId>
@@ -154,7 +154,7 @@
           <artifactId>maven-checkstyle-plugin</artifactId>
           <version>${mvn.checkstyle.version}</version>
           <configuration>
-            <excludes>**/generated/**/*, **/MeasureMapper.java, **/MeasureMapperImpl.java</excludes>
+            <excludes>**/generated/**/*, **/MeasureMapper.java, **/MeasureMapperImpl.java, **/CqmMeasureMapper.java, **/CqmMeasureMapperImpl.java</excludes>
           </configuration>
           <dependencies>
             <dependency>

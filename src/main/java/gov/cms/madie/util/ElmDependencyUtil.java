@@ -3,8 +3,8 @@ package gov.cms.madie.util;
 import java.util.*;
 
 import gov.cms.madie.Exceptions.QrdaServiceException;
-import gov.cms.madie.qrda.StatementDependency;
-import gov.cms.madie.qrda.StatementReference;
+import gov.cms.madie.models.cqm.StatementDependency;
+import gov.cms.madie.models.cqm.StatementReference;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
