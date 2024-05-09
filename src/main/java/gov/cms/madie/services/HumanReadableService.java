@@ -128,7 +128,6 @@ public class HumanReadableService {
       patientBased = measure.getGroups().get(0).getPopulationBasis().equals("boolean");
       measureScoring = measure.getGroups().get(0).getScoring();
     }
-
     HumanReadableMeasureInformationModel modelTemp =
         HumanReadableMeasureInformationModel.builder()
             .qdmVersion(5.6) // TODO Replace hardcode

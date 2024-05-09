@@ -2,7 +2,7 @@ package gov.cms.madie.util;
 
 import gov.cms.madie.Exceptions.QrdaServiceException;
 import gov.cms.madie.packaging.utils.ResourceFileUtil;
-import gov.cms.madie.qrda.StatementDependency;
+import gov.cms.madie.models.cqm.StatementDependency;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;

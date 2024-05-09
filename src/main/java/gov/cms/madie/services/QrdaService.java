@@ -47,7 +47,8 @@ public class QrdaService {
 
       dto =
           QRDADto.builder()
-              .measure(objectMapper.writeValueAsString(mapper.measureToCqmMeasure(measure, elms)))
+              .measure(
+                  objectMapper.writeValueAsString(mapper.measureToCqmMeasure(measure, elms, null)))
               .testCases(measure.getTestCases())
               .sourceDataCriteria(dataCriteria)
               .options(buildOptions(measure))

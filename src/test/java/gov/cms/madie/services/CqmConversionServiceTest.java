@@ -1,20 +1,18 @@
 package gov.cms.madie.services;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import gov.cms.madie.Exceptions.QrdaServiceException;
-import gov.cms.madie.dto.QRDADto;
+import gov.cms.madie.Exceptions.CqmConversionException;
 import gov.cms.madie.dto.QrdaExportResponseDto;
 import gov.cms.madie.dto.QrdaReportDto;
 import gov.cms.madie.dto.SourceDataCriteria;
 import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.cqm.CqmMeasure;
+import gov.cms.madie.models.cqm.datacriteria.basetypes.DataElement;
 import gov.cms.madie.models.dto.TranslatedLibrary;
-import gov.cms.madie.models.measure.*;
+import gov.cms.madie.models.measure.QdmMeasure;
+import gov.cms.madie.models.measure.TestCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -23,23 +21,19 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class QrdaServiceTest {
+public class CqmConversionServiceTest {
 
   @Mock CqmMeasureMapper mapper;
   @Mock TranslationServiceClient translationServiceClient;
-  @Mock QrdaClient client;
-  @Mock ObjectMapper objectMapper = new ObjectMapper();
-  @InjectMocks QrdaService qrdaService;
+  @InjectMocks CqmConversionService cqmConversionService;
   private QdmMeasure qdmMeasure;
 
   @BeforeEach
@@ -59,19 +53,21 @@ class QrdaServiceTest {
   }
 
   @Test
-  void convertToCqmMeasure() throws Exception {
-    CqmMeasure cqmMeasure = CqmMeasure.builder().id("1").description("test").build();
+  void convertMadieMeasureToCqmMeasure() throws Exception {
+    CqmMeasure cqmMeasure =
+        CqmMeasure.builder()
+            .id("1")
+            .description("test")
+            .source_data_criteria(List.of(DataElement.builder().id("test_datacriteria").build()))
+            .build();
     when(translationServiceClient.getTranslatedLibraries(any(String.class), any(String.class)))
         .thenReturn(List.of(TranslatedLibrary.builder().build()));
     when(translationServiceClient.getRelevantDataElements(any(QdmMeasure.class), any(String.class)))
         .thenReturn(List.of(SourceDataCriteria.builder().build()));
 
-    when(mapper.measureToCqmMeasure(any(QdmMeasure.class), any(List.class), any()))
+    when(mapper.measureToCqmMeasure(any(QdmMeasure.class), any(List.class), any(List.class)))
         .thenReturn(cqmMeasure);
 
-    when(objectMapper.writeValueAsString(any(CqmMeasure.class))).thenReturn(cqmMeasure.toString());
-
-    ArgumentCaptor<QRDADto> captor = ArgumentCaptor.forClass(QRDADto.class);
     List<QrdaReportDto> qrdaExport =
         List.of(QrdaReportDto.builder().qrda("qrda").filename("1_test").report("report").build());
     QrdaExportResponseDto clientResponse =
@@ -79,46 +75,33 @@ class QrdaServiceTest {
             .summaryReport("summaryReport")
             .individualReports(qrdaExport)
             .build();
-    when(client.getQRDA(captor.capture(), eq("testToken"), eq("testId")))
-        .thenReturn(clientResponse);
 
-    QrdaExportResponseDto result = qrdaService.generateQrda(qdmMeasure, "testToken");
+    CqmMeasure result =
+        cqmConversionService.convertMadieMeasureToCqmMeasure(qdmMeasure, "testToken");
 
-    QRDADto dto = captor.getValue();
-    assertTrue(dto.getMeasure().contains("test"));
-    assertFalse(dto.getTestCases().isEmpty());
-    assertEquals(1, dto.getTestCases().size());
-    assertTrue(dto.getOptions() instanceof Map<?, ?>);
-    Map<String, Object> options = (Map<String, Object>) dto.getOptions();
-    assertEquals(3, options.size());
-    assertTrue(options.containsKey("start_time"));
-    assertTrue(options.containsKey("end_time"));
-    assertEquals("HQR_IQR", options.get("submission_program"));
-    assertEquals(1, dto.getSourceDataCriteria().size());
-    assertEquals(1, result.getIndividualReports().size());
-    assertEquals(clientResponse.getIndividualReports(), result.getIndividualReports());
-    assertEquals(clientResponse.getSummaryReport(), result.getSummaryReport());
+    assertEquals(cqmMeasure.getDescription(), result.getDescription());
+    assertEquals(cqmMeasure.getId(), result.getId());
+    assertEquals(1, result.getSource_data_criteria().size());
+    assertEquals(
+        cqmMeasure.getSource_data_criteria().get(0).getId(),
+        result.getSource_data_criteria().get(0).getId());
   }
 
   @Test
   void convertToCqmMeasureThrowsException() throws Exception {
-    CqmMeasure cqmMeasure = CqmMeasure.builder().id("1").description("test").build();
     when(translationServiceClient.getTranslatedLibraries(any(String.class), any(String.class)))
         .thenReturn(List.of(TranslatedLibrary.builder().build()));
     when(translationServiceClient.getRelevantDataElements(any(QdmMeasure.class), any(String.class)))
         .thenReturn(List.of(SourceDataCriteria.builder().build()));
 
-    when(mapper.measureToCqmMeasure(any(QdmMeasure.class), any(List.class), any()))
-        .thenReturn(cqmMeasure);
-
-    when(objectMapper.writeValueAsString(any(CqmMeasure.class)))
-        .thenThrow(new JsonMappingException("error"));
+    when(mapper.measureToCqmMeasure(any(QdmMeasure.class), any(List.class), any(List.class)))
+        .thenThrow(new CqmConversionException("Unsupported data type"));
 
     Exception ex =
         assertThrows(
-            QrdaServiceException.class,
-            () -> qrdaService.generateQrda(qdmMeasure, "testToken"),
-            "Problem mapping the measure for QRDA generation");
-    assertThat(ex.getMessage(), containsString("Problem mapping the measure for QRDA generation"));
+            CqmConversionException.class,
+            () -> cqmConversionService.convertMadieMeasureToCqmMeasure(qdmMeasure, "testToken"),
+            "Unsupported data type");
+    assertThat(ex.getMessage(), containsString("Unsupported data type"));
   }
 }
