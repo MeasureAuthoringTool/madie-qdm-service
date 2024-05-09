@@ -57,15 +57,13 @@ public class HumanReadableService {
     if (measure == null) {
       throw new IllegalArgumentException("Measure cannot be null.");
     }
-    if (cqlLookups == null){
-      cqlLookups =
-              CqlLookups.builder().build();
+    if (cqlLookups == null) {
+      cqlLookups = CqlLookups.builder().build();
     }
     Set<CQLDefinition> allDefinitions = cqlLookups.getDefinitions();
-    if (allDefinitions == null){
+    if (allDefinitions == null) {
       allDefinitions = new HashSet<>();
     }
-
     HumanReadable hr =
         HumanReadable.builder()
             .measureInformation(buildMeasureInfo(measure))
@@ -126,14 +124,6 @@ public class HumanReadableService {
   HumanReadableMeasureInformationModel buildMeasureInfo(Measure measure) {
     boolean patientBased = false;
     String measureScoring = "";
-    measure.setGroups(null);
-    // edge case for testers
-    if (measure.getGroups() == null){
-      Group emptyGroup = Group.builder().populationBasis("").build();
-      List<Group> groupList = new ArrayList<>();
-      groupList.add(emptyGroup);
-      measure.setGroups(groupList);
-    }
     if (!CollectionUtils.isEmpty(measure.getGroups())) {
       patientBased = measure.getGroups().get(0).getPopulationBasis().equals("boolean");
       measureScoring = measure.getGroups().get(0).getScoring();
@@ -234,22 +224,22 @@ public class HumanReadableService {
   List<HumanReadablePopulationModel> buildPopulations(
       Group group, Set<CQLDefinition> allDefinitions) {
 
-      return (group.getPopulations() != null)
-            ? group.getPopulations().stream()
+    return (group.getPopulations() != null)
+        ? group.getPopulations().stream()
             .map(
-                    population ->
-                            HumanReadablePopulationModel.builder()
-                                    .name(population.getName().name())
-                                    .id(population.getId())
-                                    .display(population.getName().getDisplay())
-                                    .logic(
-                                            HumanReadableUtil.getCQLDefinitionLogic(
-                                                    population.getDefinition(), allDefinitions))
-                                    .expressionName(population.getDefinition())
-                                    .inGroup(!StringUtils.isBlank(population.getDefinition()))
-                                    .build())
+                population ->
+                    HumanReadablePopulationModel.builder()
+                        .name(population.getName().name())
+                        .id(population.getId())
+                        .display(population.getName().getDisplay())
+                        .logic(
+                            HumanReadableUtil.getCQLDefinitionLogic(
+                                population.getDefinition(), allDefinitions))
+                        .expressionName(population.getDefinition())
+                        .inGroup(!StringUtils.isBlank(population.getDefinition()))
+                        .build())
             .collect(Collectors.toList())
-            : Collections.emptyList();
+        : Collections.emptyList();
   }
 
   List<HumanReadablePopulationModel> buildStratification(

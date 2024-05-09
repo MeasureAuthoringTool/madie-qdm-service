@@ -367,6 +367,22 @@
                 </measureAttribute>
             </subjectOf>
         </xsl:if>
+        
+        <xsl:if test="$scoring_value = 'Ratio'">
+            <subjectOf>
+                <measureAttribute>
+                    <code code="STRAT" codeSystem="2.16.840.1.113883.5.4">
+                        <displayName value="Stratification"/>
+                    </code>
+                    <xsl:variable name="stratTxt">
+                        <xsl:call-template name="trim">
+                            <xsl:with-param name="textString" select="stratification"/>
+                        </xsl:call-template>
+                    </xsl:variable>
+                    <value xsi:type="ED" mediaType="text/plain" value="None"/>
+                </measureAttribute>
+            </subjectOf>
+        </xsl:if>
 
         <!-- Risk Adjustment -->
         <subjectOf>
