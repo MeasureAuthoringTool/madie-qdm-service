@@ -64,7 +64,6 @@ public class HumanReadableService {
     if (allDefinitions == null) {
       allDefinitions = new HashSet<>();
     }
-
     HumanReadable hr =
         HumanReadable.builder()
             .measureInformation(buildMeasureInfo(measure))
@@ -125,14 +124,6 @@ public class HumanReadableService {
   HumanReadableMeasureInformationModel buildMeasureInfo(Measure measure) {
     boolean patientBased = false;
     String measureScoring = "";
-    measure.setGroups(null);
-    // edge case for testers
-    if (measure.getGroups() == null) {
-      Group emptyGroup = Group.builder().populationBasis("").build();
-      List<Group> groupList = new ArrayList<>();
-      groupList.add(emptyGroup);
-      measure.setGroups(groupList);
-    }
     if (!CollectionUtils.isEmpty(measure.getGroups())) {
       patientBased = measure.getGroups().get(0).getPopulationBasis().equals("boolean");
       measureScoring = measure.getGroups().get(0).getScoring();

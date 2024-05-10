@@ -118,16 +118,19 @@
                 </td>
             </tr>
         </#if>
-        <#if model.measureInformation.measureScoring?? && (model.measureInformation.measureScoring?lower_case != "ratio" || model.measureInformation.qdmVersion < 5.5)>
-            <tr>
-                <th scope="row" class="row-header"><span class="td_label">Stratification</span></th>
-                <td style="width:80%" colspan="3">
-                    <div style="width:660px;">
+        <tr>
+            <th scope="row" class="row-header"><span class="td_label">Stratification</span></th>
+            <td style="width:80%" colspan="3">
+                <div style="width:660px;">
+                    <#if model.measureInformation.measureScoring?? && (model.measureInformation.measureScoring?lower_case != "ratio" || model.measureInformation.qdmVersion < 5.5)>
                         <pre>${model.measureInformation.stratification!""}</pre>
-                    </div>
-                </td>
-            </tr>
-        </#if>
+                    <#else>
+                        <pre>None</pre>
+                    </#if>
+                </div>
+            </td>
+        </tr>
+        
         <tr>
             <th scope="row" class="row-header"><span class="td_label">Risk Adjustment</span></th>
             <td style="width:80%" colspan="3">
@@ -283,7 +286,7 @@
                 </td>
             </tr>
         </#if>
-        <#if model.measureInformation.measureScoring?? && (model.measureInformation.measureScoring?? (model.measureInformation.measureScoring?lower_case == "proportion" || model.measureInformation.measureScoring?lower_case == "ratio"))>
+        <#if model.measureInformation.measureScoring?? && (model.measureInformation.measureScoring?lower_case == "proportion" || model.measureInformation.measureScoring?lower_case == "ratio")>
             <tr>
                 <th scope="row" class="row-header"><span class="td_label">Numerator Exclusions</span></th>
                 <td style="width:80%" colspan="3">

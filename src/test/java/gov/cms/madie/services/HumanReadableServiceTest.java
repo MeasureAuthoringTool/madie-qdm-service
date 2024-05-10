@@ -27,6 +27,7 @@ import org.springframework.util.CollectionUtils;
 import java.text.Collator;
 import java.text.DateFormat;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -401,6 +402,14 @@ class HumanReadableServiceTest {
     HumanReadableMeasureInformationModel measureInfoModel =
         humanReadableService.buildMeasureInfo(measure);
     assertThat(measureInfoModel.getReferences().get(0).getReferenceText(), is(equalTo("")));
+  }
+
+  @Test
+  public void testBuildMeasureInfoWhenGroupIsEmpty() {
+    measure.setGroups(Collections.emptyList());
+    HumanReadableMeasureInformationModel measureInfoModel =
+        humanReadableService.buildMeasureInfo(measure);
+    assertThat(measureInfoModel.getMeasureScoring(), is(equalTo("")));
   }
 
   @Test
