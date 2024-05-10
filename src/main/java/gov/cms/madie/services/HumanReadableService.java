@@ -142,7 +142,7 @@ public class HumanReadableService {
             .qdmVersion(5.6) // TODO Replace hardcode
             .ecqmTitle(measure.getMeasureName())
             .cmsId(getCmsId(measure))
-            .ecqmVersionNumber(measure.getVersion().toString())
+            .ecqmVersionNumber(HumanReadableUtil.getVersionNumber(measure))
             .calendarYear(false) // Unsupported MAT feature, default to false
             .guid(measure.getMeasureSetId())
             .cbeNumber(HumanReadableUtil.getCbeNumber(measure))

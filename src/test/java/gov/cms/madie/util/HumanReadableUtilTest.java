@@ -1,7 +1,9 @@
 package gov.cms.madie.util;
 
 import gov.cms.madie.dto.CQLDefinition;
+import gov.cms.madie.models.common.Version;
 import gov.cms.madie.models.measure.Group;
+import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.models.measure.MeasureMetaData;
 import gov.cms.madie.models.measure.MeasureObservation;
 import gov.cms.madie.models.measure.Population;
@@ -223,5 +225,37 @@ public class HumanReadableUtilTest {
             .libraryDisplayName("Math")
             .build();
     assertThat(HumanReadableUtil.getDefinitionName(cqlDefinition), is(equalTo("Math.add")));
+  }
+
+  @Test
+  void testGetVersionNumberMeasureMetaDataNull() {
+    Measure measure =
+        Measure.builder()
+            .version(Version.builder().major(1).minor(2).revisionNumber(3).build())
+            .build();
+    String version = HumanReadableUtil.getVersionNumber(measure);
+    assertThat(version, is(equalTo("1.2.003")));
+  }
+
+  @Test
+  void testGetVersionNumberMeasureIsDraft() {
+    Measure measure =
+        Measure.builder()
+            .version(Version.builder().major(1).minor(2).revisionNumber(3).build())
+            .measureMetaData(MeasureMetaData.builder().draft(true).build())
+            .build();
+    String version = HumanReadableUtil.getVersionNumber(measure);
+    assertThat(version, is(equalTo("Draft based on 1.2.003")));
+  }
+
+  @Test
+  void testGetVersionNumberMeasureIsVersioned() {
+    Measure measure =
+        Measure.builder()
+            .version(Version.builder().major(1).minor(2).revisionNumber(3).build())
+            .measureMetaData(MeasureMetaData.builder().draft(false).build())
+            .build();
+    String version = HumanReadableUtil.getVersionNumber(measure);
+    assertThat(version, is(equalTo("1.2.003")));
   }
 }

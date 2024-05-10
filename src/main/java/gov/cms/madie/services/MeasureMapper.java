@@ -140,6 +140,9 @@ public interface MeasureMapper {
   @Mapping(target = "supplementalData", source = "supplementalDataDescription")
   @Mapping(target = "finalizedDate", source = "measure")
   @Mapping(target = "qualityMeasureSet", source = "measure")
+  @Mapping(
+      target = "version",
+      expression = "java(gov.cms.madie.util.HumanReadableUtil.getVersionNumber(measure))")
   MeasureDetailsType measureToMeasureDetailsType(QdmMeasure measure);
 
   @Mapping(target = "uuid", source = "measureSetId")

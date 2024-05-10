@@ -225,4 +225,12 @@ public class HumanReadableUtil {
             .collect(Collectors.joining(", "));
     return functionName + "(" + parameters + ")";
   }
+
+  public static String getVersionNumber(Measure measure) {
+    String version = measure.getVersion() != null ? measure.getVersion().toString() : "";
+    if (measure.getMeasureMetaData() != null && measure.getMeasureMetaData().isDraft()) {
+      version = "Draft based on " + version;
+    }
+    return version;
+  }
 }
