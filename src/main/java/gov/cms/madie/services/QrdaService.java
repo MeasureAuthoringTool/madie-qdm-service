@@ -73,7 +73,7 @@ public class QrdaService {
                 .toInstant()
                 .atZone(ZoneId.of("UTC"))
                 .toLocalDateTime()
-                .format(DateTimeFormatter.ofPattern("yyyyMMddHH")));
+                .format(DateTimeFormatter.ofPattern("yyyyMMddHHss")));
 
     Long endTime =
         Long.parseLong(
@@ -82,7 +82,7 @@ public class QrdaService {
                 .toInstant()
                 .atZone(ZoneId.of("UTC"))
                 .toLocalDateTime()
-                .format(DateTimeFormatter.ofPattern("yyyyMMddHH")));
+                .format(DateTimeFormatter.ofPattern("yyyyMMddHHss")));
 
     Map<String, Object> options = new HashMap<>();
     options.put("start_time", startTime);
