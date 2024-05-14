@@ -88,6 +88,41 @@ public class CqmConversionServiceTest {
   }
 
   @Test
+  void convertMadieMeasureToCqmMeasureNoScoring() throws Exception {
+    CqmMeasure cqmMeasure =
+        CqmMeasure.builder()
+            .id("1")
+            .description("test")
+            .source_data_criteria(List.of(DataElement.builder().id("test_datacriteria").build()))
+            .build();
+    when(translationServiceClient.getTranslatedLibraries(any(String.class), any(String.class)))
+        .thenReturn(List.of(TranslatedLibrary.builder().build()));
+    when(translationServiceClient.getRelevantDataElements(any(QdmMeasure.class), any(String.class)))
+        .thenReturn(List.of(SourceDataCriteria.builder().build()));
+
+    when(mapper.measureToCqmMeasure(any(QdmMeasure.class), any(List.class), any(List.class)))
+        .thenReturn(cqmMeasure);
+
+    List<QrdaReportDto> qrdaExport =
+        List.of(QrdaReportDto.builder().qrda("qrda").filename("1_test").report("report").build());
+    QrdaExportResponseDto clientResponse =
+        QrdaExportResponseDto.builder()
+            .summaryReport("summaryReport")
+            .individualReports(qrdaExport)
+            .build();
+    qdmMeasure.setScoring(null);
+    CqmMeasure result =
+        cqmConversionService.convertMadieMeasureToCqmMeasure(qdmMeasure, "testToken");
+
+    assertEquals(cqmMeasure.getDescription(), result.getDescription());
+    assertEquals(cqmMeasure.getId(), result.getId());
+    assertEquals(1, result.getSource_data_criteria().size());
+    assertEquals(
+        cqmMeasure.getSource_data_criteria().get(0).getId(),
+        result.getSource_data_criteria().get(0).getId());
+  }
+
+  @Test
   void convertToCqmMeasureThrowsException() throws Exception {
     when(translationServiceClient.getTranslatedLibraries(any(String.class), any(String.class)))
         .thenReturn(List.of(TranslatedLibrary.builder().build()));

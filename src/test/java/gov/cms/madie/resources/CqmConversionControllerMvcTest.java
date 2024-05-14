@@ -70,6 +70,38 @@ public class CqmConversionControllerMvcTest implements ResourceFileUtil {
   }
 
   @Test
+  void testConvertMadieMeasureToCqmMeasureNoScoring() throws Exception {
+    String measureJson = getStringFromTestResource("/measures/qdm-test-measure-noscoring.json");
+    // convert to a QdmMeasure
+    ObjectMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
+    QdmMeasure qdmMeasure = mapper.readValue(measureJson, QdmMeasure.class);
+    when(cqmConversionService.convertMadieMeasureToCqmMeasure(
+            any(QdmMeasure.class), any(String.class)))
+        .thenReturn(new CqmMeasure());
+
+    ObjectWriter ow =
+        JsonMapper.builder()
+            .addModule(new JavaTimeModule())
+            .build()
+            .writer()
+            .withDefaultPrettyPrinter();
+    String json = ow.writeValueAsString(qdmMeasure);
+    mockMvc
+        .perform(
+            MockMvcRequestBuilders.put("/qdm/measures/cqm")
+                .with(user(TEST_USER_ID))
+                .with(csrf())
+                .header(HttpHeaders.AUTHORIZATION, TOKEN)
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+        .andExpect(status().isOk())
+        .andReturn();
+
+    verify(cqmConversionService, times(1))
+        .convertMadieMeasureToCqmMeasure(any(QdmMeasure.class), anyString());
+  }
+
+  @Test
   void testConvertMadieMeasureToCqmMeasureUnsupportedModel() throws Exception {
     String measureJson = getStringFromTestResource("/measures/qicore-test-measure.json");
     MvcResult mockResult =
