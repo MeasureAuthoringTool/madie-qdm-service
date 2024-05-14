@@ -14,6 +14,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,15 +40,27 @@ public class CqmConversionControllerMvcTest implements ResourceFileUtil {
   @Test
   void testConvertMadieMeasureToCqmMeasure() throws Exception {
     String measureJson = getStringFromTestResource("/measures/qdm-test-measure.json");
-    when(cqmConversionService.convertMadieMeasureToCqmMeasure(new QdmMeasure(), TOKEN))
+    // convert to a QdmMeasure
+    ObjectMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
+    QdmMeasure qdmMeasure = mapper.readValue(measureJson, QdmMeasure.class);
+    when(cqmConversionService.convertMadieMeasureToCqmMeasure(
+            any(QdmMeasure.class), any(String.class)))
         .thenReturn(new CqmMeasure());
+
+    ObjectWriter ow =
+        JsonMapper.builder()
+            .addModule(new JavaTimeModule())
+            .build()
+            .writer()
+            .withDefaultPrettyPrinter();
+    String json = ow.writeValueAsString(qdmMeasure);
     mockMvc
         .perform(
-            MockMvcRequestBuilders.get("/qdm/measures/cqm")
+            MockMvcRequestBuilders.put("/qdm/measures/cqm")
                 .with(user(TEST_USER_ID))
                 .with(csrf())
                 .header(HttpHeaders.AUTHORIZATION, TOKEN)
-                .content(measureJson)
+                .content(json)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
         .andExpect(status().isOk())
         .andReturn();
@@ -58,7 +75,7 @@ public class CqmConversionControllerMvcTest implements ResourceFileUtil {
     MvcResult mockResult =
         mockMvc
             .perform(
-                MockMvcRequestBuilders.get("/qdm/measures/cqm")
+                MockMvcRequestBuilders.put("/qdm/measures/cqm")
                     .with(user(TEST_USER_ID))
                     .with(csrf())
                     .header(HttpHeaders.AUTHORIZATION, TOKEN)

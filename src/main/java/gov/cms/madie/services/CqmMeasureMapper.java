@@ -26,7 +26,10 @@ public interface CqmMeasureMapper {
   @Mapping(target = "cms_id", source = "measure.measureSet.cmsId")
   @Mapping(target = "title", source = "measure.measureName")
   @Mapping(target = "description", source = "measure.measureMetaData.description")
-  @Mapping(target = "measure_scoring", expression = "java(measure.getScoring().toUpperCase())")
+  @Mapping(
+      target = "measure_scoring",
+      expression =
+          "java(measure.getScoring() == null || measure.getScoring().isEmpty() ? null: measure.getScoring().toUpperCase())")
   @Mapping(target = "main_cql_library", source = "measure.cqlLibraryName")
   @Mapping(target = "calculate_sdes", source = "measure.testCaseConfiguration.sdeIncluded")
   @Mapping(target = "calculation_method", expression = "java(getCalculationMethod(measure))")
