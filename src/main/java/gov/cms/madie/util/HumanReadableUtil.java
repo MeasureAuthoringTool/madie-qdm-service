@@ -128,11 +128,10 @@ public class HumanReadableUtil {
                 }
               });
     }
-    if (sb.toString().length() == 1 && sb.toString().contains("\n")) {
+    if (StringUtils.isBlank(sb.toString())) {
       return "None";
-    } else {
-      return sb.toString();
     }
+    return sb.toString();
   }
 
   public static String getMeasureObservationDescriptions(Measure measure) {

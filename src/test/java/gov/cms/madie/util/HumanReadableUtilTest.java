@@ -133,8 +133,7 @@ public class HumanReadableUtilTest {
     var result =
         HumanReadableUtil.getPopulationDescription(
             measure, PopulationType.INITIAL_POPULATION.name());
-    assertThat(result, is(equalTo("")));
-    ;
+    assertThat(result, is(equalTo("None")));
   }
 
   @Test
@@ -143,7 +142,7 @@ public class HumanReadableUtilTest {
     var result =
         HumanReadableUtil.getPopulationDescription(
             measure, PopulationType.INITIAL_POPULATION.name());
-    assertThat(result, is(equalTo("")));
+    assertThat(result, is(equalTo("None")));
   }
 
   @Test
@@ -153,7 +152,7 @@ public class HumanReadableUtilTest {
     var result =
         HumanReadableUtil.getPopulationDescription(
             measure, PopulationType.INITIAL_POPULATION.name());
-    assertThat(result, is(equalTo("")));
+    assertThat(result, is(equalTo("None")));
   }
 
   @Test
