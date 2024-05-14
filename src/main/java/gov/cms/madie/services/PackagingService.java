@@ -80,12 +80,13 @@ public class PackagingService {
 
     log.info(
         "Adding measure package artifacts to the measure package for measure {}", measure.getId());
-    String htmlDir = zipName + "/html/";
-    String qrdaDir = zipName + "/qrda/";
+    String htmlDir = "/html/";
+    String qrdaDir = "/qrda/";
     Map<String, byte[]> entries = new HashMap<>();
-    entries.put(
-        "/" + measure.getEcqmTitle() + "_patients_results.html",
-        qrdaExport.getSummaryReport().getBytes());
+    // TODO MAT-6835: Exclude top level summary until completion of this story.
+//    entries.put(
+//        "/" + measure.getEcqmTitle() + "_patients_results.html",
+//        qrdaExport.getSummaryReport().getBytes());
     for (QrdaReportDto qrda : qrdaExport.getIndividualReports()) {
       entries.put(qrdaDir + qrda.getFilename() + ".xml", qrda.getQrda().getBytes());
       entries.put(htmlDir + qrda.getFilename() + ".html", qrda.getReport().getBytes());
