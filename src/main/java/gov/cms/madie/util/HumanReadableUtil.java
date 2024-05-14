@@ -80,6 +80,8 @@ public class HumanReadableUtil {
       }
       if (!allDescriptions.isEmpty()) {
         return HumanReadableUtil.escapeHtmlString(allDescriptions.toString().trim());
+      } else {
+        return "None";
       }
     }
     return null;
@@ -126,7 +128,11 @@ public class HumanReadableUtil {
                 }
               });
     }
-    return sb.toString();
+    if (sb.toString().length() == 1 && sb.toString().contains("\n")) {
+      return "None";
+    } else {
+      return sb.toString();
+    }
   }
 
   public static String getMeasureObservationDescriptions(Measure measure) {
