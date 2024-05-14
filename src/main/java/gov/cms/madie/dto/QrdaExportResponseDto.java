@@ -13,5 +13,5 @@ import java.util.List;
 @AllArgsConstructor
 public class QrdaExportResponseDto {
   String summaryReport;
-  List<QrdaReportDto> individualReports;
+  List<QrdaReportDTO> individualReports;
 }

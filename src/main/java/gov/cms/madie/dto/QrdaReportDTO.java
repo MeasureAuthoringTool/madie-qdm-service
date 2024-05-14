@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class QrdaReportDto {
+public class QrdaReportDTO {
   String qrda;
   String report;
   String filename;

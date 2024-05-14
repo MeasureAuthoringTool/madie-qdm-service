@@ -2,7 +2,7 @@ package gov.cms.madie.services;
 
 import gov.cms.madie.Exceptions.CqmConversionException;
 import gov.cms.madie.dto.QrdaExportResponseDto;
-import gov.cms.madie.dto.QrdaReportDto;
+import gov.cms.madie.dto.QrdaReportDTO;
 import gov.cms.madie.dto.SourceDataCriteria;
 import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.cqm.CqmMeasure;
@@ -68,8 +68,8 @@ public class CqmConversionServiceTest {
     when(mapper.measureToCqmMeasure(any(QdmMeasure.class), any(List.class), any(List.class)))
         .thenReturn(cqmMeasure);
 
-    List<QrdaReportDto> qrdaExport =
-        List.of(QrdaReportDto.builder().qrda("qrda").filename("1_test").report("report").build());
+    List<QrdaReportDTO> qrdaExport =
+        List.of(QrdaReportDTO.builder().qrda("qrda").filename("1_test").report("report").build());
     QrdaExportResponseDto clientResponse =
         QrdaExportResponseDto.builder()
             .summaryReport("summaryReport")

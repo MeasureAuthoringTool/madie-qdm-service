@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.cms.madie.Exceptions.TranslationServiceException;
 import gov.cms.madie.config.QrdaClientConfig;
-import gov.cms.madie.dto.QRDADto;
+import gov.cms.madie.dto.QrdaDTO;
 import gov.cms.madie.dto.QrdaExportResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +27,7 @@ public class QrdaClient {
 
   @Autowired private ObjectMapper mapper;
 
-  public QrdaExportResponseDto getQRDA(QRDADto dto, String accessToken, String measureId) {
+  public QrdaExportResponseDto getQRDA(QrdaDTO dto, String accessToken, String measureId) {
     URI uri = URI.create(qrdaClientConfig.getBaseUrl() + qrdaClientConfig.getQrda());
     HttpHeaders headers = new HttpHeaders();
     headers.set(HttpHeaders.AUTHORIZATION, accessToken);

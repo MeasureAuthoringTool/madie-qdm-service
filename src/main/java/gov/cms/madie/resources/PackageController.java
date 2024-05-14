@@ -2,6 +2,7 @@ package gov.cms.madie.resources;
 
 import gov.cms.madie.Exceptions.UnsupportedModelException;
 import gov.cms.madie.dto.CqlLookups;
+import gov.cms.madie.dto.QrdaRequestDTO;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.services.*;
 import gov.cms.madie.models.measure.Measure;
@@ -103,12 +104,13 @@ public class PackageController {
       },
       consumes = {MediaType.APPLICATION_JSON_VALUE})
   public byte[] getQRDA(
-      @RequestBody @Validated(Measure.ValidationSequence.class) Measure measure,
+      @RequestBody QrdaRequestDTO qrdaRequestDTO,
       @RequestHeader("Authorization") String accessToken) {
+    Measure measure = qrdaRequestDTO.getMeasure();
     log.info("export QRDA for measure [{}] ", measure.getId());
     // generate QRDA if the model type is QDM
     if (measure.getModel() != null && measure.getModel().contains("QDM")) {
-      return packagingService.createQRDA(measure, accessToken);
+      return packagingService.createQRDA(qrdaRequestDTO, accessToken);
     }
     throw new UnsupportedModelException("Unsupported model type: " + measure.getModel());
   }
