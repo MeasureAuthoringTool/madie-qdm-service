@@ -7,7 +7,10 @@ import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.services.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +22,13 @@ public class CqmConversionController {
 
   private final CqmConversionService cqmConversionService;
 
-  @GetMapping(
+  @ExceptionHandler
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public void handle(HttpMessageNotReadableException e) {
+    log.warn("Returning HTTP 400 Bad Request", e);
+  }
+
+  @PutMapping(
       value = "/cqm",
       produces = {MediaType.APPLICATION_JSON_VALUE},
       consumes = {MediaType.APPLICATION_JSON_VALUE})
