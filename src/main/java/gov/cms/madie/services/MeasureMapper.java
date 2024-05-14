@@ -128,7 +128,7 @@ public interface MeasureMapper {
   @Mapping(
       target = "measurePopulationExclusionsDescription",
       expression =
-          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, PopulationType.MEASURE_POPULATION_OBSERVATION))")
+          "java(gov.cms.madie.util.MappingUtil.getPopulationDescription(measure, PopulationType.MEASURE_POPULATION_EXCLUSION))")
   @Mapping(
       target = "measureObservationsDescription",
       expression =

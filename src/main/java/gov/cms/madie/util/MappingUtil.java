@@ -108,7 +108,7 @@ public final class MappingUtil {
                 })
             .filter(StringUtils::isNotBlank)
             .collect(Collectors.joining(" "));
-    return StringUtils.isBlank(description) ? null : description;
+    return StringUtils.isBlank(description) ? "None" : description;
   }
 
   /**
@@ -141,6 +141,6 @@ public final class MappingUtil {
                 })
             .filter(StringUtils::isNotBlank)
             .collect(Collectors.joining(" "));
-    return StringUtils.isBlank(description) ? null : description;
+    return StringUtils.isBlank(description) ? "None" : description;
   }
 }
