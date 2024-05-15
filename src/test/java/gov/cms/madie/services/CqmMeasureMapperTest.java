@@ -102,6 +102,37 @@ class CqmMeasureMapperTest implements ResourceFileUtil {
   }
 
   @Test
+  void measureToCqmMeasureWithDataCriteriaNoMeasureScoring() {
+    measure.setScoring(null);
+    CqmMeasure result =
+        mapper.measureToCqmMeasure(measure, List.of(elm, elm2), List.of(dataCriteria));
+    System.out.println(result);
+    assertEquals("65f1ba66df0e11775088e5e0", result.getId());
+    assertEquals("123", result.getCms_id());
+    assertEquals("7bec3519-c428-4b6f-a483-f01fe9799c85", result.getHqmf_set_id());
+    assertEquals("c32e60ac-3118-4bf6-965e-ea2906289f27", result.getHqmf_version_number());
+    assertEquals("CMS771", result.getTitle());
+    assertEquals(false, result.isComponent());
+    assertEquals(false, result.isComposite());
+    assertNull(result.getMeasure_scoring());
+    assertEquals("PATIENT", result.getCalculation_method());
+    assertEquals(2, result.getCql_libraries().size());
+    assertEquals(
+        "UrinarySymptomScoreChangeAfterBenignProstaticHyperplasia", result.getMain_cql_library());
+    assertEquals(1, result.getSource_data_criteria().size());
+    assertThat(result.getSource_data_criteria().get(0)).isInstanceOf(Diagnosis.class);
+    Diagnosis diagnosis = (Diagnosis) result.getSource_data_criteria().get(0);
+    assertEquals("test", diagnosis.getCodeListId());
+    assertEquals("test description", diagnosis.getDescription());
+    assertEquals("Diagnosis", diagnosis.getQdmTitle());
+    assertEquals("2.16.840.1.113883.10.20.28.4.110", diagnosis.getHqmfOid());
+    assertEquals("2.16.840.1.113883.10.20.24.3.135", diagnosis.getQrdaOid());
+    assertEquals("condition", diagnosis.getQdmCategory());
+    assertEquals("5.6", diagnosis.getQdmVersion());
+    assertEquals("QDM::Diagnosis", diagnosis.get_type());
+  }
+
+  @Test
   void measureToCqmMeasureThrowsException() throws Exception {
     SourceDataCriteria badCriteria = SourceDataCriteria.builder().type("bad").build();
 

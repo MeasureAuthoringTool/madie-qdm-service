@@ -45,6 +45,15 @@ public class CqmConversionControllerTest {
     assertThat(result, is(equalTo(cqmMeasure)));
   }
 
+  void testConvertMadieMeasureToCqmMeasureNoScoring() {
+    CqmMeasure cqmMeasure = CqmMeasure.builder().id("testId").build();
+    measure.setScoring(null);
+    when(cqmConversionService.convertMadieMeasureToCqmMeasure(measure, TOKEN))
+        .thenReturn(cqmMeasure);
+    CqmMeasure result = cqmConversionController.convertMadieMeasureToCqmMeasure(measure, TOKEN);
+    assertThat(result, is(equalTo(cqmMeasure)));
+  }
+
   @Test
   void testGetMeasurePackageIfModelIsNull() {
     measure.setModel(null);
