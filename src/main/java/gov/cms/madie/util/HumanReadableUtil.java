@@ -80,6 +80,8 @@ public class HumanReadableUtil {
       }
       if (!allDescriptions.isEmpty()) {
         return HumanReadableUtil.escapeHtmlString(allDescriptions.toString().trim());
+      } else {
+        return "None";
       }
     }
     return null;
@@ -125,6 +127,9 @@ public class HumanReadableUtil {
                           });
                 }
               });
+    }
+    if (StringUtils.isBlank(sb.toString())) {
+      return "None";
     }
     return sb.toString();
   }

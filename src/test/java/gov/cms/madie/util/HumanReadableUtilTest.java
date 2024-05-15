@@ -10,7 +10,6 @@ import gov.cms.madie.models.measure.Population;
 import gov.cms.madie.models.measure.PopulationType;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.models.measure.Stratification;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -21,7 +20,6 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HumanReadableUtilTest {
 
@@ -92,7 +90,7 @@ public class HumanReadableUtilTest {
   void testGetStratificationNullStratificationss() {
     measure.setGroups(List.of(Group.builder().build()));
     var result = HumanReadableUtil.getStratification(measure);
-    assertNull(result);
+    assertThat(result, is(equalTo("None")));
   }
 
   @Test
@@ -131,20 +129,20 @@ public class HumanReadableUtilTest {
   }
 
   @Test
-  void testGetPopulationDescriptionGroupsNull() {
+  void testGetPopulationDescriptionGroupsNone() {
     var result =
         HumanReadableUtil.getPopulationDescription(
             measure, PopulationType.INITIAL_POPULATION.name());
-    assertTrue(StringUtils.isBlank(result));
+    assertThat(result, is(equalTo("None")));
   }
 
   @Test
-  void testGetPopulationDescriptionPopulationsNull() {
+  void testGetPopulationDescriptionPopulationsNone() {
     measure.setGroups(List.of(Group.builder().build()));
     var result =
         HumanReadableUtil.getPopulationDescription(
             measure, PopulationType.INITIAL_POPULATION.name());
-    assertTrue(StringUtils.isBlank(result));
+    assertThat(result, is(equalTo("None")));
   }
 
   @Test
@@ -154,7 +152,7 @@ public class HumanReadableUtilTest {
     var result =
         HumanReadableUtil.getPopulationDescription(
             measure, PopulationType.INITIAL_POPULATION.name());
-    assertTrue(StringUtils.isBlank(result));
+    assertThat(result, is(equalTo("None")));
   }
 
   @Test

@@ -164,7 +164,7 @@ class MappingUtilTest {
         Measure.builder().groups(List.of(Group.builder().build(), Group.builder().build())).build();
     String output =
         MappingUtil.getPopulationDescription(measure, PopulationType.INITIAL_POPULATION);
-    assertThat(output, is(nullValue()));
+    assertThat(output, is(equalTo("None")));
   }
 
   @Test
@@ -176,7 +176,7 @@ class MappingUtilTest {
     Measure measure = Measure.builder().groups(List.of(group1, group2)).build();
     String output =
         MappingUtil.getPopulationDescription(measure, PopulationType.INITIAL_POPULATION);
-    assertThat(output, is(nullValue()));
+    assertThat(output, is(equalTo("None")));
   }
 
   @Test
@@ -196,7 +196,7 @@ class MappingUtilTest {
             .build();
     String output =
         MappingUtil.getPopulationDescription(measure, PopulationType.INITIAL_POPULATION);
-    assertThat(output, is(nullValue()));
+    assertThat(output, is(equalTo("None")));
   }
 
   @Test
@@ -282,7 +282,7 @@ class MappingUtilTest {
                         .build()))
             .build();
     String output = MappingUtil.getPopulationDescription(measure, PopulationType.NUMERATOR);
-    assertThat(output, is(nullValue()));
+    assertThat(output, is(equalTo("None")));
   }
 
   @Test
@@ -294,7 +294,7 @@ class MappingUtilTest {
     Measure measure = Measure.builder().groups(List.of(group1, group2)).build();
     String output =
         MappingUtil.getPopulationDescription(measure, PopulationType.DENOMINATOR_OBSERVATION);
-    assertThat(output, is(nullValue()));
+    assertThat(output, is(equalTo("None")));
   }
 
   @Test
@@ -310,7 +310,7 @@ class MappingUtilTest {
             .build();
     String output =
         MappingUtil.getPopulationDescription(measure, PopulationType.DENOMINATOR_OBSERVATION);
-    assertThat(output, is(nullValue()));
+    assertThat(output, is(equalTo("None")));
   }
 
   @Test
@@ -385,35 +385,35 @@ class MappingUtilTest {
     Measure measure =
         Measure.builder().groups(List.of(Group.builder().build(), Group.builder().build())).build();
     String output = MappingUtil.getStratificationDescription(measure.getGroups());
-    assertThat(output, is(nullValue()));
+    assertThat(output, is(equalTo("None")));
   }
 
   @Test
-  void getStratificationDescriptionIfStratificationNull() {
+  void getStratificationDescriptionIfStratificationNone() {
     Group group = Group.builder().stratifications(null).build();
     Measure measure = Measure.builder().groups(List.of(group)).build();
     String output = MappingUtil.getStratificationDescription(measure.getGroups());
-    assertThat(output, is(nullValue()));
+    assertThat(output, is(equalTo("None")));
   }
 
   @Test
-  void getStratificationDescriptionIfStratificationDefinitionIsNull() {
+  void getStratificationDescriptionIfStratificationDefinitionIsNone() {
     Group group =
         Group.builder().stratifications(List.of(Stratification.builder().build())).build();
     Measure measure = Measure.builder().groups(List.of(group)).build();
     String output = MappingUtil.getStratificationDescription(measure.getGroups());
-    assertThat(output, is(nullValue()));
+    assertThat(output, is(equalTo("None")));
   }
 
   @Test
-  void getGroupStratificationDescriptionIfDescriptionIsNull() {
+  void getGroupStratificationDescriptionIfDescriptionIsNone() {
     Group group =
         Group.builder()
             .stratifications(List.of(Stratification.builder().cqlDefinition("IPP").build()))
             .build();
     Measure measure = Measure.builder().groups(List.of(group)).build();
     String output = MappingUtil.getStratificationDescription(measure.getGroups());
-    assertThat(output, is(nullValue()));
+    assertThat(output, is(equalTo("None")));
   }
 
   @Test
