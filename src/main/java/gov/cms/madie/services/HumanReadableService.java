@@ -244,7 +244,7 @@ public class HumanReadableService {
   List<HumanReadablePopulationModel> buildStratification(
       Group group, Set<CQLDefinition> allDefinitions) {
     if (CollectionUtils.isEmpty(group.getStratifications())) {
-      HumanReadablePopulationModel E =
+      HumanReadablePopulationModel emptyStrat =
           HumanReadablePopulationModel.builder()
               .name("Stratification")
               .display("Stratification")
@@ -254,7 +254,7 @@ public class HumanReadableService {
               .expressionName("None")
               .build();
 
-      return new ArrayList<HumanReadablePopulationModel>(Arrays.asList(E));
+      return new ArrayList<HumanReadablePopulationModel>(Arrays.asList(emptyStrat));
     }
 
     return group.getStratifications().stream()
