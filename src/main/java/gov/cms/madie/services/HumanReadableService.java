@@ -19,6 +19,7 @@ import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.models.measure.Population;
 import gov.cms.madie.models.measure.PopulationType;
 import gov.cms.madie.models.measure.QdmMeasure;
+import gov.cms.madie.models.measure.Stratification;
 import gov.cms.madie.util.HumanReadableDateUtil;
 import gov.cms.madie.util.HumanReadableUtil;
 import gov.cms.madie.util.MeasureUtils;
@@ -246,21 +247,21 @@ public class HumanReadableService {
     if (CollectionUtils.isEmpty(group.getStratifications())) {
       return Collections.emptyList();
     }
-
-    return group.getStratifications().stream()
-        .map(
-            stratification ->
-                HumanReadablePopulationModel.builder()
-                    .name("Stratification")
-                    .id(stratification.getId())
-                    .display("Stratification")
-                    .logic(
-                        HumanReadableUtil.getCQLDefinitionLogic(
-                            stratification.getCqlDefinition(), allDefinitions))
-                    .expressionName(stratification.getCqlDefinition())
-                    .inGroup(!StringUtils.isBlank(stratification.getCqlDefinition()))
-                    .build())
-        .collect(Collectors.toList());
+    List<HumanReadablePopulationModel> model = new ArrayList<>(group.getStratifications().size());
+    for (int i = 0; i < group.getStratifications().size(); i++) {
+      Stratification strat = group.getStratifications().get(i);
+      model.add(
+          HumanReadablePopulationModel.builder()
+              .name("Stratification")
+              .id(strat.getId())
+              .display("Stratification " + (i + 1))
+              .logic(
+                  HumanReadableUtil.getCQLDefinitionLogic(strat.getCqlDefinition(), allDefinitions))
+              .expressionName(strat.getCqlDefinition())
+              .inGroup(!StringUtils.isBlank(strat.getCqlDefinition()))
+              .build());
+    }
+    return model;
   }
 
   List<HumanReadablePopulationModel> buildMeasureObservation(
