@@ -14,6 +14,8 @@ import gov.cms.madie.model.HumanReadableMeasureInformationModel;
 import gov.cms.madie.model.HumanReadablePopulationCriteriaModel;
 import gov.cms.madie.model.HumanReadablePopulationModel;
 import gov.cms.madie.model.HumanReadableTerminologyModel;
+import gov.cms.madie.model.HumanReadableValuesetModel;
+import gov.cms.madie.dto.CQLCode;
 import gov.cms.madie.dto.CQLDefinition;
 import gov.cms.madie.dto.CQLValueSet;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,6 +44,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(MockitoExtension.class)
 class HumanReadableServiceTest {
@@ -139,6 +142,7 @@ class HumanReadableServiceTest {
                                 MeasureObservation.builder()
                                     .definition("Local Function")
                                     .aggregateMethod("Average")
+                                    .criteriaReference("p1")
                                     .build()))
                         .build()))
             .baseConfigurationTypes(List.of(BaseConfigurationTypes.OUTCOME))
@@ -570,6 +574,112 @@ class HumanReadableServiceTest {
     group.setMeasureObservations(null);
     List<HumanReadablePopulationModel> model =
         humanReadableService.buildMeasureObservation(group, allDefinitions);
+    assertThat(CollectionUtils.isEmpty(model), is(true));
+  }
+
+  @Test
+  public void testBuildValueSetDataCriteriaList() {
+    CqlLookups cqlLookups =
+        CqlLookups.builder()
+            .elementLookups(
+                Set.of(
+                    ElementLookup.builder()
+                        .code(false)
+                        .datatype("TestDT")
+                        .codeName("Delivery date Estimated")
+                        .oid("111.222.33.44.555")
+                        .codeSystemName("LOINC")
+                        .build()))
+            .build();
+    List<HumanReadableValuesetModel> result =
+        humanReadableService.buildValueSetDataCriteriaList(cqlLookups);
+    assertThat(result.size(), is(equalTo(1)));
+  }
+
+  @Test
+  public void testBuildValueSetDataCriteriaListNull() {
+    CqlLookups cqlLookups = CqlLookups.builder().build();
+    List<HumanReadableValuesetModel> result =
+        humanReadableService.buildValueSetDataCriteriaList(cqlLookups);
+    assertThat(result.size(), is(equalTo(0)));
+  }
+
+  @Test
+  public void testBuildCodeTerminologyList() {
+    CQLCode cqlCode1 =
+        CQLCode.builder()
+            .codeName("Opioid Antagonist")
+            .id("2.16.840.1.113762.1.4.1248.119")
+            .codeSystemName("Opioid Antagonist")
+            .build();
+    CQLCode cqlCode2 =
+        CQLCode.builder()
+            .codeName("Routes of Administration for Opioid Antagonists")
+            .id("2.16.840.1.113762.1.4.1248.187")
+            .codeSystemName("Routes of Administration for Opioid Antagonists")
+            .build();
+
+    List<HumanReadableTerminologyModel> terminologyModels =
+        humanReadableService.buildCodeTerminology(Set.of(cqlCode1, cqlCode2));
+    assertThat(terminologyModels.size(), is(equalTo(2)));
+    assertThat(terminologyModels.get(0).getName(), is(equalTo("Opioid Antagonist")));
+    assertThat(
+        terminologyModels.get(1).getName(),
+        is(equalTo("Routes of Administration for Opioid Antagonists")));
+  }
+
+  @Test
+  public void testBuildCodeTerminologyListEmpty() {
+    List<HumanReadableTerminologyModel> terminologyModels =
+        humanReadableService.buildCodeTerminology(Collections.emptySet());
+    assertThat(terminologyModels.size(), is(equalTo(0)));
+  }
+
+  @Test
+  public void generateHumanReadableSuccessfullyCqlLookupsNull() {
+    var result = humanReadableService.generate(measure, null);
+    assertNotNull(result);
+  }
+
+  @Test
+  public void testBuildMeasureObservationForRatio() {
+    Group group = measure.getGroups().get(0);
+    group.setScoring("Ratio");
+    List<HumanReadablePopulationModel> model =
+        humanReadableService.buildMeasureObservation(group, allDefinitions);
+    assertThat(CollectionUtils.isEmpty(model), is(false));
+  }
+
+  @Test
+  public void testBuildMeasureObservationForRatioNoAssociation() {
+    Group group = measure.getGroups().get(0);
+    group.setScoring("Ratio");
+    group.getMeasureObservations().get(0).setCriteriaReference(null);
+    List<HumanReadablePopulationModel> model =
+        humanReadableService.buildMeasureObservation(group, allDefinitions);
+    assertThat(CollectionUtils.isEmpty(model), is(false));
+    assertTrue(model.get(0).getDisplay().contains("None"));
+  }
+
+  @Test
+  public void testBuildMeasureObservationForRatioAssociatedPopulationHasNoName() {
+    Group group = measure.getGroups().get(0);
+    group.setScoring("Ratio");
+
+    group.getPopulations().get(0).setName(null);
+
+    List<HumanReadablePopulationModel> model =
+        humanReadableService.buildMeasureObservation(group, allDefinitions);
+    assertThat(CollectionUtils.isEmpty(model), is(false));
+    assertTrue(model.get(0).getDisplay().contains("None"));
+  }
+
+  @Test
+  public void testBuildPopulationsNull() {
+    Group group = measure.getGroups().get(0);
+    group.setPopulations(null);
+    List<HumanReadablePopulationModel> model =
+        humanReadableService.buildPopulations(group, allDefinitions);
     assertThat(CollectionUtils.isEmpty(model), is(true));
   }
 }

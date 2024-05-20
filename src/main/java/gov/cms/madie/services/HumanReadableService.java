@@ -70,15 +70,14 @@ public class HumanReadableService {
             .populationCriteria(buildPopCriteria(measure, allDefinitions))
             .definitions(buildDefinitions(allDefinitions))
             .functions(buildFunctions(allDefinitions))
-            // TODO: can we combine these two?
             .valuesetDataCriteriaList(buildValueSetDataCriteriaList(cqlLookups))
             .codeDataCriteriaList(buildCodeDataCriteriaList(cqlLookups))
             .build();
 
-    // value sets criteria
-    hr.setValuesetAndCodeDataCriteriaList(new ArrayList<>(hr.getValuesetDataCriteriaList()));
-    // code criteria
-    hr.getValuesetAndCodeDataCriteriaList().addAll(new ArrayList<>(hr.getCodeDataCriteriaList()));
+    // combine value sets criteria and code criteria
+    hr.setValuesetAndCodeDataCriteriaList(
+        buildValuesetAndCodeDataCriteriaList(
+            hr.getValuesetDataCriteriaList(), hr.getCodeDataCriteriaList()));
 
     // terminology
     hr.setValuesetTerminologyList(buildValueSetTerminology(cqlLookups.getValueSets()));
@@ -277,7 +276,13 @@ public class HumanReadableService {
                 Population population =
                     HumanReadableUtil.getObservationAssociation(
                         measureObservation.getCriteriaReference(), group.getPopulations());
-                display = display + " (Association: " + population.getName().getDisplay() + ")";
+                display =
+                    display
+                        + " (Association: "
+                        + (population != null && population.getName() != null
+                            ? population.getName().getDisplay()
+                            : "None")
+                        + ")";
               }
               return HumanReadablePopulationModel.builder()
                   .name(measureObservation.getDefinition())
@@ -308,7 +313,9 @@ public class HumanReadableService {
                     .name(HumanReadableUtil.getDefinitionName(definition))
                     .logic(definition.getLogic().substring(definition.getLogic().indexOf('\n') + 1))
                     .build())
-        .sorted(Comparator.comparing(HumanReadableExpressionModel::getName))
+        .sorted(
+            Comparator.comparing(
+                HumanReadableExpressionModel::getName, String.CASE_INSENSITIVE_ORDER))
         .collect(Collectors.toList());
   }
 
@@ -361,6 +368,17 @@ public class HumanReadableService {
                     .build())
         .sorted(Comparator.comparing(HumanReadableCodeModel::getDataCriteriaDisplay, collator))
         .toList();
+  }
+
+  List<HumanReadableTerminologyModel> buildValuesetAndCodeDataCriteriaList(
+      List<HumanReadableValuesetModel> valueSets, List<HumanReadableCodeModel> codes) {
+    List<HumanReadableTerminologyModel> valueSetsAndCodes = new ArrayList<>();
+    valueSetsAndCodes.addAll(valueSets);
+    valueSetsAndCodes.addAll(codes);
+    valueSetsAndCodes.sort(
+        Comparator.comparing(
+            HumanReadableTerminologyModel::getDataCriteriaDisplay, String.CASE_INSENSITIVE_ORDER));
+    return valueSetsAndCodes;
   }
 
   List<HumanReadableTerminologyModel> buildValueSetTerminology(Set<CQLValueSet> cqlValueSets) {
