@@ -565,7 +565,8 @@ class HumanReadableServiceTest {
     group.setStratifications(null);
     List<HumanReadablePopulationModel> model =
         humanReadableService.buildStratification(group, allDefinitions);
-    assertThat(CollectionUtils.isEmpty(model), is(true));
+    assertThat(CollectionUtils.isEmpty(model), is(false));
+    assertThat(model.get(0).getLogic(), is("None"));
   }
 
   @Test

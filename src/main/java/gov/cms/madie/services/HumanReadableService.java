@@ -244,7 +244,17 @@ public class HumanReadableService {
   List<HumanReadablePopulationModel> buildStratification(
       Group group, Set<CQLDefinition> allDefinitions) {
     if (CollectionUtils.isEmpty(group.getStratifications())) {
-      return Collections.emptyList();
+      HumanReadablePopulationModel emptyStrat =
+          HumanReadablePopulationModel.builder()
+              .name("Stratification")
+              .display("Stratification")
+              .logic("None")
+              .id("None")
+              .inGroup(false)
+              .expressionName("None")
+              .build();
+
+      return new ArrayList<HumanReadablePopulationModel>(Arrays.asList(emptyStrat));
     }
     List<HumanReadablePopulationModel> model = new ArrayList<>(group.getStratifications().size());
     for (int i = 0; i < group.getStratifications().size(); i++) {
