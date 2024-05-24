@@ -230,7 +230,7 @@ public class HumanReadableService {
                     HumanReadablePopulationModel.builder()
                         .name(population.getName().name())
                         .id(population.getId())
-                        .display(population.getName().getDisplay())
+                        .display(exclusionDisplayPluralizor(population.getName().getDisplay()))
                         .logic(
                             HumanReadableUtil.getCQLDefinitionLogic(
                                 population.getDefinition(), allDefinitions))
@@ -455,5 +455,12 @@ public class HumanReadableService {
                             + "]")
                     .build())
         .collect(Collectors.toList());
+  }
+
+  String exclusionDisplayPluralizor(String display) {
+    if (display.endsWith("Exclusion") || display.endsWith("Exception")) {
+      return display + "s";
+    }
+    return display;
   }
 }
