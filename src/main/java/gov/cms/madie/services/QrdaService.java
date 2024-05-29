@@ -52,9 +52,6 @@ public class QrdaService {
                   objectMapper.writeValueAsString(mapper.measureToCqmMeasure(measure, elms, null)))
               .testCases(measure.getTestCases())
               .sourceDataCriteria(dataCriteria)
-              .coveragePercentage(request.getCoveragePercentage())
-              .passPercentage(request.getPassPercentage())
-              .passFailRatio(request.getPassFailRatio())
               .options(buildOptions(measure))
               .testCaseDtos(request.getTestCaseDtos())
               .build();

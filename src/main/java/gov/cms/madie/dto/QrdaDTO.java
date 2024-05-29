@@ -18,9 +18,6 @@ public class QrdaDTO {
   List<TestCase> testCases;
   // TODO waiting for SME feedback
   List<SourceDataCriteria> sourceDataCriteria;
-  String coveragePercentage;
-  Integer passPercentage;
-  String passFailRatio;
   Object options;
   Object[] testCaseDtos;
 }
