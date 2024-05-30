@@ -2,7 +2,7 @@ package gov.cms.madie.resources;
 
 import gov.cms.madie.Exceptions.UnsupportedModelException;
 import gov.cms.madie.dto.CqlLookups;
-import gov.cms.madie.dto.QrdaRequestDTO;
+import gov.cms.madie.dto.qrda.QrdaRequestDTO;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.services.*;
 import gov.cms.madie.models.measure.Measure;

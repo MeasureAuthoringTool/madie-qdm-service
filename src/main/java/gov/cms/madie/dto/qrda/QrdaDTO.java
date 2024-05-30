@@ -1,5 +1,6 @@
-package gov.cms.madie.dto;
+package gov.cms.madie.dto.qrda;
 
+import gov.cms.madie.dto.SourceDataCriteria;
 import gov.cms.madie.models.measure.TestCase;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,5 +20,5 @@ public class QrdaDTO {
   // TODO waiting for SME feedback
   List<SourceDataCriteria> sourceDataCriteria;
   Object options;
-  Object[] testCaseDtos;
+  QrdaGroupDTO[] groupDTOs;
 }

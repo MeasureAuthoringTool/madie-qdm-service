@@ -1,9 +1,9 @@
 package gov.cms.madie.services;
 
 import gov.cms.madie.dto.CqlLookups;
-import gov.cms.madie.dto.QrdaExportResponseDto;
-import gov.cms.madie.dto.QrdaReportDTO;
-import gov.cms.madie.dto.QrdaRequestDTO;
+import gov.cms.madie.dto.qrda.QrdaExportResponseDto;
+import gov.cms.madie.dto.qrda.QrdaReportDTO;
+import gov.cms.madie.dto.qrda.QrdaRequestDTO;
 import gov.cms.madie.models.dto.TranslatedLibrary;
 import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.models.measure.QdmMeasure;

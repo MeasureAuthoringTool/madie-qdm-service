@@ -3,9 +3,9 @@ package gov.cms.madie.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.cms.madie.Exceptions.QrdaServiceException;
-import gov.cms.madie.dto.QrdaDTO;
-import gov.cms.madie.dto.QrdaExportResponseDto;
-import gov.cms.madie.dto.QrdaRequestDTO;
+import gov.cms.madie.dto.qrda.QrdaDTO;
+import gov.cms.madie.dto.qrda.QrdaExportResponseDto;
+import gov.cms.madie.dto.qrda.QrdaRequestDTO;
 import gov.cms.madie.dto.SourceDataCriteria;
 import gov.cms.madie.models.dto.TranslatedLibrary;
 import gov.cms.madie.models.measure.QdmMeasure;
@@ -53,7 +53,7 @@ public class QrdaService {
               .testCases(measure.getTestCases())
               .sourceDataCriteria(dataCriteria)
               .options(buildOptions(measure))
-              .testCaseDtos(request.getTestCaseDtos())
+              .groupDTOs(request.getGroupDTOs())
               .build();
     } catch (JsonProcessingException e) {
       throw new QrdaServiceException("Problem mapping the measure for QRDA generation", e);

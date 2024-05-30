@@ -1,6 +1,5 @@
-package gov.cms.madie.dto;
+package gov.cms.madie.dto.qrda;
 
-import gov.cms.madie.models.measure.Measure;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,8 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class QrdaRequestDTO {
-  Measure measure;
-  Object options;
-  Object[] testCaseDtos;
+public class QrdaGroupStratificationDTO {
+  String testCaseId;
+  String stratId;
+  String stratName;
+  StratificationDTO[] stratificationDtos;
 }

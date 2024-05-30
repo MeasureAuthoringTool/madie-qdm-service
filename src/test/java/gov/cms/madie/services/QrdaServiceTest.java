@@ -3,16 +3,16 @@ package gov.cms.madie.services;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.cms.madie.Exceptions.QrdaServiceException;
-import gov.cms.madie.dto.QrdaDTO;
-import gov.cms.madie.dto.QrdaExportResponseDto;
-import gov.cms.madie.dto.QrdaReportDTO;
+import gov.cms.madie.dto.qrda.QrdaDTO;
+import gov.cms.madie.dto.qrda.QrdaExportResponseDto;
+import gov.cms.madie.dto.qrda.QrdaReportDTO;
 import gov.cms.madie.dto.SourceDataCriteria;
+import gov.cms.madie.dto.qrda.QrdaRequestDTO;
 import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.cqm.CqmMeasure;
 import gov.cms.madie.models.dto.TranslatedLibrary;
 import gov.cms.madie.models.measure.*;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -60,7 +60,6 @@ class QrdaServiceTest {
   }
 
   @Test
-  @Disabled //TODO
   void convertToCqmMeasure() throws Exception {
     CqmMeasure cqmMeasure = CqmMeasure.builder().id("1").description("test").build();
     when(translationServiceClient.getTranslatedLibraries(any(String.class), any(String.class)))
@@ -84,7 +83,8 @@ class QrdaServiceTest {
     when(client.getQRDA(captor.capture(), eq("testToken"), eq("testId")))
         .thenReturn(clientResponse);
 
-    QrdaExportResponseDto result = qrdaService.generateQrda(qdmMeasure, "testToken");
+    QrdaExportResponseDto result =
+        qrdaService.generateQrda(QrdaRequestDTO.builder().measure(qdmMeasure).build(), "testToken");
 
     QrdaDTO dto = captor.getValue();
     assertTrue(dto.getMeasure().contains("test"));
@@ -119,7 +119,9 @@ class QrdaServiceTest {
     Exception ex =
         assertThrows(
             QrdaServiceException.class,
-            () -> qrdaService.generateQrda(qdmMeasure, "testToken"),
+            () ->
+                qrdaService.generateQrda(
+                    QrdaRequestDTO.builder().measure(qdmMeasure).build(), "testToken"),
             "Problem mapping the measure for QRDA generation");
     assertThat(ex.getMessage(), containsString("Problem mapping the measure for QRDA generation"));
   }
