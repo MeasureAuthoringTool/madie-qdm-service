@@ -1,5 +1,8 @@
 package gov.cms.madie.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 public class HumanReadableDateUtil {
 
   public static String getFormattedMeasurementPeriod(
@@ -27,21 +30,21 @@ public class HumanReadableDateUtil {
     if (" ".equals(formattedEndDate)) {
       through = "";
     }
-
     return formattedStartDate + through + formattedEndDate;
   }
 
   private static String formatDate(String date) {
     String returnDate = " ";
     // The string should be 8 characters long if not return " "
-    if (date.length() == 8) {
+    if (isValidLongDate(date)) {
+      returnDate = date;
+    } else if (date.length() == 8) {
       // Separate the string into year, month, and dat
       String year = date.substring(0, 4);
       String month = date.substring(4, 6);
       String day = date.substring(6, 8);
       // Get the string version of the month
       month = getMonth(month);
-
       // if the day starts with a zero only display the second digit
       if (day.charAt(0) == '0') {
         day = day.substring(1, 2);
@@ -51,6 +54,7 @@ public class HumanReadableDateUtil {
     else if (date.length() == 11 || date.length() == 12) {
       returnDate = date;
     }
+
     return returnDate;
   }
 
@@ -94,5 +98,17 @@ public class HumanReadableDateUtil {
     String formattedEndDate = getMonth(endDateMonth[0]) + endDateMonth[1] + ", " + endDateMonth[2];
 
     return formattedStartDate + " through " + formattedEndDate;
+  }
+
+  public static boolean isValidLongDate(String dateString) {
+    SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy");
+    dateFormat.setLenient(false); // Strict date parsing
+
+    try {
+      dateFormat.parse(dateString);
+      return true;
+    } catch (ParseException e) {
+      return false;
+    }
   }
 }
