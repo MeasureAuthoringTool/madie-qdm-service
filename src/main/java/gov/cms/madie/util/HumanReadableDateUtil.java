@@ -36,7 +36,7 @@ public class HumanReadableDateUtil {
   private static String formatDate(String date) {
     String returnDate = " ";
     // The string should be 8 characters long if not return " "
-    if (isValidLongDate(date)) {
+    if (isValidDateWithFullMonth(date)) {
       returnDate = date;
     } else if (date.length() == 8) {
       // Separate the string into year, month, and dat
@@ -100,7 +100,7 @@ public class HumanReadableDateUtil {
     return formattedStartDate + " through " + formattedEndDate;
   }
 
-  public static boolean isValidLongDate(String dateString) {
+  public static boolean isValidDateWithFullMonth(String dateString) {
     SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy");
     dateFormat.setLenient(false); // Strict date parsing
 
