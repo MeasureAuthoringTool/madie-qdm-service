@@ -141,9 +141,11 @@ public class HumanReadableService {
             // TODO needs safety check
             .patientBased(patientBased)
             .measurementPeriodStartDate(
-                DateFormat.getDateInstance().format(measure.getMeasurementPeriodStart()))
+                DateFormat.getDateInstance(DateFormat.LONG, Locale.US)
+                    .format(measure.getMeasurementPeriodStart()))
             .measurementPeriodEndDate(
-                DateFormat.getDateInstance().format(measure.getMeasurementPeriodEnd()))
+                DateFormat.getDateInstance(DateFormat.LONG, Locale.US)
+                    .format(measure.getMeasurementPeriodEnd()))
             .measureScoring(measureScoring) // All groups expected to have same scoring
             .description(measure.getMeasureMetaData().getDescription())
             .copyright(measure.getMeasureMetaData().getCopyright())
