@@ -3,8 +3,9 @@ package gov.cms.madie.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.cms.madie.Exceptions.QrdaServiceException;
-import gov.cms.madie.dto.QRDADto;
-import gov.cms.madie.dto.QrdaExportResponseDto;
+import gov.cms.madie.dto.qrda.QrdaDTO;
+import gov.cms.madie.dto.qrda.QrdaExportResponseDto;
+import gov.cms.madie.dto.qrda.QrdaRequestDTO;
 import gov.cms.madie.dto.SourceDataCriteria;
 import gov.cms.madie.models.dto.TranslatedLibrary;
 import gov.cms.madie.models.measure.QdmMeasure;
@@ -30,7 +31,8 @@ public class QrdaService {
   private final QrdaClient client;
   private final ObjectMapper objectMapper;
 
-  public QrdaExportResponseDto generateQrda(QdmMeasure measure, String accessToken) {
+  public QrdaExportResponseDto generateQrda(QrdaRequestDTO request, String accessToken) {
+    QdmMeasure measure = (QdmMeasure) request.getMeasure();
     // get Libraries
     List<TranslatedLibrary> translatedLibraries =
         translationServiceClient.getTranslatedLibraries(measure.getCql(), accessToken);
@@ -42,16 +44,16 @@ public class QrdaService {
     List<SourceDataCriteria> dataCriteria =
         translationServiceClient.getRelevantDataElements(measure, accessToken);
 
-    QRDADto dto = null;
+    QrdaDTO dto = null;
     try {
-
       dto =
-          QRDADto.builder()
+          QrdaDTO.builder()
               .measure(
                   objectMapper.writeValueAsString(mapper.measureToCqmMeasure(measure, elms, null)))
               .testCases(measure.getTestCases())
               .sourceDataCriteria(dataCriteria)
               .options(buildOptions(measure))
+              .groupDTOs(request.getGroupDTOs())
               .build();
     } catch (JsonProcessingException e) {
       throw new QrdaServiceException("Problem mapping the measure for QRDA generation", e);

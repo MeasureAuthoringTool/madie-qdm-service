@@ -1,6 +1,7 @@
 package gov.cms.madie.resources;
 
 import gov.cms.madie.dto.CqlLookups;
+import gov.cms.madie.dto.qrda.QrdaRequestDTO;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.services.*;
 import gov.cms.madie.models.measure.Measure;
@@ -19,8 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -164,8 +164,8 @@ class PackageControllerMvcTest implements ResourceFileUtil {
 
   @Test
   void testGetQRDASuccess() throws Exception {
-    String measureJson = getStringFromTestResource("/measures/qdm-test-measure.json");
-    Mockito.when(packagingService.createQRDA(new Measure(), TOKEN))
+    String measureJson = getStringFromTestResource("/measures/qrda-qdm-test.json");
+    Mockito.when(packagingService.createQRDA(any(), eq(TOKEN)))
         .thenReturn("measure package".getBytes());
     mockMvc
         .perform(
@@ -178,12 +178,12 @@ class PackageControllerMvcTest implements ResourceFileUtil {
         .andExpect(status().isOk())
         .andReturn();
 
-    verify(packagingService, times(1)).createQRDA(any(Measure.class), anyString());
+    verify(packagingService, times(1)).createQRDA(any(QrdaRequestDTO.class), anyString());
   }
 
   @Test
   void testGetQRDAUnsupportedModel() throws Exception {
-    String measureJson = getStringFromTestResource("/measures/qicore-test-measure.json");
+    String measureJson = getStringFromTestResource("/measures/qrda-qicore-test.json");
     MvcResult mockResult =
         mockMvc
             .perform(

@@ -1,0 +1,71 @@
+{
+  "measure": {
+    "id": "6564ac8a5159a90bd713bea5",
+    "measureHumanReadableId": null,
+    "measureSetId": "3abdaa71-3683-4afe-829f-278cadc82950",
+    "version": "0.0.000",
+    "revisionNumber": null,
+    "state": null,
+    "cqlLibraryName": "QICoreTestMeasure",
+    "ecqmTitle": "QICoreTestMeasure",
+    "measureName": "QICoreTestMeasure",
+    "active": true,
+    "cqlErrors": false,
+    "errors": [],
+    "cql": "fake cql",
+    "elmJson": null,
+    "elmXml": null,
+    "testCases": [],
+    "groups": [
+    ],
+    "createdAt": "2023-11-27T14:49:46.742Z",
+    "createdBy": "john doe",
+    "lastModifiedAt": "2023-12-18T16:38:12.125Z",
+    "lastModifiedBy": "John doe",
+    "measurementPeriodStart": "2020-01-01T00:00:00.000+00:00",
+    "measurementPeriodEnd": "2020-12-31T23:59:59.999+00:00",
+    "supplementalData": [],
+    "supplementalDataDescription": null,
+    "riskAdjustments": [],
+    "riskAdjustmentDescription": null,
+    "model": "QI-Core v4.1.1",
+    "measureMetaData": {
+      "steward": null,
+      "developers": null,
+      "description": null,
+      "copyright": null,
+      "disclaimer": null,
+      "rationale": null,
+      "guidance": null,
+      "clinicalRecommendation": null,
+      "draft": true,
+      "references": null,
+      "endorsements": null,
+      "riskAdjustment": null,
+      "definition": null,
+      "experimental": true,
+      "transmissionFormat": null,
+      "supplementalDataElements": null
+    },
+    "versionId": "b84bf535-e179-49d1-8871-c08056358275",
+    "cmsId": null,
+    "reviewMetaData": {
+      "approvalDate": null,
+      "lastReviewDate": null
+    },
+    "measureSet": {
+      "id": "6564ac8a5159a90bd713bea6",
+      "measureSetId": "3abdaa71-3683-4afe-829f-278cadc82950",
+      "owner": "john_doe",
+      "acls": null
+    },
+    "scoring": "Cohort",
+    "baseConfigurationTypes": [
+      "Efficiency"
+    ],
+    "patientBasis": false,
+    "rateAggregation": null,
+    "improvementNotation": null
+  },
+  "groupDTOs": []
+}

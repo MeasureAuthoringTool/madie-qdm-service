@@ -3,10 +3,11 @@ package gov.cms.madie.services;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gov.cms.madie.Exceptions.QrdaServiceException;
-import gov.cms.madie.dto.QRDADto;
-import gov.cms.madie.dto.QrdaExportResponseDto;
-import gov.cms.madie.dto.QrdaReportDto;
+import gov.cms.madie.dto.qrda.QrdaDTO;
+import gov.cms.madie.dto.qrda.QrdaExportResponseDto;
+import gov.cms.madie.dto.qrda.QrdaReportDTO;
 import gov.cms.madie.dto.SourceDataCriteria;
+import gov.cms.madie.dto.qrda.QrdaRequestDTO;
 import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.cqm.CqmMeasure;
 import gov.cms.madie.models.dto.TranslatedLibrary;
@@ -71,9 +72,9 @@ class QrdaServiceTest {
 
     when(objectMapper.writeValueAsString(any(CqmMeasure.class))).thenReturn(cqmMeasure.toString());
 
-    ArgumentCaptor<QRDADto> captor = ArgumentCaptor.forClass(QRDADto.class);
-    List<QrdaReportDto> qrdaExport =
-        List.of(QrdaReportDto.builder().qrda("qrda").filename("1_test").report("report").build());
+    ArgumentCaptor<QrdaDTO> captor = ArgumentCaptor.forClass(QrdaDTO.class);
+    List<QrdaReportDTO> qrdaExport =
+        List.of(QrdaReportDTO.builder().qrda("qrda").filename("1_test").report("report").build());
     QrdaExportResponseDto clientResponse =
         QrdaExportResponseDto.builder()
             .summaryReport("summaryReport")
@@ -82,9 +83,10 @@ class QrdaServiceTest {
     when(client.getQRDA(captor.capture(), eq("testToken"), eq("testId")))
         .thenReturn(clientResponse);
 
-    QrdaExportResponseDto result = qrdaService.generateQrda(qdmMeasure, "testToken");
+    QrdaExportResponseDto result =
+        qrdaService.generateQrda(QrdaRequestDTO.builder().measure(qdmMeasure).build(), "testToken");
 
-    QRDADto dto = captor.getValue();
+    QrdaDTO dto = captor.getValue();
     assertTrue(dto.getMeasure().contains("test"));
     assertFalse(dto.getTestCases().isEmpty());
     assertEquals(1, dto.getTestCases().size());
@@ -117,7 +119,9 @@ class QrdaServiceTest {
     Exception ex =
         assertThrows(
             QrdaServiceException.class,
-            () -> qrdaService.generateQrda(qdmMeasure, "testToken"),
+            () ->
+                qrdaService.generateQrda(
+                    QrdaRequestDTO.builder().measure(qdmMeasure).build(), "testToken"),
             "Problem mapping the measure for QRDA generation");
     assertThat(ex.getMessage(), containsString("Problem mapping the measure for QRDA generation"));
   }
