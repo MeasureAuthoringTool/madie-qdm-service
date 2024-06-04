@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -322,10 +323,14 @@ class HumanReadableServiceTest {
         equalTo(measure.getGroups().get(0).getPopulationBasis().equals("boolean")));
     assertThat(
         measureInfoModel.getMeasurementPeriodStartDate(),
-        equalTo(DateFormat.getDateInstance().format(measure.getMeasurementPeriodStart())));
+        equalTo(
+            DateFormat.getDateInstance(DateFormat.LONG, Locale.US)
+                .format(measure.getMeasurementPeriodStart())));
     assertThat(
         measureInfoModel.getMeasurementPeriodEndDate(),
-        equalTo(DateFormat.getDateInstance().format(measure.getMeasurementPeriodEnd())));
+        equalTo(
+            DateFormat.getDateInstance(DateFormat.LONG, Locale.US)
+                .format(measure.getMeasurementPeriodEnd())));
     assertThat(
         measureInfoModel.getMeasureScoring(),
         equalTo(
