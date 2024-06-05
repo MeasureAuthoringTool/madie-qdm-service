@@ -2,6 +2,7 @@ package gov.cms.madie.resources;
 
 import gov.cms.madie.Exceptions.UnsupportedModelException;
 import gov.cms.madie.dto.CqlLookups;
+import gov.cms.madie.dto.qrda.QrdaRequestDTO;
 import gov.cms.madie.models.measure.FhirMeasure;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.services.HqmfService;
@@ -150,8 +151,10 @@ class PackageControllerTest {
   @Test
   void testGetQRDASuccess() {
     String qrda = "test QRDA";
-    when(packagingService.createQRDA(measure, TOKEN)).thenReturn(qrda.getBytes());
-    byte[] result = packageController.getQRDA(measure, TOKEN);
+    when(packagingService.createQRDA(QrdaRequestDTO.builder().measure(measure).build(), TOKEN))
+        .thenReturn(qrda.getBytes());
+    byte[] result =
+        packageController.getQRDA(QrdaRequestDTO.builder().measure(measure).build(), TOKEN);
     assertThat(new String(result), is(equalTo(qrda)));
   }
 
@@ -162,7 +165,8 @@ class PackageControllerTest {
     Exception ex =
         Assertions.assertThrows(
             UnsupportedModelException.class,
-            () -> packageController.getQRDA(measure, TOKEN),
+            () ->
+                packageController.getQRDA(QrdaRequestDTO.builder().measure(measure).build(), TOKEN),
             errorMessage);
     assertThat(ex.getMessage(), is(equalTo(errorMessage)));
   }
@@ -174,7 +178,8 @@ class PackageControllerTest {
     Exception ex =
         Assertions.assertThrows(
             UnsupportedModelException.class,
-            () -> packageController.getQRDA(measure, TOKEN),
+            () ->
+                packageController.getQRDA(QrdaRequestDTO.builder().measure(measure).build(), TOKEN),
             errorMessage);
     assertThat(ex.getMessage(), is(equalTo(errorMessage)));
   }

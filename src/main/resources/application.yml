@@ -7,7 +7,7 @@ madie:
   allowedApi: http://localhost:9000
   cql-elm:
     service:
-      base-url: ${ELM_TRANSLATOR_SERVICE_URL:http://localhost:8084/api}
+      base-url: ${QDM_ELM_TRANSLATOR_SERVICE_URL:http://localhost:8084/api/qdm}
       cql-elm-urn: /cql/elm
       cql-lookups: /cql/lookups
       relevant-data-elements: /cql/relevant-elements

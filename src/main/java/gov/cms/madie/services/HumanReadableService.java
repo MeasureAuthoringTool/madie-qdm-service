@@ -141,9 +141,11 @@ public class HumanReadableService {
             // TODO needs safety check
             .patientBased(patientBased)
             .measurementPeriodStartDate(
-                DateFormat.getDateInstance().format(measure.getMeasurementPeriodStart()))
+                DateFormat.getDateInstance(DateFormat.LONG, Locale.US)
+                    .format(measure.getMeasurementPeriodStart()))
             .measurementPeriodEndDate(
-                DateFormat.getDateInstance().format(measure.getMeasurementPeriodEnd()))
+                DateFormat.getDateInstance(DateFormat.LONG, Locale.US)
+                    .format(measure.getMeasurementPeriodEnd()))
             .measureScoring(measureScoring) // All groups expected to have same scoring
             .description(measure.getMeasureMetaData().getDescription())
             .copyright(measure.getMeasureMetaData().getCopyright())
@@ -230,7 +232,7 @@ public class HumanReadableService {
                     HumanReadablePopulationModel.builder()
                         .name(population.getName().name())
                         .id(population.getId())
-                        .display(population.getName().getDisplay())
+                        .display(exclusionDisplayPluralizor(population.getName().getDisplay()))
                         .logic(
                             HumanReadableUtil.getCQLDefinitionLogic(
                                 population.getDefinition(), allDefinitions))
@@ -244,7 +246,17 @@ public class HumanReadableService {
   List<HumanReadablePopulationModel> buildStratification(
       Group group, Set<CQLDefinition> allDefinitions) {
     if (CollectionUtils.isEmpty(group.getStratifications())) {
-      return Collections.emptyList();
+      HumanReadablePopulationModel emptyStrat =
+          HumanReadablePopulationModel.builder()
+              .name("Stratification")
+              .display("Stratification")
+              .logic("None")
+              .id("None")
+              .inGroup(false)
+              .expressionName("None")
+              .build();
+
+      return new ArrayList<HumanReadablePopulationModel>(Arrays.asList(emptyStrat));
     }
     List<HumanReadablePopulationModel> model = new ArrayList<>(group.getStratifications().size());
     for (int i = 0; i < group.getStratifications().size(); i++) {
@@ -455,5 +467,12 @@ public class HumanReadableService {
                             + "]")
                     .build())
         .collect(Collectors.toList());
+  }
+
+  String exclusionDisplayPluralizor(String display) {
+    if (display.endsWith("Exclusion") || display.endsWith("Exception")) {
+      return display + "s";
+    }
+    return display;
   }
 }
