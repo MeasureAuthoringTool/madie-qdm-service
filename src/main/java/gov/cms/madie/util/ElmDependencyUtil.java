@@ -12,7 +12,7 @@ import org.json.JSONObject;
 @Slf4j
 public class ElmDependencyUtil {
 
-  public static List<StatementDependency> findDependencies(
+  public static Map<String, List<StatementDependency>> findDependencies(
       List<String> cqlLibraryElms, String mainCqlLibraryName) {
     Map<String, List<StatementDependency>> neededElmDepsMap = new HashMap<>();
     Map<String, List<StatementDependency>> allElmsDepMap = new HashMap<>();
@@ -28,7 +28,7 @@ public class ElmDependencyUtil {
         throw new QrdaServiceException("library or identifier missing");
       }
       String elmId = elmJson.getJSONObject("library").getJSONObject("identifier").getString("id");
-      neededElmDepsMap.put(elmId, List.of(buildStatementDependency(elmId, null, null)));
+      neededElmDepsMap.put(elmId, new ArrayList());
       allElmsDepMap.put(elmId, makeStatementDepsForElm(elmJson));
     }
     neededElmDepsMap.put(mainCqlLibraryName, allElmsDepMap.get(mainCqlLibraryName));
@@ -42,7 +42,7 @@ public class ElmDependencyUtil {
                       reference ->
                           deepAddExternalLibraryDeps(reference, neededElmDepsMap, allElmsDepMap));
             });
-    return neededElmDepsMap.get(mainCqlLibraryName);
+    return neededElmDepsMap;
   }
 
   private static List<StatementDependency> makeStatementDepsForElm(JSONObject elmJson) {
@@ -74,34 +74,38 @@ public class ElmDependencyUtil {
       String parentName,
       List<StatementDependency> elmDeps,
       Map<String, String> includedLibrariesMap) {
+    String parent = parentName;
     if (obj instanceof JSONArray) {
       ((JSONArray) obj)
           .forEach(
               el ->
                   generateStatementDepsForElmHelper(
-                      el, libraryId, parentName, elmDeps, includedLibrariesMap));
+                      el, libraryId, parent, elmDeps, includedLibrariesMap));
     } else if (obj instanceof JSONObject jsonObj) {
       List<String> ref = List.of("ExpressionRef", "FunctionRef");
       if (jsonObj.has("type")
           && ref.contains(jsonObj.getString("type"))
-          && !"Patient".equals(parentName)
-          && null != parentName) {
+          && !"Patient".equals(parentName)) {
         if (elmDeps.isEmpty()) {
           elmDeps.add(buildStatementDependency(parentName, libraryId, jsonObj));
         } else {
           elmDeps.stream()
-              .map(
+              .filter(statementDependency -> parent.equals(statementDependency.getStatement_name()))
+              .forEach(
                   statementDependency -> {
-                    if (parentName.equals(statementDependency.getStatement_name())) {
+                    if (jsonObj.has("libraryName")
+                        && includedLibrariesMap.containsKey(jsonObj.get("libraryName"))) {
                       statementDependency
                           .getStatement_references()
                           .add(
                               buildStatementReference(
-                                  includedLibrariesMap.getOrDefault(
-                                      jsonObj.getString("libraryName"), libraryId),
+                                  includedLibrariesMap.get(jsonObj.getString("libraryName")),
                                   jsonObj));
+                    } else {
+                      statementDependency
+                          .getStatement_references()
+                          .add(buildStatementReference(libraryId, jsonObj));
                     }
-                    return statementDependency;
                   });
         }
       } else if (jsonObj.has("name") && jsonObj.has("expression")) {
@@ -114,6 +118,7 @@ public class ElmDependencyUtil {
                 .findAny()
                 .orElseGet(() -> buildStatementDependency(newParentName, null, null));
         elmDeps.add(dep);
+        parentName = newParentName;
       }
       for (String key : jsonObj.keySet()) {
         if (!key.equals("annotation")) {

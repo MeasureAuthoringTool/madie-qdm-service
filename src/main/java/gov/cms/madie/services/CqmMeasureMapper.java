@@ -10,7 +10,6 @@ import gov.cms.madie.models.cqm.datacriteria.basetypes.DataElement;
 import gov.cms.madie.models.cqm.datacriteria.*;
 import gov.cms.madie.models.measure.*;
 import gov.cms.madie.util.ElmDependencyUtil;
-import org.bson.json.JsonObject;
 import org.json.JSONObject;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -52,54 +51,46 @@ public interface CqmMeasureMapper {
   }
 
   default MeasurePeriod getMeasurePeriod(QdmMeasure measure) {
-    PeriodPoint low = PeriodPoint.builder().value(measure
-            .getMeasurementPeriodStart()
-            .toInstant()
-            .atZone(ZoneId.of("UTC"))
-            .toLocalDateTime()
-            .format(DateTimeFormatter.ofPattern("yyyyMMddHH")).toString()).build();
-//    JSONObject low = new JSONObject();
-//    low.put(
-//        "value",
-//        measure
-//            .getMeasurementPeriodStart()
-//            .toInstant()
-//            .atZone(ZoneId.of("UTC"))
-//            .toLocalDateTime()
-//            .format(DateTimeFormatter.ofPattern("yyyyMMddHH")));
-
-//    JSONObject high = new JSONObject();
-//    high.put(
-//        "value",
-//        measure
-//            .getMeasurementPeriodEnd()
-//            .toInstant()
-//            .atZone(ZoneId.of("UTC"))
-//            .toLocalDateTime()
-//            .format(DateTimeFormatter.ofPattern("yyyyMMddHH")));
-    PeriodPoint high = PeriodPoint.builder().value(measure
-            .getMeasurementPeriodEnd()
-            .toInstant()
-            .atZone(ZoneId.of("UTC"))
-            .toLocalDateTime()
-            .format(DateTimeFormatter.ofPattern("yyyyMMddHH")).toString()).build();
+    PeriodPoint low =
+        PeriodPoint.builder()
+            .value(
+                measure
+                    .getMeasurementPeriodStart()
+                    .toInstant()
+                    .atZone(ZoneId.of("UTC"))
+                    .toLocalDateTime()
+                    .format(DateTimeFormatter.ofPattern("yyyyMMddHH"))
+                    .toString())
+            .build();
+    PeriodPoint high =
+        PeriodPoint.builder()
+            .value(
+                measure
+                    .getMeasurementPeriodEnd()
+                    .toInstant()
+                    .atZone(ZoneId.of("UTC"))
+                    .toLocalDateTime()
+                    .format(DateTimeFormatter.ofPattern("yyyyMMddHH"))
+                    .toString())
+            .build();
 
     return MeasurePeriod.builder().low(low).high(high).build();
   }
 
   default List<CQLLibrary> getCqlLibraries(QdmMeasure measure, List<String> elms) {
 
-    List<StatementDependency> statements =
+    Map<String, List<StatementDependency>> statements =
         ElmDependencyUtil.findDependencies(elms, measure.getCqlLibraryName());
 
-    List<StatementDependency> finalStatements = statements;
     return elms.stream()
-        .map(elm -> buildCQLLibrary(elm, measure.getCqlLibraryName(), finalStatements))
+        .map(elm -> buildCQLLibrary(elm, measure.getCqlLibraryName(), statements))
         .collect(Collectors.toList());
   }
 
   default CQLLibrary buildCQLLibrary(
-      String elm, String measureLibraryName, List<StatementDependency> statementDependencies) {
+      String elm,
+      String measureLibraryName,
+      Map<String, List<StatementDependency>> statementDependencies) {
 
     JSONObject elmJson = new JSONObject(elm);
     if (elmJson.has("library") && elmJson.getJSONObject("library").has("valueSets")) {
@@ -133,7 +124,8 @@ public interface CqmMeasureMapper {
             // true for all non-composite measures
             .is_top_level(true)
             .statement_dependencies(
-                statementDependencies)
+                statementDependencies.get(
+                    elmJson.getJSONObject("library").getJSONObject("identifier").getString("id")))
             .build();
 
     cqlLibrary.setElm(elmJson.toMap());
@@ -272,75 +264,76 @@ public interface CqmMeasureMapper {
   }
 
   default List<PopulationSet> getPopulationSets(QdmMeasure measure) {
-        if (CollectionUtils.isEmpty(measure.getGroups())) {
-          return null;
-        }
-
-      String measureScoring = measure.getScoring().replaceAll(" +", "");
-      List<PopulationSet> populationSets = new ArrayList<>();
-      for (int i = 0; i < measure.getGroups().size(); i++) {
-        String groupId = measure.getGroups().get(i).getId();
-        PopulationSet populationSet =
-            PopulationSet.builder()
-                .id(groupId)
-                .title("Population Criteria Section")
-                .population_set_id(groupId)
-                .populations(
-                    generateCqmPopulations(
-                        measure.getGroups().get(i).getPopulations(), measure.getCqlLibraryName(),
-   measureScoring))
-                .stratifications(
-                    generateCqmStratifications(
-                        measure.getGroups().get(i).getStratifications(),
-                        measure.getCqlLibraryName(),
-                        i))
-                .supplemental_data_elements(
-                    generateCqmSupplementalDataElements(
-                        measure.getSupplementalData(), measure.getCqlLibraryName()))
-                .build();
-        if (measureScoring.equals("ContinuousVariable") || measureScoring.equals("Ratio")) {
-          populationSet.setObservations(generateCqmObservations(measure));
-        }
-        populationSets.add(populationSet);
-      }
-      return populationSets;
+    if (CollectionUtils.isEmpty(measure.getGroups())) {
+      return null;
     }
 
-    default String mapPopulationName(PopulationType populationName) {
-      switch (populationName) {
-        case INITIAL_POPULATION:
-          return "IPP";
-        case DENOMINATOR:
-          return "DENOM";
-        case DENOMINATOR_EXCLUSION:
-          return "DENEX";
-        case DENOMINATOR_EXCEPTION:
-          return "DENEXCEP";
-        case NUMERATOR:
-          return "NUMER";
-        case NUMERATOR_EXCLUSION:
-          return "NUMEX";
-        case MEASURE_POPULATION:
-          return "MSRPOPL";
-        case MEASURE_POPULATION_EXCLUSION:
-          return "MSRPOPLEX";
-        default:
-          return populationName.name();
+    String measureScoring = measure.getScoring().replaceAll(" +", "");
+    List<PopulationSet> populationSets = new ArrayList<>();
+    for (int i = 0; i < measure.getGroups().size(); i++) {
+      String groupId = measure.getGroups().get(i).getId();
+      PopulationSet populationSet =
+          PopulationSet.builder()
+              .id(groupId)
+              .title("Population Criteria Section")
+              .population_set_id(groupId)
+              .populations(
+                  generateCqmPopulations(
+                      measure.getGroups().get(i).getPopulations(),
+                      measure.getCqlLibraryName(),
+                      measureScoring))
+              .stratifications(
+                  generateCqmStratifications(
+                      measure.getGroups().get(i).getStratifications(),
+                      measure.getCqlLibraryName(),
+                      i))
+              .supplemental_data_elements(
+                  generateCqmSupplementalDataElements(
+                      measure.getSupplementalData(), measure.getCqlLibraryName()))
+              .build();
+      if (measureScoring.equals("ContinuousVariable") || measureScoring.equals("Ratio")) {
+        populationSet.setObservations(generateCqmObservations(measure));
       }
+      populationSets.add(populationSet);
     }
+    return populationSets;
+  }
 
-    default PopulationMap determinePopulationType(Map<String, Object> acc, String measureScoring)
-   {
-      ObjectMapper mapper = new ObjectMapper();
-      mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
-     try {
-       switch (measureScoring){
+  default String mapPopulationName(PopulationType populationName) {
+    switch (populationName) {
+      case INITIAL_POPULATION:
+        return "IPP";
+      case DENOMINATOR:
+        return "DENOM";
+      case DENOMINATOR_EXCLUSION:
+        return "DENEX";
+      case DENOMINATOR_EXCEPTION:
+        return "DENEXCEP";
+      case NUMERATOR:
+        return "NUMER";
+      case NUMERATOR_EXCLUSION:
+        return "NUMEX";
+      case MEASURE_POPULATION:
+        return "MSRPOPL";
+      case MEASURE_POPULATION_EXCLUSION:
+        return "MSRPOPLEX";
+      default:
+        return populationName.name();
+    }
+  }
+
+  default PopulationMap determinePopulationType(Map<String, Object> acc, String measureScoring) {
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+    try {
+      switch (measureScoring) {
         case "Cohort":
           acc.put("@class", CohortPopulationMap.class);
           return mapper.readValue(mapper.writeValueAsString(acc), CohortPopulationMap.class);
         case "ContinuousVariable":
           acc.put("@class", ContinuousVariablePopulationMap.class);
-          return mapper.readValue(mapper.writeValueAsString(acc), ContinuousVariablePopulationMap.class);
+          return mapper.readValue(
+              mapper.writeValueAsString(acc), ContinuousVariablePopulationMap.class);
         case "Proportion":
           acc.put("@class", ProportionPopulationMap.class);
           return mapper.readValue(mapper.writeValueAsString(acc), ProportionPopulationMap.class);
@@ -349,116 +342,115 @@ public interface CqmMeasureMapper {
           return mapper.readValue(mapper.writeValueAsString(acc), RatioPopulationMap.class);
         default:
           return null;
-       }
-
-       } catch (JsonProcessingException e) {
-       throw new RuntimeException(e);
-     }
-
-    }
-
-    default PopulationMap generateCqmPopulations(
-            List<Population> populations, String cqlLibraryName, String measureScoring) {
-      ObjectMapper mapper = new ObjectMapper();
-      Map<String, Object> acc = new HashMap<>();
-      for (Population population : populations) {
-        String key = mapPopulationName(population.getName());
-        acc.put(
-            key,
-            StatementReference.builder()
-                .id(population.getId())
-                .library_name(cqlLibraryName)
-                .statement_name(population.getDefinition())
-                .hqmf_id(null)
-                .build());
       }
-      return determinePopulationType(acc, measureScoring);
-    }
 
-    default List<CqmStratification> generateCqmStratifications(
-        List<Stratification> stratifications, String cqlLibraryName, int groupIndex) {
-      List<CqmStratification> cqmStratifications = new ArrayList<>();
-      if (stratifications != null) {
-        for (int i = 0; i < stratifications.size(); i++) {
-          Stratification stratification = stratifications.get(i);
-          CqmStratification cqmStratification =
-              CqmStratification.builder()
-                  .id(UUID.randomUUID().toString())
-                  .hqmf_id(null)
-                  .stratification_id(
-                      String.format("PopulationSet_%d_Stratification_%d", groupIndex + 1, i + 1))
-                  .title(String.format("PopSet%d Stratification %d", groupIndex + 1, i + 1))
-                  .statement(
-                      StatementReference.builder()
-                          .id(stratification.getId())
-                          .library_name(cqlLibraryName)
-                          .statement_name(stratification.getCqlDefinition())
-                          .hqmf_id(null)
-                          .build())
-                  .build();
-          cqmStratifications.add(cqmStratification);
-        }
-      }
-      return cqmStratifications;
+    } catch (JsonProcessingException e) {
+      throw new RuntimeException(e);
     }
+  }
 
-    default List<StatementReference> generateCqmSupplementalDataElements(
-        List<DefDescPair> supplementalDataElements, String cqlLibraryName) {
-      List<StatementReference> statementReferences = new ArrayList<>();
-      for (DefDescPair element : supplementalDataElements) {
-        statementReferences.add(
-            StatementReference.builder()
+  default PopulationMap generateCqmPopulations(
+      List<Population> populations, String cqlLibraryName, String measureScoring) {
+    ObjectMapper mapper = new ObjectMapper();
+    Map<String, Object> acc = new HashMap<>();
+    for (Population population : populations) {
+      String key = mapPopulationName(population.getName());
+      acc.put(
+          key,
+          StatementReference.builder()
+              .id(population.getId())
+              .library_name(cqlLibraryName)
+              .statement_name(population.getDefinition())
+              .hqmf_id(null)
+              .build());
+    }
+    return determinePopulationType(acc, measureScoring);
+  }
+
+  default List<CqmStratification> generateCqmStratifications(
+      List<Stratification> stratifications, String cqlLibraryName, int groupIndex) {
+    List<CqmStratification> cqmStratifications = new ArrayList<>();
+    if (stratifications != null) {
+      for (int i = 0; i < stratifications.size(); i++) {
+        Stratification stratification = stratifications.get(i);
+        CqmStratification cqmStratification =
+            CqmStratification.builder()
                 .id(UUID.randomUUID().toString())
-                .library_name(cqlLibraryName)
-                .statement_name(element.getDefinition())
                 .hqmf_id(null)
-                .build());
+                .stratification_id(
+                    String.format("PopulationSet_%d_Stratification_%d", groupIndex + 1, i + 1))
+                .title(String.format("PopSet%d Stratification %d", groupIndex + 1, i + 1))
+                .statement(
+                    StatementReference.builder()
+                        .id(stratification.getId())
+                        .library_name(cqlLibraryName)
+                        .statement_name(stratification.getCqlDefinition())
+                        .hqmf_id(null)
+                        .build())
+                .build();
+        cqmStratifications.add(cqmStratification);
       }
-      return statementReferences;
     }
+    return cqmStratifications;
+  }
 
-    default List<Observation> generateCqmObservations(QdmMeasure measure) {
-      List<Observation> cqmObservations = new ArrayList<>();
-      if (!CollectionUtils.isEmpty(measure.getGroups())) {
-        for (Group group : measure.getGroups()) {
-          if (!CollectionUtils.isEmpty(group.getMeasureObservations())) {
-            for (MeasureObservation observation : group.getMeasureObservations()) {
-              cqmObservations.add(
-                  Observation.builder()
-                      .id(observation.getId())
-                      .hqmf_id(null)
-                      .aggregation_type(observation.getAggregateMethod())
-                      .observation_function(
-                          StatementReference.builder()
-                              .id(UUID.randomUUID().toString())
-                              .library_name(measure.getCqlLibraryName())
-                              .statement_name(observation.getDefinition())
-                              .hqmf_id(null)
-                              .build())
-                      .observation_parameter(
-                          StatementReference.builder()
-                              .id(UUID.randomUUID().toString())
-                              .library_name(measure.getCqlLibraryName())
-                              .statement_name(
-                                  getAssociatedPopulationDefinition(
-                                      observation.getCriteriaReference(), group.getPopulations()))
-                              .hqmf_id(null)
-                              .build())
-                      .build());
-            }
+  default List<StatementReference> generateCqmSupplementalDataElements(
+      List<DefDescPair> supplementalDataElements, String cqlLibraryName) {
+    List<StatementReference> statementReferences = new ArrayList<>();
+    for (DefDescPair element : supplementalDataElements) {
+      statementReferences.add(
+          StatementReference.builder()
+              .id(UUID.randomUUID().toString())
+              .library_name(cqlLibraryName)
+              .statement_name(element.getDefinition())
+              .hqmf_id(null)
+              .build());
+    }
+    return statementReferences;
+  }
+
+  default List<Observation> generateCqmObservations(QdmMeasure measure) {
+    List<Observation> cqmObservations = new ArrayList<>();
+    if (!CollectionUtils.isEmpty(measure.getGroups())) {
+      for (Group group : measure.getGroups()) {
+        if (!CollectionUtils.isEmpty(group.getMeasureObservations())) {
+          for (MeasureObservation observation : group.getMeasureObservations()) {
+            cqmObservations.add(
+                Observation.builder()
+                    .id(observation.getId())
+                    .hqmf_id(null)
+                    .aggregation_type(observation.getAggregateMethod())
+                    .observation_function(
+                        StatementReference.builder()
+                            .id(UUID.randomUUID().toString())
+                            .library_name(measure.getCqlLibraryName())
+                            .statement_name(observation.getDefinition())
+                            .hqmf_id(null)
+                            .build())
+                    .observation_parameter(
+                        StatementReference.builder()
+                            .id(UUID.randomUUID().toString())
+                            .library_name(measure.getCqlLibraryName())
+                            .statement_name(
+                                getAssociatedPopulationDefinition(
+                                    observation.getCriteriaReference(), group.getPopulations()))
+                            .hqmf_id(null)
+                            .build())
+                    .build());
           }
         }
       }
-      return cqmObservations;
     }
+    return cqmObservations;
+  }
 
-    default String getAssociatedPopulationDefinition(
-        String criteriaReference, List<Population> populations) {
-      for (Population population : populations) {
-        if (population.getId().equals(criteriaReference)) {
-          return population.getDefinition();
-        }
+  default String getAssociatedPopulationDefinition(
+      String criteriaReference, List<Population> populations) {
+    for (Population population : populations) {
+      if (population.getId().equals(criteriaReference)) {
+        return population.getDefinition();
       }
-      return null;
     }
+    return null;
+  }
 }
