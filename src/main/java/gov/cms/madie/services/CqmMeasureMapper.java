@@ -10,6 +10,7 @@ import gov.cms.madie.models.cqm.datacriteria.basetypes.DataElement;
 import gov.cms.madie.models.cqm.datacriteria.*;
 import gov.cms.madie.models.measure.*;
 import gov.cms.madie.util.ElmDependencyUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -268,7 +269,10 @@ public interface CqmMeasureMapper {
       return null;
     }
 
-    String measureScoring = measure.getScoring().replaceAll(" +", "");
+    String measureScoring = null;
+    if (!StringUtils.isEmpty(measure.getScoring())) {
+      measureScoring = measure.getScoring().replaceAll(" +", "");
+    }
     List<PopulationSet> populationSets = new ArrayList<>();
     for (int i = 0; i < measure.getGroups().size(); i++) {
       String groupId = measure.getGroups().get(i).getId();
@@ -291,7 +295,8 @@ public interface CqmMeasureMapper {
                   generateCqmSupplementalDataElements(
                       measure.getSupplementalData(), measure.getCqlLibraryName()))
               .build();
-      if (measureScoring.equals("ContinuousVariable") || measureScoring.equals("Ratio")) {
+      if (!StringUtils.isEmpty(measureScoring)
+          && (measureScoring.equals("ContinuousVariable") || measureScoring.equals("Ratio"))) {
         populationSet.setObservations(generateCqmObservations(measure));
       }
       populationSets.add(populationSet);
@@ -351,6 +356,9 @@ public interface CqmMeasureMapper {
 
   default PopulationMap generateCqmPopulations(
       List<Population> populations, String cqlLibraryName, String measureScoring) {
+    if (StringUtils.isEmpty(measureScoring)) {
+      return null;
+    }
     ObjectMapper mapper = new ObjectMapper();
     Map<String, Object> acc = new HashMap<>();
     for (Population population : populations) {
