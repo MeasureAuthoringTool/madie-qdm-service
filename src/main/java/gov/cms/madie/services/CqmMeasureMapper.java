@@ -359,7 +359,6 @@ public interface CqmMeasureMapper {
     if (StringUtils.isEmpty(measureScoring)) {
       return null;
     }
-    ObjectMapper mapper = new ObjectMapper();
     Map<String, Object> acc = new HashMap<>();
     for (Population population : populations) {
       String key = mapPopulationName(population.getName());
