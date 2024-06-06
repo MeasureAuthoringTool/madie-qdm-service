@@ -7,6 +7,7 @@ import gov.cms.madie.dto.qrda.QrdaDTO;
 import gov.cms.madie.dto.qrda.QrdaExportResponseDto;
 import gov.cms.madie.dto.qrda.QrdaRequestDTO;
 import gov.cms.madie.dto.SourceDataCriteria;
+import gov.cms.madie.models.cqm.CqmMeasure;
 import gov.cms.madie.models.dto.TranslatedLibrary;
 import gov.cms.madie.models.measure.QdmMeasure;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.util.CollectionUtils;
 
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,10 +48,11 @@ public class QrdaService {
 
     QrdaDTO dto = null;
     try {
+      CqmMeasure cqmMeasure = mapper.measureToCqmMeasure(measure, elms, null);
+      cqmMeasure.setPopulation_sets(new ArrayList<>());
       dto =
           QrdaDTO.builder()
-              .measure(
-                  objectMapper.writeValueAsString(mapper.measureToCqmMeasure(measure, elms, null)))
+              .measure(objectMapper.writeValueAsString(cqmMeasure))
               .testCases(measure.getTestCases())
               .sourceDataCriteria(dataCriteria)
               .options(buildOptions(measure))

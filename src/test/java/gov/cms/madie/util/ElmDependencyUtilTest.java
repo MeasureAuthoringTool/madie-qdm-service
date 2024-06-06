@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -18,11 +19,23 @@ class ElmDependencyUtilTest implements ResourceFileUtil {
   void findDependencies() throws Exception {
     String elms = getStringFromTestResource("/elm/libraryElm.json");
     String elms2 = getStringFromTestResource("/elm/libraryElm2.json");
-    List<StatementDependency> dependencies =
+    Map<String, List<StatementDependency>> libraries =
         ElmDependencyUtil.findDependencies(
             List.of(elms, elms2), "UrinarySymptomScoreChangeAfterBenignProstaticHyperplasia");
 
-    assertEquals(25, dependencies.size());
+    assertEquals(2, libraries.size());
+    assertEquals(
+        25, libraries.get("UrinarySymptomScoreChangeAfterBenignProstaticHyperplasia").size());
+    assertEquals(4, libraries.get("MATGlobalCommonFunctionsQDM").size());
+    assertEquals(
+        2,
+        libraries.get("MATGlobalCommonFunctionsQDM").stream()
+            .filter(
+                statementDependency -> statementDependency.getStatement_name().equals("EarliestOf"))
+            .findFirst()
+            .get()
+            .getStatement_references()
+            .size());
   }
 
   @Test
