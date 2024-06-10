@@ -17,8 +17,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -68,6 +71,10 @@ class CqmMeasureMapperTest implements ResourceFileUtil {
     assertEquals(2, result.getCql_libraries().size());
     assertEquals(
         "UrinarySymptomScoreChangeAfterBenignProstaticHyperplasia", result.getMain_cql_library());
+    assertThat(result.getPopulation_sets(), is(notNullValue()));
+    assertThat(result.getPopulation_sets().get(0), is(notNullValue()));
+    assertThat(result.getPopulation_sets().get(0).getObservations(), is(notNullValue()));
+    assertThat(result.getPopulation_sets().get(0).getObservations().isEmpty(), is(true));
   }
 
   @Test
@@ -89,7 +96,8 @@ class CqmMeasureMapperTest implements ResourceFileUtil {
     assertEquals(
         "UrinarySymptomScoreChangeAfterBenignProstaticHyperplasia", result.getMain_cql_library());
     assertEquals(1, result.getSource_data_criteria().size());
-    assertThat(result.getSource_data_criteria().get(0)).isInstanceOf(Diagnosis.class);
+    assertThat(result.getSource_data_criteria().get(0), is(instanceOf(Diagnosis.class)));
+
     Diagnosis diagnosis = (Diagnosis) result.getSource_data_criteria().get(0);
     assertEquals("test", diagnosis.getCodeListId());
     assertEquals("test description", diagnosis.getDescription());
@@ -120,7 +128,8 @@ class CqmMeasureMapperTest implements ResourceFileUtil {
     assertEquals(
         "UrinarySymptomScoreChangeAfterBenignProstaticHyperplasia", result.getMain_cql_library());
     assertEquals(1, result.getSource_data_criteria().size());
-    assertThat(result.getSource_data_criteria().get(0)).isInstanceOf(Diagnosis.class);
+    //    assertThat(result.getSource_data_criteria().get(0)).isInstanceOf(Diagnosis.class);
+    assertThat(result.getSource_data_criteria().get(0), is(instanceOf(Diagnosis.class)));
     Diagnosis diagnosis = (Diagnosis) result.getSource_data_criteria().get(0);
     assertEquals("test", diagnosis.getCodeListId());
     assertEquals("test description", diagnosis.getDescription());
