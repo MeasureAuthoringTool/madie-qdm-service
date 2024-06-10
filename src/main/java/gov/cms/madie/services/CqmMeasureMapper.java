@@ -291,6 +291,7 @@ public interface CqmMeasureMapper {
                       measure.getGroups().get(i).getStratifications(),
                       measure.getCqlLibraryName(),
                       i))
+              .observations(List.of()) // cqm-execution needs a non-null value for observations
               .supplemental_data_elements(
                   generateCqmSupplementalDataElements(
                       measure.getSupplementalData(), measure.getCqlLibraryName()))
