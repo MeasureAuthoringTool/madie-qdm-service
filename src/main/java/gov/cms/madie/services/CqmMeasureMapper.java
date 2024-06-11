@@ -147,6 +147,10 @@ public interface CqmMeasureMapper {
 
               element.setCodeListId(criteria.getOid());
               element.setDescription(criteria.getDescription());
+              element.setDesc(criteria.getOid());
+              if (criteria.isDrc()) {
+                element.setCodeId(criteria.getCodeId());
+              }
               return element;
             })
         .toList();
