@@ -405,7 +405,7 @@ public class HumanReadableService {
                     new HumanReadableValuesetModel(
                         cqlValueSet.getName(), cqlValueSet.getOid(), cqlValueSet.getVersion(), ""))
             .sorted(
-                Comparator.comparing(HumanReadableValuesetModel::getDataCriteriaDisplay, collator))
+                Comparator.comparing(HumanReadableValuesetModel::getTerminologyDisplay))
             .toList();
     return new ArrayList<>(valueSetTerminology);
   }
@@ -426,7 +426,7 @@ public class HumanReadableService {
                         .isCodesystemVersionIncluded(
                             StringUtils.isNotBlank(cqlCode.getCodeSystemVersion()))
                         .build())
-            .sorted(Comparator.comparing(HumanReadableCodeModel::getDataCriteriaDisplay, collator))
+            .sorted(Comparator.comparing(HumanReadableCodeModel::getTerminologyDisplay))
             .toList();
     return new ArrayList<>(codeTerminology);
   }
