@@ -690,7 +690,7 @@ class HumanReadableServiceTest {
   }
 
   @Test
-  public void testSortStuff() {
+  public void testTerminologyComparatorSortsValuesets() {
 
     final List<HumanReadableTerminologyModel> terms =
         List.of(
@@ -741,7 +741,7 @@ class HumanReadableServiceTest {
   }
 
   @Test
-  public void testSortStuff2() {
+  public void testTerminologyComparatorSortsCodes() {
     final List<HumanReadableTerminologyModel> terms =
         List.of(
             new HumanReadableValuesetModel(
