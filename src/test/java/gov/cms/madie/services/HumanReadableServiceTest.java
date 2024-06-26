@@ -688,4 +688,91 @@ class HumanReadableServiceTest {
         humanReadableService.buildPopulations(group, allDefinitions);
     assertThat(CollectionUtils.isEmpty(model), is(true));
   }
+
+  @Test
+  public void testSortStuff() {
+
+    final List<HumanReadableTerminologyModel> terms =
+        List.of(
+            new HumanReadableCodeModel(
+                "T1b: Breast tumor >0.5 cm but <= 1 cm in greatest dimension (finding)",
+                "369898000",
+                "SNOMEDCT",
+                false,
+                null,
+                null),
+            new HumanReadableCodeModel("T1b", "LA3633-0", "LOINC", false, null, null),
+            new HumanReadableCodeModel("T1", "LA3637-1", "LOINC", false, null, null),
+            new HumanReadableCodeModel("T0", "LA3638-9", "LOINC", false, null, null),
+            new HumanReadableCodeModel("T1a", "LA3636-3", "LOINC", false, null, null),
+            new HumanReadableCodeModel(
+                "T1: Breast tumor <= 2 cm in greatest dimension (finding)",
+                "369895002",
+                "SNOMEDCT",
+                false,
+                null,
+                null),
+            new HumanReadableCodeModel(
+                "T1a: Breast tumor >0.1 cm but <= 0.5 cm in greatest dimension (finding)",
+                "369897005",
+                "SNOMEDCT",
+                false,
+                null,
+                null));
+
+    List<String> sorted =
+        terms.stream()
+            .sorted(humanReadableService.getTerminologyModelComparator())
+            .map(HumanReadableTerminologyModel::getTerminologyDisplay)
+            .toList();
+
+    assertThat(
+        sorted,
+        is(
+            equalTo(
+                List.of(
+                    "code \"T0\" (\"LOINC Code (LA3638-9)\")",
+                    "code \"T1\" (\"LOINC Code (LA3637-1)\")",
+                    "code \"T1: Breast tumor <= 2 cm in greatest dimension (finding)\" (\"SNOMEDCT Code (369895002)\")",
+                    "code \"T1a\" (\"LOINC Code (LA3636-3)\")",
+                    "code \"T1a: Breast tumor >0.1 cm but <= 0.5 cm in greatest dimension (finding)\" (\"SNOMEDCT Code (369897005)\")",
+                    "code \"T1b\" (\"LOINC Code (LA3633-0)\")",
+                    "code \"T1b: Breast tumor >0.5 cm but <= 1 cm in greatest dimension (finding)\" (\"SNOMEDCT Code (369898000)\")"))));
+  }
+
+  @Test
+  public void testSortStuff2() {
+    final List<HumanReadableTerminologyModel> terms =
+        List.of(
+            new HumanReadableValuesetModel(
+                "Focal Chorioretinitis and Focal Retinochoroiditis",
+                "2.16.840.1.113883.3.526.3.1460",
+                null,
+                null),
+            new HumanReadableValuesetModel(
+                "Glaucoma Associated with Congenital Anomalies and Dystrophies and Systemic Syndromes",
+                "2.16.840.1.113883.3.526.3.1461",
+                null,
+                null),
+            new HumanReadableValuesetModel(
+                "Glaucoma", "2.16.840.1.113883.3.526.3.1423", null, null),
+            new HumanReadableValuesetModel(
+                "Hereditary Choroidal Dystrophies", "2.16.840.1.113883.3.526.3.1462", null, null));
+
+    List<String> sorted =
+        terms.stream()
+            .sorted(humanReadableService.getTerminologyModelComparator())
+            .map(HumanReadableTerminologyModel::getTerminologyDisplay)
+            .toList();
+
+    assertThat(
+        sorted,
+        is(
+            equalTo(
+                List.of(
+                    "valueset \"Focal Chorioretinitis and Focal Retinochoroiditis\" (2.16.840.1.113883.3.526.3.1460)",
+                    "valueset \"Glaucoma\" (2.16.840.1.113883.3.526.3.1423)",
+                    "valueset \"Glaucoma Associated with Congenital Anomalies and Dystrophies and Systemic Syndromes\" (2.16.840.1.113883.3.526.3.1461)",
+                    "valueset \"Hereditary Choroidal Dystrophies\" (2.16.840.1.113883.3.526.3.1462)"))));
+  }
 }
