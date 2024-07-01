@@ -13,15 +13,14 @@ public interface MadieConstants {
   }
 
   interface MeasureType {
-    String APPROPRIATE_USE_PROCESS = "APPROPRIATE";
-    String COST_OR_RESOURCE_USE = "RESOURCE";
-    String EFFICIENCY = "EFFICIENCY";
-    String INTERMEDIATE_CLINICAL_OUTCOME = "INTERM-OM";
-    String OUTCOME = "OUTCOME";
-    String PATIENT_ENGAGEMENT_OR_EXPERIENCE = "EXPERIENCE";
-    String PATIENT_REPORTED_OUTCOME = "PRO-PM";
-    String PERFORMANCE = "PERFORMANCE";
-    String PROCESS = "PROCESS";
-    String STRUCTURE = "STRUCTURE";
+    String APPROPRIATE_USE_PROCESS = "Appropriate Use Process";
+    String RESOURCE_USE = "Resource Use";
+    String EFFICIENCY = "Efficiency";
+    String INTERMEDIATE_CLINICAL_OUTCOME = "Intermediate Clinical Outcome";
+    String OUTCOME = "Outcome";
+    String EXPERIENCE = "Experience";
+    String PATIENT_REPORTED_OUTCOME_PERFORMANCE = "Patient Reported Outcome Performance";
+    String PROCESS = "Process";
+    String STRUCTURE = "Structure";
   }
 }
