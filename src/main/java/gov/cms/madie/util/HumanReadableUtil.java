@@ -36,20 +36,26 @@ public class HumanReadableUtil {
     if (measure.getMeasureMetaData() != null
         && CollectionUtils.isNotEmpty(measure.getMeasureMetaData().getEndorsements())) {
       return measure.getMeasureMetaData().getEndorsements().stream()
-          .map(endorser -> endorser.getEndorsementId())
+          .map(
+              endorser ->
+                  StringUtils.isBlank(endorser.getEndorsementId())
+                      ? "Not Applicable"
+                      : endorser.getEndorsementId())
           .collect(Collectors.joining("\n"));
     }
-    return null;
+    return "Not Applicable";
   }
 
   public static String getEndorsedBy(Measure measure) {
     if (measure.getMeasureMetaData() != null
         && CollectionUtils.isNotEmpty(measure.getMeasureMetaData().getEndorsements())) {
       return measure.getMeasureMetaData().getEndorsements().stream()
-          .map(endorser -> endorser.getEndorser())
+          .map(
+              endorser ->
+                  StringUtils.isBlank(endorser.getEndorser()) ? "None" : endorser.getEndorser())
           .collect(Collectors.joining("\n"));
     }
-    return null;
+    return "None";
   }
 
   public static List<String> getMeasureTypes(Measure measure) {
