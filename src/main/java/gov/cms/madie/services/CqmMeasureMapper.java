@@ -171,7 +171,7 @@ public interface CqmMeasureMapper {
         return new AssessmentRecommended();
       case "CareGoal":
         return new CareGoal();
-      case "CommunicationNotPerformed":
+      case "CommunicationPerformed":
         return new CommunicationPerformed();
       case "DeviceOrder":
         return new DeviceOrder();

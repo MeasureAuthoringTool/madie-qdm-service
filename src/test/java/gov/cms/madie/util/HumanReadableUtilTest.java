@@ -2,14 +2,7 @@ package gov.cms.madie.util;
 
 import gov.cms.madie.dto.CQLDefinition;
 import gov.cms.madie.models.common.Version;
-import gov.cms.madie.models.measure.Group;
-import gov.cms.madie.models.measure.Measure;
-import gov.cms.madie.models.measure.MeasureMetaData;
-import gov.cms.madie.models.measure.MeasureObservation;
-import gov.cms.madie.models.measure.Population;
-import gov.cms.madie.models.measure.PopulationType;
-import gov.cms.madie.models.measure.QdmMeasure;
-import gov.cms.madie.models.measure.Stratification;
+import gov.cms.madie.models.measure.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -23,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class HumanReadableUtilTest {
 
-  private QdmMeasure measure = QdmMeasure.builder().build();
+  private final QdmMeasure measure = QdmMeasure.builder().build();
 
   @Test
   void testGetMeasureDevelopersMetaDataNull() {
@@ -42,14 +35,24 @@ public class HumanReadableUtilTest {
   void testGetCbeNumberMetaDataNull() {
     measure.setMeasureMetaData(null);
     var result = HumanReadableUtil.getCbeNumber(measure);
-    assertNull(result);
+    assertEquals("Not Applicable", result);
   }
 
   @Test
   void testGetCbeNumberCbeNumberNull() {
     measure.setMeasureMetaData(MeasureMetaData.builder().build());
     var result = HumanReadableUtil.getCbeNumber(measure);
-    assertNull(result);
+    assertEquals("Not Applicable", result);
+  }
+
+  @Test
+  void testGetCbeNumberCbeNumberIsEmpty() {
+    measure.setMeasureMetaData(
+        MeasureMetaData.builder()
+            .endorsements(List.of(Endorsement.builder().endorsementId("").build()))
+            .build());
+    var result = HumanReadableUtil.getCbeNumber(measure);
+    assertEquals("Not Applicable", result);
   }
 
   @Test
@@ -63,14 +66,25 @@ public class HumanReadableUtilTest {
   void testGetEndorsedByMetaDataNull() {
     measure.setMeasureMetaData(null);
     var result = HumanReadableUtil.getEndorsedBy(measure);
-    assertNull(result);
+    assertEquals("None", result);
   }
 
   @Test
   void testGetEndorsedByEndorsementNull() {
     measure.setMeasureMetaData(MeasureMetaData.builder().build());
     var result = HumanReadableUtil.getEndorsedBy(measure);
-    assertNull(result);
+
+    assertEquals("None", result);
+  }
+
+  @Test
+  void testGetEndorsedByEndorserIsEmpty() {
+    measure.setMeasureMetaData(
+        MeasureMetaData.builder()
+            .endorsements(List.of(Endorsement.builder().endorser("").build()))
+            .build());
+    var result = HumanReadableUtil.getEndorsedBy(measure);
+    assertEquals("None", result);
   }
 
   @Test

@@ -46,6 +46,11 @@ public class HumanReadableService {
   private Template baseHumanReadableTemplate;
   private final Collator collator = Collator.getInstance(Locale.US);
 
+  Comparator<HumanReadableTerminologyModel> getTerminologyModelComparator() {
+    return Comparator.comparing(
+        HumanReadableTerminologyModel::getName, String.CASE_INSENSITIVE_ORDER);
+  }
+
   /**
    * Generates the QDM Human Readable HTML from a MADiE Measure.
    *
@@ -404,8 +409,7 @@ public class HumanReadableService {
                 cqlValueSet ->
                     new HumanReadableValuesetModel(
                         cqlValueSet.getName(), cqlValueSet.getOid(), cqlValueSet.getVersion(), ""))
-            .sorted(
-                Comparator.comparing(HumanReadableValuesetModel::getDataCriteriaDisplay, collator))
+            .sorted(getTerminologyModelComparator())
             .toList();
     return new ArrayList<>(valueSetTerminology);
   }
@@ -426,7 +430,7 @@ public class HumanReadableService {
                         .isCodesystemVersionIncluded(
                             StringUtils.isNotBlank(cqlCode.getCodeSystemVersion()))
                         .build())
-            .sorted(Comparator.comparing(HumanReadableCodeModel::getDataCriteriaDisplay, collator))
+            .sorted(getTerminologyModelComparator())
             .toList();
     return new ArrayList<>(codeTerminology);
   }

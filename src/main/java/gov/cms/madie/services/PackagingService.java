@@ -81,11 +81,11 @@ public class PackagingService {
 
     log.info(
         "Adding measure package artifacts to the measure package for measure {}", measure.getId());
-    String htmlDir = "/html/";
-    String qrdaDir = "/qrda/";
+    String htmlDir = "html/";
+    String qrdaDir = "qrda/";
     Map<String, byte[]> entries = new HashMap<>();
     entries.put(
-        "/" + measure.getEcqmTitle() + "_patients_results.html",
+        measure.getEcqmTitle() + "_patients_results.html",
         qrdaExport.getSummaryReport().getBytes());
     for (QrdaReportDTO qrda : qrdaExport.getIndividualReports()) {
       entries.put(qrdaDir + qrda.getFilename() + ".xml", qrda.getQrda().getBytes());
