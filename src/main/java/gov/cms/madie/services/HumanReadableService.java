@@ -172,8 +172,7 @@ public class HumanReadableService {
             .improvementNotation(MeasureUtils.getImprovementNotation((QdmMeasure) measure))
             .guidance(measure.getMeasureMetaData().getGuidance())
             .transmissionFormat(measure.getMeasureMetaData().getTransmissionFormat())
-            .definition(
-                HumanReadableUtil.escapeHtmlString(measure.getMeasureMetaData().getDefinition()))
+            .definition(measure.getMeasureMetaData().getDefinition())
             .references(HumanReadableUtil.buildReferences(measure.getMeasureMetaData()))
             .measureSet(measure.getMeasureMetaData().getMeasureSetTitle())
             .build();
