@@ -31,8 +31,7 @@ public final class MappingUtil {
       case INTERMEDIATE_CLINICAL_OUTCOME -> MadieConstants.MeasureType
           .INTERMEDIATE_CLINICAL_OUTCOME;
       case OUTCOME -> MadieConstants.MeasureType.OUTCOME;
-      case EXPERIENCE -> MadieConstants.MeasureType
-          .EXPERIENCE;
+      case EXPERIENCE -> MadieConstants.MeasureType.EXPERIENCE;
       case PATIENT_REPORTED_OUTCOME_PERFORMANCE -> MadieConstants.MeasureType
           .PATIENT_REPORTED_OUTCOME_PERFORMANCE;
       case PROCESS -> MadieConstants.MeasureType.PROCESS;

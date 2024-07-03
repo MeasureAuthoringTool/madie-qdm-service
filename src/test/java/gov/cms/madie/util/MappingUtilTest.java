@@ -53,8 +53,8 @@ class MappingUtilTest {
 
   @Test
   void getMeasureTypeIdResource() {
-    String output = MappingUtil.getMeasureTypeId(BaseConfigurationTypes.COST_OR_RESOURCE_USE);
-    assertThat(output, is(equalTo(MadieConstants.MeasureType.COST_OR_RESOURCE_USE)));
+    String output = MappingUtil.getMeasureTypeId(BaseConfigurationTypes.RESOURCE_USE);
+    assertThat(output, is(equalTo(MadieConstants.MeasureType.RESOURCE_USE)));
   }
 
   @Test
@@ -78,22 +78,16 @@ class MappingUtilTest {
 
   @Test
   void getMeasureTypeIdExperience() {
-    String output =
-        MappingUtil.getMeasureTypeId(BaseConfigurationTypes.PATIENT_ENGAGEMENT_OR_EXPERIENCE);
-    assertThat(output, is(equalTo(MadieConstants.MeasureType.PATIENT_ENGAGEMENT_OR_EXPERIENCE)));
+    String output = MappingUtil.getMeasureTypeId(BaseConfigurationTypes.EXPERIENCE);
+    assertThat(output, is(equalTo(MadieConstants.MeasureType.EXPERIENCE)));
   }
 
   @Test
   void getMeasureTypeIdProPm() {
     String output =
         MappingUtil.getMeasureTypeId(BaseConfigurationTypes.PATIENT_REPORTED_OUTCOME_PERFORMANCE);
-    assertThat(output, is(equalTo(MadieConstants.MeasureType.PATIENT_REPORTED_OUTCOME)));
-  }
-
-  @Test
-  void getMeasureTypeIdPerformance() {
-    String output = MappingUtil.getMeasureTypeId(BaseConfigurationTypes.PERFORMANCE);
-    assertThat(output, is(equalTo(MadieConstants.MeasureType.PERFORMANCE)));
+    assertThat(
+        output, is(equalTo(MadieConstants.MeasureType.PATIENT_REPORTED_OUTCOME_PERFORMANCE)));
   }
 
   @Test

@@ -544,12 +544,12 @@ class MeasureMapperTest {
   void testBaseConfigurationTypesToTypesTypes() {
     TypesType output =
         measureMapper.baseConfigurationTypesToTypesTypes(
-            List.of(BaseConfigurationTypes.PERFORMANCE, BaseConfigurationTypes.OUTCOME));
+            List.of(BaseConfigurationTypes.RESOURCE_USE, BaseConfigurationTypes.OUTCOME));
     assertThat(output, is(notNullValue()));
     assertThat(output.getType(), is(notNullValue()));
     assertThat(
-        output.getType().get(0).getValue(), is(BaseConfigurationTypes.PERFORMANCE.toString()));
-    assertThat(output.getType().get(0).getId(), is(MadieConstants.MeasureType.PERFORMANCE));
+        output.getType().get(0).getValue(), is(BaseConfigurationTypes.RESOURCE_USE.toString()));
+    assertThat(output.getType().get(0).getId(), is(MadieConstants.MeasureType.RESOURCE_USE));
     assertThat(output.getType().get(1).getValue(), is(BaseConfigurationTypes.OUTCOME.toString()));
     assertThat(output.getType().get(1).getId(), is(MadieConstants.MeasureType.OUTCOME));
   }
