@@ -58,7 +58,7 @@ public class CqmConversionServiceTest {
         CqmMeasure.builder()
             .id("1")
             .description("test")
-            .source_data_criteria(List.of(DataElement.builder().id("test_datacriteria").build()))
+            .source_data_criteria(List.of(DataElement.builder()._id("test_datacriteria").build()))
             .build();
     when(translationServiceClient.getTranslatedLibraries(any(String.class), any(String.class)))
         .thenReturn(List.of(TranslatedLibrary.builder().build()));
@@ -83,8 +83,8 @@ public class CqmConversionServiceTest {
     assertEquals(cqmMeasure.getId(), result.getId());
     assertEquals(1, result.getSource_data_criteria().size());
     assertEquals(
-        cqmMeasure.getSource_data_criteria().get(0).getId(),
-        result.getSource_data_criteria().get(0).getId());
+        cqmMeasure.getSource_data_criteria().get(0).get_id(),
+        result.getSource_data_criteria().get(0).get_id());
   }
 
   @Test
@@ -93,7 +93,7 @@ public class CqmConversionServiceTest {
         CqmMeasure.builder()
             .id("1")
             .description("test")
-            .source_data_criteria(List.of(DataElement.builder().id("test_datacriteria").build()))
+            .source_data_criteria(List.of(DataElement.builder()._id("test_datacriteria").build()))
             .build();
     when(translationServiceClient.getTranslatedLibraries(any(String.class), any(String.class)))
         .thenReturn(List.of(TranslatedLibrary.builder().build()));
@@ -118,8 +118,8 @@ public class CqmConversionServiceTest {
     assertEquals(cqmMeasure.getId(), result.getId());
     assertEquals(1, result.getSource_data_criteria().size());
     assertEquals(
-        cqmMeasure.getSource_data_criteria().get(0).getId(),
-        result.getSource_data_criteria().get(0).getId());
+        cqmMeasure.getSource_data_criteria().get(0).get_id(),
+        result.getSource_data_criteria().get(0).get_id());
   }
 
   @Test
