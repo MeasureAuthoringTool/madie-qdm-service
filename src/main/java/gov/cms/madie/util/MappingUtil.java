@@ -26,16 +26,14 @@ public final class MappingUtil {
   public static String getMeasureTypeId(BaseConfigurationTypes baseConfigurationType) {
     return switch (baseConfigurationType) {
       case APPROPRIATE_USE_PROCESS -> MadieConstants.MeasureType.APPROPRIATE_USE_PROCESS;
-      case COST_OR_RESOURCE_USE -> MadieConstants.MeasureType.COST_OR_RESOURCE_USE;
+      case RESOURCE_USE -> MadieConstants.MeasureType.RESOURCE_USE;
       case EFFICIENCY -> MadieConstants.MeasureType.EFFICIENCY;
       case INTERMEDIATE_CLINICAL_OUTCOME -> MadieConstants.MeasureType
           .INTERMEDIATE_CLINICAL_OUTCOME;
       case OUTCOME -> MadieConstants.MeasureType.OUTCOME;
-      case PATIENT_ENGAGEMENT_OR_EXPERIENCE -> MadieConstants.MeasureType
-          .PATIENT_ENGAGEMENT_OR_EXPERIENCE;
+      case EXPERIENCE -> MadieConstants.MeasureType.EXPERIENCE;
       case PATIENT_REPORTED_OUTCOME_PERFORMANCE -> MadieConstants.MeasureType
-          .PATIENT_REPORTED_OUTCOME;
-      case PERFORMANCE -> MadieConstants.MeasureType.PERFORMANCE;
+          .PATIENT_REPORTED_OUTCOME_PERFORMANCE;
       case PROCESS -> MadieConstants.MeasureType.PROCESS;
       case STRUCTURE -> MadieConstants.MeasureType.STRUCTURE;
       default -> throw new PackagingException(
