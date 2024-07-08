@@ -24,7 +24,6 @@ public final class MappingUtil {
   }
 
   public static String getMeasureTypeId(BaseConfigurationTypes baseConfigurationType) {
-
     return switch (baseConfigurationType) {
       case APPROPRIATE_USE_PROCESS -> MadieConstants.MeasureType.APPROPRIATE_USE_PROCESS;
       case RESOURCE_USE -> MadieConstants.MeasureType.RESOURCE_USE;
