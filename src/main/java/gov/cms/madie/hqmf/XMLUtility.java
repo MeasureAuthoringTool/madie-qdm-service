@@ -95,6 +95,7 @@ public class XMLUtility {
   }
 
   public TransformerFactory buildTransformerFactory() {
+    System.setProperty("jdk.xml.xpathExprOpLimit", "400");
     TransformerFactory transformerFactory = SAXTransformerFactory.newInstance();
 
     try {
