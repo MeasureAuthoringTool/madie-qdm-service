@@ -36,6 +36,7 @@ public class XMLUtility {
       "http://xml.org/sax/features/external-general-entities";
   private static final String EXTERNAL_PARAMETER_ENTITIES =
       "http://xml.org/sax/features/external-parameter-entities";
+  private static final String X_PATH_EXPR_OP_LIMIT = "jdk.xml.xpathExprOpLimit";
 
   public static XMLUtility getInstance() {
     if (instance == null) {
@@ -95,7 +96,7 @@ public class XMLUtility {
   }
 
   public TransformerFactory buildTransformerFactory() {
-    System.setProperty("jdk.xml.xpathExprOpLimit", "400");
+    System.setProperty(X_PATH_EXPR_OP_LIMIT, "400");
     TransformerFactory transformerFactory = SAXTransformerFactory.newInstance();
 
     try {
