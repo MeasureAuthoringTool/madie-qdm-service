@@ -270,4 +270,18 @@ public class HumanReadableUtilTest {
     String version = HumanReadableUtil.getVersionNumber(measure);
     assertThat(version, is(equalTo("1.2.003")));
   }
+
+  @Test
+  void testGetFunctionSignatureCQLDefinitionNull() {
+    String result = HumanReadableUtil.getFunctionSignature(null);
+    assertNull(result);
+  }
+
+  @Test
+  void testGetFunctionSignatureFunctionArgumentsNull() {
+    CQLDefinition definition =
+        CQLDefinition.builder().definitionName("test definitioin name").build();
+    String result = HumanReadableUtil.getFunctionSignature(definition);
+    assertThat(result, is(equalTo("test definitioin name")));
+  }
 }

@@ -84,12 +84,13 @@ public class HumanReadableUtil {
               .append("\n");
         }
       }
-      if (!allDescriptions.isEmpty()) {
+      if (!StringUtils.isBlank(allDescriptions)) {
         return HumanReadableUtil.escapeHtmlString(allDescriptions.toString().trim());
       } else {
         return "None";
       }
     }
+    System.out.println("getStratification: before return null");
     return null;
   }
 
