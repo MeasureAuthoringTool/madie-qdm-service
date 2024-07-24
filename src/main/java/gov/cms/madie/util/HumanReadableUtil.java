@@ -90,7 +90,6 @@ public class HumanReadableUtil {
         return "None";
       }
     }
-    System.out.println("getStratification: before return null");
     return null;
   }
 
