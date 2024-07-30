@@ -25,7 +25,7 @@ public class CqmConversionService {
         translationServiceClient.getTranslatedLibraries(measure.getCql(), accessToken);
     List<String> elms =
         translatedLibraries.stream()
-            .map(translatedLibrary -> translatedLibrary.getElmJson())
+            .map(TranslatedLibrary::getElmJson)
             .collect(Collectors.toList());
 
     List<SourceDataCriteria> dataCriteria =

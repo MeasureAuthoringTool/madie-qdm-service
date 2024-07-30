@@ -60,8 +60,7 @@ public interface CqmMeasureMapper {
                     .toInstant()
                     .atZone(ZoneId.of("UTC"))
                     .toLocalDateTime()
-                    .format(DateTimeFormatter.ofPattern("yyyyMMddHH"))
-                    .toString())
+                    .format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")))
             .build();
     PeriodPoint high =
         PeriodPoint.builder()
@@ -71,8 +70,7 @@ public interface CqmMeasureMapper {
                     .toInstant()
                     .atZone(ZoneId.of("UTC"))
                     .toLocalDateTime()
-                    .format(DateTimeFormatter.ofPattern("yyyyMMddHH"))
-                    .toString())
+                    .format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")))
             .build();
 
     return MeasurePeriod.builder().low(low).high(high).build();
