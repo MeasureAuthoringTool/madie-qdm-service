@@ -75,7 +75,6 @@ public interface MeasureMapper {
       qualifiedByName = "endorsementsToCbeid")
   @Mapping(target = "period", source = "measure")
   @Mapping(target = "steward", source = "measure.measureMetaData.steward")
-  @Mapping(target = "experimental", source = "measure.measureMetaData.experimental")
   @Mapping(target = "developers", source = "measure.measureMetaData")
   @Mapping(target = "endorsement", source = "measure.measureMetaData.endorsements")
   @Mapping(target = "description", source = "measure.measureMetaData.description")

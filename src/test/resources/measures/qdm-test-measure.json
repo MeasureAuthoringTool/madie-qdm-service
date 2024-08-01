@@ -78,11 +78,9 @@
     "draft": true,
     "references": null,
     "endorsements": null,
-    "riskAdjustment": null,
     "definition": null,
     "experimental": true,
-    "transmissionFormat": null,
-    "supplementalDataElements": null
+    "transmissionFormat": null
   },
   "versionId": "b84bf535-e179-49d1-8871-c08056358275",
   "reviewMetaData": {

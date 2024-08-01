@@ -32,7 +32,6 @@ import jakarta.xml.bind.annotation.XmlType;
  *         <element name="cbeid" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         <element name="period" type="{}periodType"/>
  *         <element name="steward" type="{}stewardType"/>
- *         <element name="experimental" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         <element name="populationBasis" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         <element name="developers" type="{}developersType"/>
  *         <element name="endorsement" type="{}endorsementType"/>
@@ -85,7 +84,6 @@ import jakarta.xml.bind.annotation.XmlType;
       "cbeid",
       "period",
       "steward",
-      "experimental",
       "populationBasis",
       "developers",
       "endorsement",
@@ -152,9 +150,6 @@ public class MeasureDetailsType {
 
   @XmlElement(required = true)
   protected StewardType steward;
-
-  @XmlElement(required = true)
-  protected String experimental;
 
   @XmlElement(required = true)
   protected String populationBasis;
@@ -445,24 +440,6 @@ public class MeasureDetailsType {
    */
   public void setSteward(StewardType value) {
     this.steward = value;
-  }
-
-  /**
-   * Gets the value of the experimental property.
-   *
-   * @return possible object is {@link String }
-   */
-  public String getExperimental() {
-    return experimental;
-  }
-
-  /**
-   * Sets the value of the experimental property.
-   *
-   * @param value allowed object is {@link String }
-   */
-  public void setExperimental(String value) {
-    this.experimental = value;
   }
 
   /**

@@ -377,7 +377,6 @@
 <!--      <xs:element type="nqfidType" name="nqfid"/>-->
       <xs:element type="periodType" name="period"/>
       <xs:element type="stewardType" name="steward"/>
-      <xs:element type="xs:string" name="experimental"/>
       <xs:element type="xs:string" name="populationBasis"/>
       <xs:element type="developersType" name="developers"/>
       <xs:element type="endorsementType" name="endorsement"/>

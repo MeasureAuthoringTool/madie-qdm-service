@@ -4554,11 +4554,9 @@
     "draft": true,
     "references": null,
     "endorsements": null,
-    "riskAdjustment": null,
     "definition": null,
     "experimental": false,
     "transmissionFormat": null,
-    "supplementalDataElements": null,
     "measureSetTitle": null
   },
   "versionId": "c32e60ac-3118-4bf6-965e-ea2906289f27",
