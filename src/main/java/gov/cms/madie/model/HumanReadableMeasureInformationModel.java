@@ -57,6 +57,5 @@ public class HumanReadableMeasureInformationModel {
   private String supplementalDataElements;
   private String measureSet;
   private boolean patientBased;
-  private boolean experimental;
   private String populationBasis;
 }
