@@ -329,13 +329,29 @@
         <xsl:choose>
             <xsl:when test="types/type">
                 <xsl:for-each select="types/type">
+                    <xsl:variable name="nameVar" select="@id"/>
+                    <xsl:variable name="codeVar">
+                        <xsl:choose>
+                            <xsl:when test="$nameVar = 'Appropriate Use Process'">APPROPRIATE</xsl:when>
+                            <xsl:when test="$nameVar = 'Resource Use'">RESOURCE</xsl:when>
+                            <xsl:when test="$nameVar = 'Efficiency'">EFFICIENCY</xsl:when>
+                            <xsl:when test="$nameVar = 'Intermediate Clinical Outcome'">INTERM-OM</xsl:when>
+                            <xsl:when test="$nameVar = 'Outcome'">OUTCOME</xsl:when>
+                            <xsl:when test="$nameVar = 'Experience'">EXPERIENCE</xsl:when>
+                            <xsl:when test="$nameVar = 'Patient Reported Outcome Performance'">PRO-PM</xsl:when>
+                            <xsl:when test="$nameVar = 'Process'">PROCESS</xsl:when>
+                            <xsl:when test="$nameVar = 'Structure'">STRUCTURE</xsl:when>
+                            <xsl:otherwise>
+                                <xsl:value-of select="$nameVar"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:variable>
                     <subjectOf>
                         <measureAttribute>
                             <code code="MSRTYPE" codeSystem="2.16.840.1.113883.5.4">
                                 <displayName value="Measure Type"/>
                             </code>
-                            <xsl:variable name="nameVar" select="@id"/>
-                            <value xsi:type="CD" code="{$nameVar}" codeSystem="2.16.840.1.113883.5.1063">
+                            <value xsi:type="CD" code="{$codeVar}" codeSystem="2.16.840.1.113883.5.1063">
                                 <displayName value="{$nameVar}"/>
                             </value>
                         </measureAttribute>
