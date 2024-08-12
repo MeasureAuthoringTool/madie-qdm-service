@@ -65,9 +65,8 @@ class MappingUtilTest {
 
   @Test
   void getMeasureTypeIdIntermOm() {
-    String output =
-        MappingUtil.getMeasureTypeId(BaseConfigurationTypes.INTERMEDIATE_CLINICAL_OUTCOME);
-    assertThat(output, is(equalTo(MadieConstants.MeasureType.INTERMEDIATE_CLINICAL_OUTCOME)));
+    String output = MappingUtil.getMeasureTypeId(BaseConfigurationTypes.INTERMEDIATE_OUTCOME);
+    assertThat(output, is(equalTo(MadieConstants.MeasureType.INTERMEDIATE_OUTCOME)));
   }
 
   @Test
@@ -84,10 +83,8 @@ class MappingUtilTest {
 
   @Test
   void getMeasureTypeIdProPm() {
-    String output =
-        MappingUtil.getMeasureTypeId(BaseConfigurationTypes.PATIENT_REPORTED_OUTCOME_PERFORMANCE);
-    assertThat(
-        output, is(equalTo(MadieConstants.MeasureType.PATIENT_REPORTED_OUTCOME_PERFORMANCE)));
+    String output = MappingUtil.getMeasureTypeId(BaseConfigurationTypes.PATIENT_REPORTED_OUTCOME);
+    assertThat(output, is(equalTo(MadieConstants.MeasureType.PATIENT_REPORTED_OUTCOME)));
   }
 
   @Test
@@ -107,9 +104,12 @@ class MappingUtilTest {
     Exception ex =
         Assertions.assertThrows(
             PackagingException.class,
-            () -> MappingUtil.getMeasureTypeId(BaseConfigurationTypes.PATIENT_REPORTED_OUTCOME));
+            () ->
+                MappingUtil.getMeasureTypeId(
+                    BaseConfigurationTypes.PATIENT_REPORTED_OUTCOME_PERFORMANCE));
     assertThat(
-        ex.getMessage(), is(equalTo("Unsupported base configuration: Patient Reported Outcome")));
+        ex.getMessage(),
+        is(equalTo("Unsupported base configuration: Patient Reported Outcome Performance")));
   }
 
   @Test
