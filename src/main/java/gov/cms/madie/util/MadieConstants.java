@@ -16,10 +16,10 @@ public interface MadieConstants {
     String APPROPRIATE_USE_PROCESS = "Appropriate Use Process";
     String RESOURCE_USE = "Resource Use";
     String EFFICIENCY = "Efficiency";
-    String INTERMEDIATE_CLINICAL_OUTCOME = "Intermediate Clinical Outcome";
+    String INTERMEDIATE_OUTCOME = "Intermediate Outcome";
     String OUTCOME = "Outcome";
     String EXPERIENCE = "Experience";
-    String PATIENT_REPORTED_OUTCOME_PERFORMANCE = "Patient Reported Outcome Performance";
+    String PATIENT_REPORTED_OUTCOME = "Patient Reported Outcome";
     String PROCESS = "Process";
     String STRUCTURE = "Structure";
   }
