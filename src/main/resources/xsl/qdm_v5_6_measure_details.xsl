@@ -335,10 +335,12 @@
                             <xsl:when test="$nameVar = 'Appropriate Use Process'">APPROPRIATE</xsl:when>
                             <xsl:when test="$nameVar = 'Resource Use'">RESOURCE</xsl:when>
                             <xsl:when test="$nameVar = 'Efficiency'">EFFICIENCY</xsl:when>
+                            <xsl:when test="$nameVar = 'Intermediate Outcome'">INTERM-OM</xsl:when>
                             <xsl:when test="$nameVar = 'Intermediate Clinical Outcome'">INTERM-OM</xsl:when>
                             <xsl:when test="$nameVar = 'Outcome'">OUTCOME</xsl:when>
                             <xsl:when test="$nameVar = 'Experience'">EXPERIENCE</xsl:when>
                             <xsl:when test="$nameVar = 'Patient Reported Outcome Performance'">PRO-PM</xsl:when>
+                            <xsl:when test="$nameVar = 'Patient Reported Outcome'">PRO-PM</xsl:when>
                             <xsl:when test="$nameVar = 'Process'">PROCESS</xsl:when>
                             <xsl:when test="$nameVar = 'Structure'">STRUCTURE</xsl:when>
                             <xsl:otherwise>
