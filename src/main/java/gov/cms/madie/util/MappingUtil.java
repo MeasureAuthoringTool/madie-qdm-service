@@ -28,12 +28,10 @@ public final class MappingUtil {
       case APPROPRIATE_USE_PROCESS -> MadieConstants.MeasureType.APPROPRIATE_USE_PROCESS;
       case RESOURCE_USE -> MadieConstants.MeasureType.RESOURCE_USE;
       case EFFICIENCY -> MadieConstants.MeasureType.EFFICIENCY;
-      case INTERMEDIATE_CLINICAL_OUTCOME -> MadieConstants.MeasureType
-          .INTERMEDIATE_CLINICAL_OUTCOME;
       case OUTCOME -> MadieConstants.MeasureType.OUTCOME;
+      case INTERMEDIATE_OUTCOME -> MadieConstants.MeasureType.INTERMEDIATE_OUTCOME;
       case EXPERIENCE -> MadieConstants.MeasureType.EXPERIENCE;
-      case PATIENT_REPORTED_OUTCOME_PERFORMANCE -> MadieConstants.MeasureType
-          .PATIENT_REPORTED_OUTCOME_PERFORMANCE;
+      case PATIENT_REPORTED_OUTCOME -> MadieConstants.MeasureType.PATIENT_REPORTED_OUTCOME;
       case PROCESS -> MadieConstants.MeasureType.PROCESS;
       case STRUCTURE -> MadieConstants.MeasureType.STRUCTURE;
       default -> throw new PackagingException(
