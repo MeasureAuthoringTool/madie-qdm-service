@@ -156,9 +156,7 @@ public class HumanReadableUtil {
               .append("\n");
         }
       }
-      if (!allDescriptions.isEmpty()) {
-        return HumanReadableUtil.escapeHtmlString(allDescriptions.toString().trim());
-      }
+      return allDescriptions.toString().trim();
     }
     return null;
   }
