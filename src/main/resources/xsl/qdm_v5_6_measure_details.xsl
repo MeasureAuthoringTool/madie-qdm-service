@@ -192,14 +192,14 @@
                 <id root="{cqlUUID}"/>
                 <text mediaType="text/cql">
                     <reference
-                            value="https://madie.cms.gov/libraries/{../measureDetails/guid}/{$msrAbbrName}-v{$libraryVersion}-QDM-{$modelVersion}.cql"/>
+                            value="https://madie.cms.gov/libraries/{../measureDetails/guid}/{$msrAbbrName}-v{$libraryVersion}.cql"/>
                     <translation mediaType="application/elm+xml">
                         <reference
-                                value="https://madie.cms.gov/libraries/{../measureDetails/guid}/{$msrAbbrName}-v{$libraryVersion}-QDM-{$modelVersion}.xml"/>
+                                value="https://madie.cms.gov/libraries/{../measureDetails/guid}/{$msrAbbrName}-v{$libraryVersion}.xml"/>
                     </translation>
                     <translation mediaType="application/elm+json">
                         <reference
-                                value="https://madie.cms.gov/libraries/{../measureDetails/guid}/{$msrAbbrName}-v{$libraryVersion}-QDM-{$modelVersion}.json"/>
+                                value="https://madie.cms.gov/libraries/{../measureDetails/guid}/{$msrAbbrName}-v{$libraryVersion}.json"/>
                     </translation>
                 </text>
                 <setId root="https://madie.cms.gov/libraries" extension="{../measureDetails/guid}"
@@ -214,14 +214,14 @@
                     <id root="{@id}"/>
                     <text mediaType="text/cql">
                         <reference
-                                value="https://madie.cms.gov/libraries/{@setId}/{translate(@name,'_','-')}-v{translate(@version,'.','-')}-QDM-{$modelVersion}.cql"/>
+                                value="https://madie.cms.gov/libraries/{@setId}/{translate(@name,'_','-')}-v{translate(@version,'.','-')}.cql"/>
                         <translation mediaType="application/elm+xml">
                             <reference
-                                    value="https://madie.cms.gov/libraries/{@setId}/{translate(@name,'_','-')}-v{translate(@version,'.','-')}-QDM-{$modelVersion}.xml"/>
+                                    value="https://madie.cms.gov/libraries/{@setId}/{translate(@name,'_','-')}-v{translate(@version,'.','-')}.xml"/>
                         </translation>
                         <translation mediaType="application/elm+json">
                             <reference
-                                    value="https://madie.cms.gov/libraries/{@setId}/{translate(@name,'_','-')}-v{translate(@version,'.','-')}-QDM-{$modelVersion}.json"/>
+                                    value="https://madie.cms.gov/libraries/{@setId}/{translate(@name,'_','-')}-v{translate(@version,'.','-')}.json"/>
                         </translation>
                     </text>
                     <setId root="https://madie.cms.gov/libraries" extension="{@setId}"
