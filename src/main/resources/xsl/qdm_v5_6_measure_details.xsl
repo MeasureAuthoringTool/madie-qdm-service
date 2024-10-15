@@ -187,19 +187,19 @@
         <xsl:variable name="modelVersion" select="translate(/measure/cqlLookUp/usingModelVersion,'.','-')"/>
         <relatedDocument typeCode="COMP">
             <expressionDocument>
-                <xsl:variable name="msrAbbrName" select="translate(/measure/measureDetails/shortTitle,'_','-')"/>
+                <xsl:variable name="libraryName" select="translate(/measure/cqlLookUp/library,'_','-')"/>
                 <xsl:variable name="libraryVersion" select="translate(/measure/cqlLookUp/version,'.','-')"/>
                 <id root="{cqlUUID}"/>
                 <text mediaType="text/cql">
                     <reference
-                            value="https://madie.cms.gov/libraries/{../measureDetails/guid}/{$msrAbbrName}-v{$libraryVersion}.cql"/>
+                            value="https://madie.cms.gov/libraries/{../measureDetails/guid}/{$libraryName}-v{$libraryVersion}.cql"/>
                     <translation mediaType="application/elm+xml">
                         <reference
-                                value="https://madie.cms.gov/libraries/{../measureDetails/guid}/{$msrAbbrName}-v{$libraryVersion}.xml"/>
+                                value="https://madie.cms.gov/libraries/{../measureDetails/guid}/{$libraryName}-v{$libraryVersion}.xml"/>
                     </translation>
                     <translation mediaType="application/elm+json">
                         <reference
-                                value="https://madie.cms.gov/libraries/{../measureDetails/guid}/{$msrAbbrName}-v{$libraryVersion}.json"/>
+                                value="https://madie.cms.gov/libraries/{../measureDetails/guid}/{$libraryName}-v{$libraryVersion}.json"/>
                     </translation>
                 </text>
                 <setId root="https://madie.cms.gov/libraries" extension="{../measureDetails/guid}"
