@@ -1,5 +1,6 @@
 package gov.cms.madie.services;
 
+import gov.cms.madie.Exceptions.HQMFServiceException;
 import gov.cms.madie.Exceptions.TranslationServiceException;
 import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.dto.qrda.QrdaExportResponseDto;
@@ -140,17 +141,16 @@ class PackagingServiceTest {
         .thenReturn(cqlLookups);
     when(humanReadableService.generate(any(Measure.class), any(CqlLookups.class)))
         .thenReturn("success");
-    Mockito.doThrow(new RuntimeException("Test Exception"))
+    Mockito.doThrow(new HQMFServiceException())
         .when(hqmfService)
         .generateHqmf(any(QdmMeasure.class), any(CqlLookups.class));
-    byte[] packageContents = packagingService.createMeasurePackage(measure, TOKEN);
-    String packageString = new String(packageContents);
-    String library1FileName = library1.getName() + "-" + library1.getVersion();
-    assertThat(packageString, containsString(library1FileName + ".cql"));
-    assertThat(packageString, containsString(library1FileName + ".xml"));
-    assertThat(packageString, containsString(library1FileName + ".json"));
-    assertThat(packageString, containsString("test-v1.2.003-QDM.html"));
-    assertThat(packageString, containsString("test-v1.2.003-QDM-ERROR.xml"));
+    Exception exception =
+            assertThrows(
+                    HQMFServiceException.class,
+                    () -> packagingService.createMeasurePackage(measure, TOKEN));
+
+    assertThat(exception.getMessage(), containsString("An error occurred that caused the HQMF generation to fail."));
+
   }
 
   @Test

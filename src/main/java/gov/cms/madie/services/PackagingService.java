@@ -1,5 +1,6 @@
 package gov.cms.madie.services;
 
+import gov.cms.madie.Exceptions.HQMFServiceException;
 import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.dto.qrda.QrdaExportResponseDto;
 import gov.cms.madie.dto.qrda.QrdaReportDTO;
@@ -64,6 +65,7 @@ public class PackagingService {
       entries.put(
           measure.getEcqmTitle() + "-v" + measure.getVersion() + "-QDM-ERROR" + ".xml",
           "<error>An error occurred that caused the HQMF generation to fail.</error>".getBytes());
+      throw new HQMFServiceException();
     }
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     return new ZipUtility().zipEntries(entries, outputStream);
