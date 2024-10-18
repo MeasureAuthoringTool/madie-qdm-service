@@ -8,14 +8,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
@@ -33,6 +31,7 @@ public class CustomErrorHandlerAdvice {
   Map<String, Object> handleCustomException(WebRequest request) {
     return getErrorAttributes(request, HttpStatus.BAD_REQUEST);
   }
+
   // Handle HQMFServiceException separately
   @ExceptionHandler(HQMFServiceException.class)
   @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -40,6 +39,7 @@ public class CustomErrorHandlerAdvice {
   Map<String, Object> handleHQMFServiceException(WebRequest request) {
     return getErrorAttributes(request, HttpStatus.INTERNAL_SERVER_ERROR);
   }
+
   private Map<String, Object> getErrorAttributes(WebRequest request, HttpStatus httpStatus) {
     ErrorAttributeOptions errorOptions =
         ErrorAttributeOptions.of(ErrorAttributeOptions.Include.MESSAGE);
