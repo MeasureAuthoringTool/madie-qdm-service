@@ -1,6 +1,5 @@
 package gov.cms.madie.resources;
 
-import gov.cms.madie.Exceptions.HQMFServiceException;
 import gov.cms.madie.Exceptions.PackagingException;
 import gov.cms.madie.Exceptions.TranslationServiceException;
 import gov.cms.madie.Exceptions.UnsupportedModelException;
@@ -30,14 +29,6 @@ public class CustomErrorHandlerAdvice {
   @ResponseBody
   Map<String, Object> handleCustomException(WebRequest request) {
     return getErrorAttributes(request, HttpStatus.BAD_REQUEST);
-  }
-
-  // Handle HQMFServiceException separately
-  @ExceptionHandler(HQMFServiceException.class)
-  @ResponseStatus(HttpStatus.BAD_REQUEST)
-  @ResponseBody
-  Map<String, Object> handleHQMFServiceException(WebRequest request) {
-    return getErrorAttributes(request, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   private Map<String, Object> getErrorAttributes(WebRequest request, HttpStatus httpStatus) {

@@ -1,6 +1,6 @@
 package gov.cms.madie.services;
 
-import gov.cms.madie.Exceptions.HQMFServiceException;
+import gov.cms.madie.Exceptions.PackagingException;
 import gov.cms.madie.Exceptions.TranslationServiceException;
 import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.dto.qrda.QrdaExportResponseDto;
@@ -141,16 +141,17 @@ class PackagingServiceTest {
         .thenReturn(cqlLookups);
     when(humanReadableService.generate(any(Measure.class), any(CqlLookups.class)))
         .thenReturn("success");
-    Mockito.doThrow(new HQMFServiceException())
+
+    Mockito.doThrow(new PackagingException("An error occurred that caused the HQMF generation to fail"))
         .when(hqmfService)
         .generateHqmf(any(QdmMeasure.class), any(CqlLookups.class));
     Exception exception =
-            assertThrows(
-                    HQMFServiceException.class,
-                    () -> packagingService.createMeasurePackage(measure, TOKEN));
-
-    assertThat(exception.getMessage(), containsString("An error occurred that caused the HQMF generation to fail."));
-
+        assertThrows(
+                PackagingException.class,
+            () -> packagingService.createMeasurePackage(measure, TOKEN));
+    assertThat(
+        exception.getMessage(),
+        containsString("An error occurred that caused the HQMF generation to fail"));
   }
 
   @Test

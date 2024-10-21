@@ -1,6 +1,5 @@
 package gov.cms.madie.services;
 
-import gov.cms.madie.Exceptions.HQMFServiceException;
 import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.dto.qrda.QrdaExportResponseDto;
 import gov.cms.madie.dto.qrda.QrdaReportDTO;
@@ -54,19 +53,9 @@ public class PackagingService {
           measure.getEcqmTitle() + "-v" + measure.getVersion() + "-QDM" + ".html",
           humanReadable.getBytes());
     }
-    // TODO: remove this after HQMF is complete, but for now don't prevent export if HQMF fails
-    try {
       String hqmf = hqmfService.generateHqmf(qdmMeasure, cqlLookups);
       entries.put(
           measure.getEcqmTitle() + "-v" + measure.getVersion() + "-QDM" + ".xml", hqmf.getBytes());
-    } catch (Exception ex) {
-      // TODO: this is temporary - remove it after!!
-      log.error("An error occurred during HQMF generation for measure: {}", measure.getId(), ex);
-      entries.put(
-          measure.getEcqmTitle() + "-v" + measure.getVersion() + "-QDM-ERROR" + ".xml",
-          "<error>An error occurred that caused the HQMF generation to fail.</error>".getBytes());
-      throw new HQMFServiceException();
-    }
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     return new ZipUtility().zipEntries(entries, outputStream);
   }
