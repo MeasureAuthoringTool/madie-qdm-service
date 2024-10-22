@@ -53,18 +53,9 @@ public class PackagingService {
           measure.getEcqmTitle() + "-v" + measure.getVersion() + "-QDM" + ".html",
           humanReadable.getBytes());
     }
-    // TODO: remove this after HQMF is complete, but for now don't prevent export if HQMF fails
-    try {
       String hqmf = hqmfService.generateHqmf(qdmMeasure, cqlLookups);
       entries.put(
           measure.getEcqmTitle() + "-v" + measure.getVersion() + "-QDM" + ".xml", hqmf.getBytes());
-    } catch (Exception ex) {
-      // TODO: this is temporary - remove it after!!
-      log.error("An error occurred during HQMF generation for measure: {}", measure.getId(), ex);
-      entries.put(
-          measure.getEcqmTitle() + "-v" + measure.getVersion() + "-QDM-ERROR" + ".xml",
-          "<error>An error occurred that caused the HQMF generation to fail.</error>".getBytes());
-    }
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     return new ZipUtility().zipEntries(entries, outputStream);
   }
