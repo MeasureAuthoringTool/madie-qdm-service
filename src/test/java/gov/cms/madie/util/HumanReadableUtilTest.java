@@ -170,6 +170,26 @@ public class HumanReadableUtilTest {
   }
 
   @Test
+  void testGetPopulationDescriptionMultiplePopCriteriaMixedDescriptions() {
+    measure.setGroups(List.of(
+        Group.builder().populations(List.of(Population.builder().definition("definition1").name(PopulationType.INITIAL_POPULATION).description("desc").build())).build(),
+        Group.builder().populations(List.of(Population.builder().definition("definition1").name(PopulationType.INITIAL_POPULATION).description("").build())).build()
+    ));
+    var result = HumanReadableUtil.getPopulationDescription(measure, PopulationType.INITIAL_POPULATION.name());
+    assertThat(result, is(equalTo("desc")));
+  }
+
+  @Test
+  void testGetPopulationDescriptionMultiplePopCriteriaMixedNullDescriptions() {
+    measure.setGroups(List.of(
+        Group.builder().populations(List.of(Population.builder().definition("definition1").name(PopulationType.INITIAL_POPULATION).description("desc").build())).build(),
+        Group.builder().populations(List.of(Population.builder().definition("definition1").name(PopulationType.INITIAL_POPULATION).description(null).build())).build()
+    ));
+    var result = HumanReadableUtil.getPopulationDescription(measure, PopulationType.INITIAL_POPULATION.name());
+    assertThat(result, is(equalTo("desc")));
+  }
+
+  @Test
   void testStratificationDescriptionOutput() {
     Stratification s1 = Stratification.builder().description("G1S1").build();
     Group g1 = Group.builder().stratifications(List.of(s1)).build();
