@@ -288,7 +288,8 @@ public class HumanReadableService {
     return group.getMeasureObservations().stream()
         .map(
             measureObservation -> {
-              String display = measureObservation.getDefinition();
+              String display = PopulationType.MEASURE_OBSERVATION.getDisplay();
+
               if ("Ratio".equals(group.getScoring())) {
                 Population population =
                     HumanReadableUtil.getObservationAssociation(
