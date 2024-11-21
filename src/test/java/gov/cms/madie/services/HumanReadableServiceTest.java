@@ -681,6 +681,30 @@ class HumanReadableServiceTest {
   }
 
   @Test
+  public void testBuildMeasureObservationForRatioMultipleObservations() {
+    Group group = measure.getGroups().get(0);
+    group.setScoring("Ratio");
+    group.setMeasureObservations(
+        List.of(
+            MeasureObservation.builder()
+                .definition("Local Function")
+                .aggregateMethod("Average")
+                .criteriaReference("p1")
+                .build(),
+            MeasureObservation.builder()
+                .definition("Test Function")
+                .aggregateMethod("Average")
+                .criteriaReference("p1")
+                .build()));
+
+    List<HumanReadablePopulationModel> model =
+        humanReadableService.buildMeasureObservation(group, allDefinitions);
+    assertThat(CollectionUtils.isEmpty(model), is(false));
+    assertTrue(model.get(0).getDisplay().contains("Measure Observation 1"));
+    assertTrue(model.get(1).getDisplay().contains("Measure Observation 2"));
+  }
+
+  @Test
   public void testBuildPopulationsNull() {
     Group group = measure.getGroups().get(0);
     group.setPopulations(null);

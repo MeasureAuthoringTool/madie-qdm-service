@@ -285,10 +285,16 @@ public class HumanReadableService {
       return Collections.emptyList();
     }
 
+    AtomicInteger index = new AtomicInteger(1);
     return group.getMeasureObservations().stream()
         .map(
             measureObservation -> {
-              String display = PopulationType.MEASURE_OBSERVATION.getDisplay();
+              String display =
+                  group.getMeasureObservations().size() > 1
+                      ? PopulationType.MEASURE_OBSERVATION.getDisplay()
+                          + " "
+                          + index.getAndIncrement()
+                      : PopulationType.MEASURE_OBSERVATION.getDisplay();
 
               if ("Ratio".equals(group.getScoring())) {
                 Population population =
