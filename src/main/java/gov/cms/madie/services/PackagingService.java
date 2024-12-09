@@ -79,8 +79,16 @@ public class PackagingService {
         measure.getEcqmTitle() + "_patients_results.html",
         qrdaExport.getSummaryReport().getBytes());
     for (QrdaReportDTO qrda : qrdaExport.getIndividualReports()) {
-      entries.put(qrdaDir + qrda.getFilename() + ".xml", qrda.getQrda().getBytes());
-      entries.put(htmlDir + qrda.getFilename() + ".html", qrda.getReport().getBytes());
+      if (qrda.getQrda() == null) {
+        log.warn("QRDA export for Measure [{}], testcase filename [{}] is missing QRDA", measure.getId(), qrda.getFilename());
+      } else {
+        entries.put(qrdaDir + qrda.getFilename() + ".xml", qrda.getQrda().getBytes());
+      }
+      if (qrda.getReport() == null) {
+        log.warn("QRDA export for Measure [{}], testcase filename [{}] is missing HTML", measure.getId(), qrda.getFilename());
+      } else {
+        entries.put(htmlDir + qrda.getFilename() + ".html", qrda.getReport().getBytes());
+      }
     }
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     return new ZipUtility().zipEntries(entries, outputStream);
