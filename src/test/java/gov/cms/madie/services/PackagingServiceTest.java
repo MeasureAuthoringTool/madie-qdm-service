@@ -176,4 +176,62 @@ class PackagingServiceTest {
     assertThat(new String(qrda), containsString("html/"));
     assertThat(new String(qrda), containsString("1_test.html"));
   }
+
+  @Test
+  void testCreateQrdaHandlesNullQrdaEntry() {
+    when(qrdaService.generateQrda(any(QrdaRequestDTO.class), any(String.class)))
+        .thenReturn(
+            QrdaExportResponseDto.builder()
+                .summaryReport("summaryReport")
+                .individualReports(
+                    List.of(
+                        QrdaReportDTO.builder()
+                            .qrda(null)
+                            .filename("1_test")
+                            .report("report1")
+                            .build(),
+                        QrdaReportDTO.builder()
+                            .qrda("qrda2")
+                            .filename("2_test")
+                            .report("report2")
+                            .build()))
+                .build());
+    byte[] qrda =
+        packagingService.createQRDA(QrdaRequestDTO.builder().measure(measure).build(), TOKEN);
+    assertThat(new String(qrda), containsString("qrda/"));
+    assertThat(new String(qrda), containsString("2_test.xml"));
+
+    assertThat(new String(qrda), containsString("html/"));
+    assertThat(new String(qrda), containsString("1_test.html"));
+    assertThat(new String(qrda), containsString("2_test.html"));
+  }
+
+  @Test
+  void testCreateQrdaHandlesNullHtmlEntry() {
+    when(qrdaService.generateQrda(any(QrdaRequestDTO.class), any(String.class)))
+        .thenReturn(
+            QrdaExportResponseDto.builder()
+                .summaryReport("summaryReport")
+                .individualReports(
+                    List.of(
+                        QrdaReportDTO.builder()
+                            .qrda("qrda1")
+                            .filename("1_test")
+                            .report(null)
+                            .build(),
+                        QrdaReportDTO.builder()
+                            .qrda("qrda2")
+                            .filename("2_test")
+                            .report("report2")
+                            .build()))
+                .build());
+    byte[] qrda =
+        packagingService.createQRDA(QrdaRequestDTO.builder().measure(measure).build(), TOKEN);
+    assertThat(new String(qrda), containsString("qrda/"));
+    assertThat(new String(qrda), containsString("1_test.xml"));
+    assertThat(new String(qrda), containsString("2_test.xml"));
+
+    assertThat(new String(qrda), containsString("html/"));
+    assertThat(new String(qrda), containsString("2_test.html"));
+  }
 }
