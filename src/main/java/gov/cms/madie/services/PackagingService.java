@@ -41,23 +41,25 @@ public class PackagingService {
     Map<String, byte[]> entries = new HashMap<>();
     for (TranslatedLibrary translatedLibrary : translatedLibraries) {
       String entryName = translatedLibrary.getName() + "-" + translatedLibrary.getVersion();
-      entries.put(resourcesDir + entryName + ".json", translatedLibrary.getElmJson().getBytes());
-      entries.put(resourcesDir + entryName + ".xml", translatedLibrary.getElmXml().getBytes());
-      entries.put(cqlDir + entryName + ".cql", translatedLibrary.getCql().getBytes());
+      entries.put(
+          resourcesDir + entryName.trim() + ".json", translatedLibrary.getElmJson().getBytes());
+      entries.put(
+          resourcesDir + entryName.trim() + ".xml", translatedLibrary.getElmXml().getBytes());
+      entries.put(cqlDir + entryName.trim() + ".cql", translatedLibrary.getCql().getBytes());
     }
     CqlLookups cqlLookups = translationServiceClient.getCqlLookups(qdmMeasure, accessToken);
     final String humanReadable = humanReadableService.generate(measure, cqlLookups);
 
     if (humanReadable != null) {
       entries.put(
-          measure.getEcqmTitle() + "-v" + measure.getVersion() + "-QDM" + ".html",
+          measure.getEcqmTitle().trim() + "-v" + measure.getVersion() + "-QDM" + ".html",
           humanReadable.getBytes());
     }
-      String hqmf = hqmfService.generateHqmf(qdmMeasure, cqlLookups);
-      entries.put(
-          measure.getEcqmTitle() + "-v" + measure.getVersion() + "-QDM" + ".xml", hqmf.getBytes());
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    return new ZipUtility().zipEntries(entries, outputStream);
+    String hqmf = hqmfService.generateHqmf(qdmMeasure, cqlLookups);
+    entries.put(
+        measure.getEcqmTitle().trim() + "-v" + measure.getVersion() + "-QDM" + ".xml",
+        hqmf.getBytes());
+    return new ZipUtility().zipEntries(entries, new ByteArrayOutputStream());
   }
 
   public byte[] createQRDA(QrdaRequestDTO qrdaRequestDTO, String accessToken) {
