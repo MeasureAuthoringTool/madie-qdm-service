@@ -142,13 +142,13 @@ class PackagingServiceTest {
     when(humanReadableService.generate(any(Measure.class), any(CqlLookups.class)))
         .thenReturn("success");
 
-    Mockito.doThrow(new PackagingException("An error occurred that caused the HQMF generation to fail"))
+    Mockito.doThrow(
+            new PackagingException("An error occurred that caused the HQMF generation to fail"))
         .when(hqmfService)
         .generateHqmf(any(QdmMeasure.class), any(CqlLookups.class));
     Exception exception =
         assertThrows(
-                PackagingException.class,
-            () -> packagingService.createMeasurePackage(measure, TOKEN));
+            PackagingException.class, () -> packagingService.createMeasurePackage(measure, TOKEN));
     assertThat(
         exception.getMessage(),
         containsString("An error occurred that caused the HQMF generation to fail"));
@@ -233,5 +233,38 @@ class PackagingServiceTest {
 
     assertThat(new String(qrda), containsString("html/"));
     assertThat(new String(qrda), containsString("2_test.html"));
+  }
+
+  @Test
+  void trimFileNameValues() {
+    QdmMeasure msr = measure.toBuilder().ecqmTitle("   test   ").build();
+    TranslatedLibrary library1 =
+        TranslatedLibrary.builder()
+            .name("Lib one")
+            .version("0.0.000")
+            .elmJson("elm xml")
+            .elmXml("elm xml")
+            .cql("cql")
+            .build();
+    TranslatedLibrary library2 =
+        TranslatedLibrary.builder()
+            .name("Lib two")
+            .version("0.0.001")
+            .elmJson("elm xml")
+            .elmXml("elm xml")
+            .cql("cql")
+            .build();
+    CqlLookups cqlLookups = CqlLookups.builder().build();
+    when(translationServiceClient.getTranslatedLibraries(msr.getCql(), TOKEN))
+        .thenReturn(List.of(library1, library2));
+    when(translationServiceClient.getCqlLookups(any(QdmMeasure.class), anyString()))
+        .thenReturn(CqlLookups.builder().build());
+    when(hqmfService.generateHqmf(msr, cqlLookups)).thenReturn("<hqmf>this is a test hqmf</hqmf>");
+    when(humanReadableService.generate(any(Measure.class), any(CqlLookups.class)))
+        .thenReturn("success");
+    byte[] packageContents = packagingService.createMeasurePackage(msr, TOKEN);
+    String packageString = new String(packageContents);
+    assertThat(packageString, containsString("test-v1.2.003-QDM.html"));
+    assertThat(packageString, containsString("test-v1.2.003-QDM.xml"));
   }
 }
