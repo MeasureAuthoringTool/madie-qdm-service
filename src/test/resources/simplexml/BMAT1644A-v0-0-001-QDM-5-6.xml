@@ -254,9 +254,9 @@
         <guid>1117b927-236b-433d-89aa-a03861956a02</guid>
         <version>0.0.001</version>
         <cbeid/>
-        <period calenderYear="true" uuid="f1786933-1d78-4b91-9b1c-33302ab0db56">
-            <startDate>00000101</startDate>
-            <stopDate>00001231</stopDate>
+        <period calenderYear="false" uuid="f1786933-1d78-4b91-9b1c-33302ab0db56">
+            <startDate>20240101</startDate>
+            <stopDate>20241231</stopDate>
         </period>
         <steward id="281">ICF</steward>
         <experimental>false</experimental>
