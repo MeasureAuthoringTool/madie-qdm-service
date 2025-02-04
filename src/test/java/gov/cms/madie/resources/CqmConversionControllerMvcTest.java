@@ -5,9 +5,9 @@ import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.packaging.utils.ResourceFileUtil;
 import gov.cms.madie.services.CqmConversionService;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest({CqmConversionController.class})
 public class CqmConversionControllerMvcTest implements ResourceFileUtil {
-  @MockBean private CqmConversionService cqmConversionService;
+  @Mock private CqmConversionService cqmConversionService;
   @Autowired private MockMvc mockMvc;
 
   private static final String TEST_USER_ID = "john_doe";

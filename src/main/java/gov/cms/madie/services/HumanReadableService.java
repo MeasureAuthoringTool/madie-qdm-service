@@ -43,7 +43,7 @@ import java.util.stream.Stream;
 @Slf4j
 public class HumanReadableService {
 
-  private Template baseHumanReadableTemplate;
+  private final Template baseHumanReadableTemplate;
   private final Collator collator = Collator.getInstance(Locale.US);
 
   Comparator<HumanReadableTerminologyModel> getTerminologyModelComparator() {

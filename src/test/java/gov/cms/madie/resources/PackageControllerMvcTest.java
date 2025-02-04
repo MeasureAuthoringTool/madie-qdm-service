@@ -7,10 +7,12 @@ import gov.cms.madie.services.*;
 import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.packaging.utils.ResourceFileUtil;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,13 +30,15 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest({PackageController.class})
+@ExtendWith(MockitoExtension.class)
 class PackageControllerMvcTest implements ResourceFileUtil {
 
-  @MockBean private PackagingService packagingService;
-  @MockBean private SimpleXmlService simpleXmlService;
-  @MockBean private HqmfService hqmfService;
-  @MockBean private TranslationServiceClient translationServiceClient;
-  @MockBean private HumanReadableService humanReadableService;
+  @Mock private PackagingService packagingService;
+  @Mock private SimpleXmlService simpleXmlService;
+  @Mock private HqmfService hqmfService;
+  @Mock private TranslationServiceClient translationServiceClient;
+  @Mock private HumanReadableService humanReadableService;
+
   @Autowired private MockMvc mockMvc;
 
   private static final String TEST_USER_ID = "john_doe";

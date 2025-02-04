@@ -9,6 +9,11 @@ import java.io.IOException;
 
 @Configuration
 public class HumanReadableConfig {
+  @Bean
+  public freemarker.template.Configuration freemarkerConfiguration(
+      FreeMarkerConfigurer configurer) {
+    return configurer.getConfiguration();
+  }
 
   @Bean
   public FreeMarkerConfigurer freemarkerConfig() {
