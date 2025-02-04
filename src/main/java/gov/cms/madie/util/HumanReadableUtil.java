@@ -119,19 +119,23 @@ public class HumanReadableUtil {
   public static String getPopulationDescription(Measure measure, String populationType) {
     StringBuilder sb = new StringBuilder();
     if (CollectionUtils.isNotEmpty(measure.getGroups())) {
-      measure.getGroups().forEach(
-        group -> {
-          if (CollectionUtils.isNotEmpty(group.getPopulations())) {
-            group.getPopulations().forEach(
-              population -> {
-                if (StringUtils.isNotBlank(population.getDefinition())
-                    && populationType.equalsIgnoreCase(population.getName().name())
-                    && StringUtils.isNotBlank(population.getDescription())) {
-                  sb.append(population.getDescription()).append("\n");
+      measure
+          .getGroups()
+          .forEach(
+              group -> {
+                if (CollectionUtils.isNotEmpty(group.getPopulations())) {
+                  group
+                      .getPopulations()
+                      .forEach(
+                          population -> {
+                            if (StringUtils.isNotBlank(population.getDefinition())
+                                && populationType.equalsIgnoreCase(population.getName().name())
+                                && StringUtils.isNotBlank(population.getDescription())) {
+                              sb.append(population.getDescription()).append("\n");
+                            }
+                          });
                 }
               });
-          }
-        });
     }
     if (StringUtils.isBlank(sb.toString())) {
       return "None";
