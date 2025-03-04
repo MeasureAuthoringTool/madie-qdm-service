@@ -1,9 +1,6 @@
 package gov.cms.madie.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 /** The Class CQLCode. */
 @Builder
@@ -19,7 +16,7 @@ public class CQLCode {
   private String codeSystemOID;
   private String codeOID;
   private String displayName;
-  private String codeIdentifier;
+  @EqualsAndHashCode.Exclude private String codeIdentifier;
   private boolean isUsed;
   private boolean readOnly;
   private String suffix;
