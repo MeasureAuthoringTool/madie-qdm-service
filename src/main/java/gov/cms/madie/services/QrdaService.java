@@ -37,7 +37,7 @@ public class QrdaService {
     QdmMeasure measure = (QdmMeasure) request.getMeasure();
     // get Libraries
     List<TranslatedLibrary> translatedLibraries =
-        translationServiceClient.getTranslatedLibraries(measure.getCql(), accessToken);
+        translationServiceClient.getTranslatedLibraries(measure.getCql(), accessToken, false);
     List<String> elms =
         translatedLibraries.stream()
             .map(translatedLibrary -> translatedLibrary.getElmJson())

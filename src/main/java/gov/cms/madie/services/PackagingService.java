@@ -27,11 +27,13 @@ public class PackagingService {
   private final HumanReadableService humanReadableService;
   private final QrdaService qrdaService;
 
-  public byte[] createMeasurePackage(Measure measure, String accessToken) {
+  public byte[] createMeasurePackage(
+      Measure measure, String accessToken, boolean includeElmWarnings) {
     log.info("Creating the measure package for measure [{}]", measure.getId());
     QdmMeasure qdmMeasure = (QdmMeasure) measure;
     List<TranslatedLibrary> translatedLibraries =
-        translationServiceClient.getTranslatedLibraries(measure.getCql(), accessToken);
+        translationServiceClient.getTranslatedLibraries(
+            measure.getCql(), accessToken, includeElmWarnings);
     if (CollectionUtils.isEmpty(translatedLibraries)) {
       return new byte[0];
     }
