@@ -11,11 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -37,10 +33,11 @@ public class PackageController {
       consumes = {MediaType.APPLICATION_JSON_VALUE})
   public byte[] getMeasurePackage(
       @RequestBody @Validated(Measure.ValidationSequence.class) Measure measure,
-      @RequestHeader("Authorization") String accessToken) {
+      @RequestHeader("Authorization") String accessToken,
+      @RequestParam(defaultValue = "false") boolean includeElmWarnings) {
     // generate package if the model type is QDM
     if (measure.getModel() != null && measure.getModel().contains("QDM")) {
-      return packagingService.createMeasurePackage(measure, accessToken);
+      return packagingService.createMeasurePackage(measure, accessToken, includeElmWarnings);
     }
     throw new UnsupportedModelException("Unsupported model type: " + measure.getModel());
   }

@@ -26,9 +26,15 @@ import java.util.Set;
 public record TranslationServiceClient(
     CqlElmTranslatorClientConfig translatorClientConfig, RestTemplate elmTranslatorRestTemplate) {
 
-  public List<TranslatedLibrary> getTranslatedLibraries(String cql, String accessToken) {
+  public List<TranslatedLibrary> getTranslatedLibraries(
+      String cql, String accessToken, boolean includeElmWarnings) {
+    String errorSeverity = includeElmWarnings ? "Warning" : "Error";
     URI uri =
-        URI.create(translatorClientConfig.getBaseUrl() + translatorClientConfig.getCqlElmUrn());
+        URI.create(
+            translatorClientConfig.getBaseUrl()
+                + translatorClientConfig.getCqlElmUrn()
+                + "?errorSeverity="
+                + errorSeverity);
     HttpHeaders headers = new HttpHeaders();
     headers.set(HttpHeaders.AUTHORIZATION, accessToken);
     HttpEntity<String> entity = new HttpEntity<>(cql, headers);

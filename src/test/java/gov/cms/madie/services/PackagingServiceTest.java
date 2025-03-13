@@ -25,8 +25,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -76,7 +75,7 @@ class PackagingServiceTest {
             .cql("cql")
             .build();
     CqlLookups cqlLookups = CqlLookups.builder().build();
-    when(translationServiceClient.getTranslatedLibraries(measure.getCql(), TOKEN))
+    when(translationServiceClient.getTranslatedLibraries(measure.getCql(), TOKEN, true))
         .thenReturn(List.of(library1, library2));
     when(translationServiceClient.getCqlLookups(any(QdmMeasure.class), anyString()))
         .thenReturn(CqlLookups.builder().build());
@@ -84,7 +83,7 @@ class PackagingServiceTest {
         .thenReturn("<hqmf>this is a test hqmf</hqmf>");
     when(humanReadableService.generate(any(Measure.class), any(CqlLookups.class)))
         .thenReturn("success");
-    byte[] packageContents = packagingService.createMeasurePackage(measure, TOKEN);
+    byte[] packageContents = packagingService.createMeasurePackage(measure, TOKEN, true);
     String packageString = new String(packageContents);
     String library1FileName = library1.getName() + "-" + library1.getVersion();
     assertThat(packageString, containsString(library1FileName + ".cql"));
@@ -96,9 +95,9 @@ class PackagingServiceTest {
 
   @Test
   void testCreateMeasurePackageWhenNoLibFound() {
-    when(translationServiceClient.getTranslatedLibraries(measure.getCql(), TOKEN))
+    when(translationServiceClient.getTranslatedLibraries(measure.getCql(), TOKEN, true))
         .thenReturn(List.of());
-    byte[] packageContents = packagingService.createMeasurePackage(measure, TOKEN);
+    byte[] packageContents = packagingService.createMeasurePackage(measure, TOKEN, true);
     assertThat(packageContents.length, is(equalTo(0)));
   }
 
@@ -107,11 +106,11 @@ class PackagingServiceTest {
     String msg = "An issue occurred while fetching the translated artifacts for measure cql";
     Mockito.doThrow(new TranslationServiceException(msg, new Exception()))
         .when(translationServiceClient)
-        .getTranslatedLibraries(anyString(), anyString());
+        .getTranslatedLibraries(anyString(), anyString(), anyBoolean());
     Exception exception =
         assertThrows(
             TranslationServiceException.class,
-            () -> packagingService.createMeasurePackage(measure, TOKEN),
+            () -> packagingService.createMeasurePackage(measure, TOKEN, true),
             msg);
     assertThat(exception.getMessage(), containsString(msg));
   }
@@ -134,7 +133,7 @@ class PackagingServiceTest {
             .elmXml("elm xml")
             .cql("cql")
             .build();
-    when(translationServiceClient.getTranslatedLibraries(measure.getCql(), TOKEN))
+    when(translationServiceClient.getTranslatedLibraries(measure.getCql(), TOKEN, true))
         .thenReturn(List.of(library1, library2));
     CqlLookups cqlLookups = CqlLookups.builder().build();
     when(translationServiceClient.getCqlLookups(any(QdmMeasure.class), anyString()))
@@ -148,7 +147,8 @@ class PackagingServiceTest {
         .generateHqmf(any(QdmMeasure.class), any(CqlLookups.class));
     Exception exception =
         assertThrows(
-            PackagingException.class, () -> packagingService.createMeasurePackage(measure, TOKEN));
+            PackagingException.class,
+            () -> packagingService.createMeasurePackage(measure, TOKEN, true));
     assertThat(
         exception.getMessage(),
         containsString("An error occurred that caused the HQMF generation to fail"));
@@ -255,14 +255,14 @@ class PackagingServiceTest {
             .cql("cql")
             .build();
     CqlLookups cqlLookups = CqlLookups.builder().build();
-    when(translationServiceClient.getTranslatedLibraries(msr.getCql(), TOKEN))
+    when(translationServiceClient.getTranslatedLibraries(msr.getCql(), TOKEN, true))
         .thenReturn(List.of(library1, library2));
     when(translationServiceClient.getCqlLookups(any(QdmMeasure.class), anyString()))
         .thenReturn(CqlLookups.builder().build());
     when(hqmfService.generateHqmf(msr, cqlLookups)).thenReturn("<hqmf>this is a test hqmf</hqmf>");
     when(humanReadableService.generate(any(Measure.class), any(CqlLookups.class)))
         .thenReturn("success");
-    byte[] packageContents = packagingService.createMeasurePackage(msr, TOKEN);
+    byte[] packageContents = packagingService.createMeasurePackage(msr, TOKEN, true);
     String packageString = new String(packageContents);
     assertThat(packageString, containsString("test-v1.2.003-QDM.html"));
     assertThat(packageString, containsString("test-v1.2.003-QDM.xml"));

@@ -29,8 +29,7 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -62,7 +61,8 @@ class QrdaServiceTest {
   @Test
   void convertToCqmMeasure() throws Exception {
     CqmMeasure cqmMeasure = CqmMeasure.builder().id("1").description("test").build();
-    when(translationServiceClient.getTranslatedLibraries(any(String.class), any(String.class)))
+    when(translationServiceClient.getTranslatedLibraries(
+            any(String.class), any(String.class), anyBoolean()))
         .thenReturn(List.of(TranslatedLibrary.builder().build()));
     when(translationServiceClient.getRelevantDataElements(any(QdmMeasure.class), any(String.class)))
         .thenReturn(List.of(SourceDataCriteria.builder().build()));
@@ -105,7 +105,8 @@ class QrdaServiceTest {
   @Test
   void convertToCqmMeasureThrowsException() throws Exception {
     CqmMeasure cqmMeasure = CqmMeasure.builder().id("1").description("test").build();
-    when(translationServiceClient.getTranslatedLibraries(any(String.class), any(String.class)))
+    when(translationServiceClient.getTranslatedLibraries(
+            any(String.class), any(String.class), anyBoolean()))
         .thenReturn(List.of(TranslatedLibrary.builder().build()));
     when(translationServiceClient.getRelevantDataElements(any(QdmMeasure.class), any(String.class)))
         .thenReturn(List.of(SourceDataCriteria.builder().build()));

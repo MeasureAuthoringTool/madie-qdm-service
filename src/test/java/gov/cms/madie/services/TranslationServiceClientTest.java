@@ -51,7 +51,7 @@ class TranslationServiceClientTest {
             any(ParameterizedTypeReference.class)))
         .thenReturn(ResponseEntity.ok(List.of(library1, library2)));
     List<TranslatedLibrary> translatedLibraries =
-        translationServiceClient.getTranslatedLibraries("cql", "token");
+        translationServiceClient.getTranslatedLibraries("cql", "token", true);
     assertThat(translatedLibraries.size(), is(equalTo(2)));
     assertThat(translatedLibraries.get(0).getName(), is(equalTo(library1.getName())));
     assertThat(translatedLibraries.get(1).getName(), is(equalTo(library2.getName())));
@@ -69,7 +69,7 @@ class TranslationServiceClientTest {
     Exception ex =
         assertThrows(
             TranslationServiceException.class,
-            () -> translationServiceClient.getTranslatedLibraries("cql", "token"),
+            () -> translationServiceClient.getTranslatedLibraries("cql", "token", true),
             message);
     assertThat(ex.getMessage(), containsString(message));
   }

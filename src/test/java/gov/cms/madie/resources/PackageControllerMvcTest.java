@@ -43,7 +43,7 @@ class PackageControllerMvcTest implements ResourceFileUtil {
   @Test
   void testGetMeasurePackage() throws Exception {
     String measureJson = getStringFromTestResource("/measures/qdm-test-measure.json");
-    Mockito.when(packagingService.createMeasurePackage(new Measure(), TOKEN))
+    Mockito.when(packagingService.createMeasurePackage(new Measure(), TOKEN, true))
         .thenReturn("measure package".getBytes());
     mockMvc
         .perform(
@@ -56,7 +56,8 @@ class PackageControllerMvcTest implements ResourceFileUtil {
         .andExpect(status().isOk())
         .andReturn();
 
-    verify(packagingService, times(1)).createMeasurePackage(any(Measure.class), anyString());
+    verify(packagingService, times(1))
+        .createMeasurePackage(any(Measure.class), anyString(), anyBoolean());
   }
 
   @Test

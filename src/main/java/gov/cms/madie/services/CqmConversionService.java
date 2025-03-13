@@ -22,7 +22,7 @@ public class CqmConversionService {
   public CqmMeasure convertMadieMeasureToCqmMeasure(QdmMeasure measure, String accessToken) {
     // get Libraries
     List<TranslatedLibrary> translatedLibraries =
-        translationServiceClient.getTranslatedLibraries(measure.getCql(), accessToken);
+        translationServiceClient.getTranslatedLibraries(measure.getCql(), accessToken, false);
     List<String> elms =
         translatedLibraries.stream()
             .map(TranslatedLibrary::getElmJson)

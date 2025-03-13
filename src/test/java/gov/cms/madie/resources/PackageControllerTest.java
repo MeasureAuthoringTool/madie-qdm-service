@@ -54,9 +54,9 @@ class PackageControllerTest {
   @Test
   void testGetMeasurePackage() {
     String measurePackage = "measure package";
-    when(packagingService.createMeasurePackage(measure, TOKEN))
+    when(packagingService.createMeasurePackage(measure, TOKEN, true))
         .thenReturn(measurePackage.getBytes());
-    byte[] rawPackage = packageController.getMeasurePackage(measure, TOKEN);
+    byte[] rawPackage = packageController.getMeasurePackage(measure, TOKEN, true);
     assertThat(new String(rawPackage), is(equalTo(measurePackage)));
   }
 
@@ -67,7 +67,7 @@ class PackageControllerTest {
     Exception ex =
         Assertions.assertThrows(
             UnsupportedModelException.class,
-            () -> packageController.getMeasurePackage(measure, TOKEN),
+            () -> packageController.getMeasurePackage(measure, TOKEN, true),
             errorMessage);
     assertThat(ex.getMessage(), is(equalTo(errorMessage)));
   }
@@ -79,7 +79,7 @@ class PackageControllerTest {
     Exception ex =
         Assertions.assertThrows(
             UnsupportedModelException.class,
-            () -> packageController.getMeasurePackage(measure, TOKEN),
+            () -> packageController.getMeasurePackage(measure, TOKEN, true),
             errorMessage);
     assertThat(ex.getMessage(), is(equalTo(errorMessage)));
   }
