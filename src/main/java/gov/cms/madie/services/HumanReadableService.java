@@ -470,11 +470,8 @@ public class HumanReadableService {
                     .id(UUID.randomUUID().toString())
                     .name(riskAdjustment.getDefinition())
                     .logic(
-                        "["
-                            + HumanReadableUtil.getLogic(
-                                    riskAdjustment.getDefinition(), definitions)
-                                .trim()
-                            + "]")
+                        HumanReadableUtil.getLogic(riskAdjustment.getDefinition(), definitions)
+                            .trim())
                     .build())
         .collect(Collectors.toList());
   }
