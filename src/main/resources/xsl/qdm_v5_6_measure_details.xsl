@@ -916,7 +916,7 @@
 
     <xsl:template name="trim">
         <xsl:param name="textString"/>
-        <xsl:value-of select="normalize-space($textString)"/>
+        <xsl:value-of select="replace(replace(replace($textString,'\s+$',''),'^\s+',''),' +', ' ')"/>
     </xsl:template>
 
     <xsl:template name="constructExt">
