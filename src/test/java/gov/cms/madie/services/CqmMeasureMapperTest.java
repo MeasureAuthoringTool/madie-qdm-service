@@ -75,6 +75,68 @@ class CqmMeasureMapperTest implements ResourceFileUtil {
     assertThat(result.getPopulation_sets().get(0), is(notNullValue()));
     assertThat(result.getPopulation_sets().get(0).getObservations(), is(notNullValue()));
     assertThat(result.getPopulation_sets().get(0).getObservations().isEmpty(), is(true));
+
+    assertEquals(2, result.getPopulation_sets().get(0).getSupplemental_data_elements().size());
+
+    assertEquals(
+        "SDE Race",
+        result
+            .getPopulation_sets()
+            .get(0)
+            .getSupplemental_data_elements()
+            .get(0)
+            .getStatement_name());
+    assertEquals(
+        "UrinarySymptomScoreChangeAfterBenignProstaticHyperplasia",
+        result
+            .getPopulation_sets()
+            .get(0)
+            .getSupplemental_data_elements()
+            .get(0)
+            .getLibrary_name());
+
+    assertEquals(
+        "SDE Payer",
+        result
+            .getPopulation_sets()
+            .get(0)
+            .getSupplemental_data_elements()
+            .get(1)
+            .getStatement_name());
+    assertEquals(
+        "UrinarySymptomScoreChangeAfterBenignProstaticHyperplasia",
+        result
+            .getPopulation_sets()
+            .get(0)
+            .getSupplemental_data_elements()
+            .get(1)
+            .getLibrary_name());
+
+    assertEquals(2, result.getPopulation_sets().get(0).getRisk_adjustment_variables().size());
+
+    assertEquals(
+        "SDE Ethnicity",
+        result
+            .getPopulation_sets()
+            .get(0)
+            .getRisk_adjustment_variables()
+            .get(0)
+            .getStatement_name());
+    assertEquals(
+        "UrinarySymptomScoreChangeAfterBenignProstaticHyperplasia",
+        result.getPopulation_sets().get(0).getRisk_adjustment_variables().get(0).getLibrary_name());
+
+    assertEquals(
+        "SDE Sex",
+        result
+            .getPopulation_sets()
+            .get(0)
+            .getRisk_adjustment_variables()
+            .get(1)
+            .getStatement_name());
+    assertEquals(
+        "UrinarySymptomScoreChangeAfterBenignProstaticHyperplasia",
+        result.getPopulation_sets().get(0).getRisk_adjustment_variables().get(1).getLibrary_name());
   }
 
   @Test
