@@ -297,6 +297,9 @@ public interface CqmMeasureMapper {
               .supplemental_data_elements(
                   generateCqmSupplementalDataElements(
                       measure.getSupplementalData(), measure.getCqlLibraryName()))
+              .risk_adjustment_variables(
+                  generateCqmRiskAdjustmentVariables(
+                      measure.getRiskAdjustments(), measure.getCqlLibraryName()))
               .build();
       if (!StringUtils.isEmpty(measureScoring)
           && (measureScoring.equals("ContinuousVariable") || measureScoring.equals("Ratio"))) {
@@ -413,6 +416,21 @@ public interface CqmMeasureMapper {
               .id(UUID.randomUUID().toString())
               .library_name(cqlLibraryName)
               .statement_name(element.getDefinition())
+              .hqmf_id(null)
+              .build());
+    }
+    return statementReferences;
+  }
+
+  default List<StatementReference> generateCqmRiskAdjustmentVariables(
+      List<DefDescPair> riskAdjustmentVariables, String cqlLibraryName) {
+    List<StatementReference> statementReferences = new ArrayList<>();
+    for (DefDescPair riskAdjustmentVariable : riskAdjustmentVariables) {
+      statementReferences.add(
+          StatementReference.builder()
+              .id(UUID.randomUUID().toString())
+              .library_name(cqlLibraryName)
+              .statement_name(riskAdjustmentVariable.getDefinition())
               .hqmf_id(null)
               .build());
     }

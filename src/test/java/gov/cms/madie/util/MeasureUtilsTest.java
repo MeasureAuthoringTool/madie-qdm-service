@@ -34,12 +34,12 @@ class MeasureUtilsTest {
         DefDescPair.builder().definition("SDE Sex").description("gender data").build();
     List<MeasureObservation> observations =
         List.of(
-            new MeasureObservation(
-                "mo-id-1",
-                "Measure Observation",
-                "calculate number of episodes",
-                null,
-                AggregateMethodType.COUNT.getValue()));
+            MeasureObservation.builder()
+                .id("mo-id-1")
+                .definition("Measure Observation")
+                .description("calculate number of episodes")
+                .aggregateMethod(AggregateMethodType.COUNT.getValue())
+                .build());
 
     Group group =
         Group.builder()
