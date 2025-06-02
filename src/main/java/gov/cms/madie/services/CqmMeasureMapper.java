@@ -37,6 +37,7 @@ public interface CqmMeasureMapper {
           "java(measure.getScoring() == null || measure.getScoring().isEmpty() ? null: measure.getScoring().toUpperCase())")
   @Mapping(target = "main_cql_library", source = "measure.cqlLibraryName")
   @Mapping(target = "calculate_sdes", source = "measure.testCaseConfiguration.sdeIncluded")
+  @Mapping(target = "calculate_ravs", source = "measure.testCaseConfiguration.ravIncluded")
   @Mapping(target = "calculation_method", expression = "java(getCalculationMethod(measure))")
   @Mapping(target = "measure_period", expression = "java(getMeasurePeriod(measure))")
   @Mapping(target = "cql_libraries", expression = "java(getCqlLibraries(measure, elms))")
