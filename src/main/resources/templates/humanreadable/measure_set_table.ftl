@@ -6,7 +6,7 @@
             <th scope="row" class="row-header"><span class="td_label">Measure Set</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${model.measureInformation.measureSet?no_esc!""}</pre>
+                    <pre>${(model.measureInformation.measureSet?no_esc)!""}</pre>
                 </div>
             </td>
         </tr>
