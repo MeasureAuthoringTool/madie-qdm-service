@@ -51,7 +51,7 @@
             <th scope="row" class="row-header"><span class="td_label">Description</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${model.measureInformation.description?no_esc!""}</pre>
+                    <pre>${(model.measureInformation.description?no_esc)!""}</pre>
                 </div>
             </td>
         </tr>
@@ -59,7 +59,7 @@
             <th scope="row" class="row-header"><span class="td_label">Copyright</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${model.measureInformation.copyright?no_esc!""}</pre>
+                    <pre>${(model.measureInformation.copyright?no_esc)!""}</pre>
                 </div>
             </td>
         </tr>
@@ -67,7 +67,7 @@
             <th scope="row" class="row-header"><span class="td_label">Disclaimer</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${model.measureInformation.disclaimer?no_esc!""}</pre>
+                    <pre>${(model.measureInformation.disclaimer?no_esc)!""}</pre>
                 </div>
             </td>
         </tr>
@@ -130,7 +130,7 @@
                 </div>
             </td>
         </tr>
-        
+
         <tr>
             <th scope="row" class="row-header"><span class="td_label">Risk Adjustment</span></th>
             <td style="width:80%" colspan="3">
@@ -143,7 +143,7 @@
             <th scope="row" class="row-header"><span class="td_label">Rate Aggregation</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${model.measureInformation.rateAggregation?no_esc!""}</pre>
+                    <pre>${(model.measureInformation.rateAggregation?no_esc)!""}</pre>
                 </div>
             </td>
         </tr>
@@ -151,7 +151,7 @@
             <th scope="row" class="row-header"><span class="td_label">Rationale</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${model.measureInformation.rationale?no_esc!""}</pre>
+                    <pre>${(model.measureInformation.rationale?no_esc)!""}</pre>
                 </div>
             </td>
         </tr>
@@ -159,7 +159,7 @@
             <th scope="row" class="row-header"><span class="td_label">Clinical Recommendation Statement</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${model.measureInformation.clinicalRecommendationStatement?no_esc!""}</pre>
+                    <pre>${(model.measureInformation.clinicalRecommendationStatement?no_esc)!""}</pre>
                 </div>
             </td>
         </tr>
@@ -167,7 +167,7 @@
             <th scope="row" class="row-header"><span class="td_label">Improvement Notation</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${model.measureInformation.improvementNotation?no_esc!""}</pre>
+                    <pre>${(model.measureInformation.improvementNotation?no_esc)!""}</pre>
                 </div>
             </td>
         </tr>
@@ -197,7 +197,7 @@
             <th scope="row" class="row-header"><span class="td_label">Definition</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${model.measureInformation.definition?no_esc!""}</pre>
+                    <pre>${(model.measureInformation.definition?no_esc)!""}</pre>
                 </div>
             </td>
         </tr>
@@ -205,7 +205,7 @@
             <th scope="row" class="row-header"><span class="td_label">Guidance</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${model.measureInformation.guidance?no_esc!""}</pre>
+                    <pre>${(model.measureInformation.guidance?no_esc)!""}</pre>
                 </div>
             </td>
         </tr>
@@ -213,7 +213,7 @@
             <th scope="row" class="row-header"><span class="td_label">Transmission Format</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${model.measureInformation.transmissionFormat?no_esc!""}</pre>
+                    <pre>${(model.measureInformation.transmissionFormat?no_esc)!""}</pre>
                 </div>
             </td>
         </tr>
