@@ -85,7 +85,7 @@ public class HumanReadableUtil {
         }
       }
       if (!StringUtils.isBlank(allDescriptions)) {
-        return HumanReadableUtil.escapeHtmlString(allDescriptions.toString().trim());
+        return allDescriptions.toString().trim();
       } else {
         return "None";
       }
