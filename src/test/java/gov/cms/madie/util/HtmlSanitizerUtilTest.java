@@ -13,7 +13,7 @@ class HtmlSanitizerUtilTest {
     String sanitized = HtmlSanitizerUtil.sanitize(html);
 
     assertEquals(
-        "<h1>Title</h1>\n<p>Paragraph</p>\n<a href=\"http://example.com\" target=\"_blank\" rel=\"nofollow\">Link</a>",
+        "Title\n<p>Paragraph</p>\n<a href=\"http://example.com\" rel=\"nofollow\">Link</a>",
         sanitized);
   }
 
@@ -22,7 +22,7 @@ class HtmlSanitizerUtilTest {
     String html = "<script>alert('XSS');</script><h1>Title</h1>";
     String sanitized = HtmlSanitizerUtil.sanitize(html);
 
-    assertEquals("<h1>Title</h1>", sanitized);
+    assertEquals("Title", sanitized);
   }
 
   @Test
