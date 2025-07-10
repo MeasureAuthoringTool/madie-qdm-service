@@ -234,7 +234,7 @@ public class HumanReadableUtilTest {
     QdmMeasure testMeasure = QdmMeasure.builder().groups(List.of(g1, g2)).build();
 
     String humanreadabledescription = HumanReadableUtil.getStratification(testMeasure);
-    assertEquals("G1S1\nG2S2", humanreadabledescription);
+    assertEquals("G1S1 G2S2", humanreadabledescription);
   }
 
   @Test

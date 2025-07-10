@@ -123,7 +123,7 @@
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
                     <#if model.measureInformation.measureScoring?? && (model.measureInformation.measureScoring?lower_case != "ratio" || model.measureInformation.qdmVersion < 5.5)>
-                        <pre>${model.measureInformation.stratification!""}</pre>
+                        <pre>${(model.measureInformation.stratification?no_esc)!""}</pre>
                     <#else>
                         <pre>None</pre>
                     </#if>
@@ -135,7 +135,7 @@
             <th scope="row" class="row-header"><span class="td_label">Risk Adjustment</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${model.measureInformation.riskAdjustment!""}</pre>
+                    <pre>${(model.measureInformation.riskAdjustment?no_esc)!""}</pre>
                 </div>
             </td>
         </tr>
@@ -222,7 +222,7 @@
             <th scope="row" class="row-header"><span class="td_label">Initial Population</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${model.measureInformation.initialPopulation!""}</pre>
+                    <pre>${(model.measureInformation.initialPopulation?no_esc)!""}</pre>
                 </div>
             </td>
         </tr>
@@ -231,7 +231,7 @@
                 <th scope="row" class="row-header"><span class="td_label">Denominator</span></th>
                 <td style="width:80%" colspan="3">
                     <div style="width:660px;">
-                        <pre>${model.measureInformation.denominator!""}</pre>
+                        <pre>${(model.measureInformation.denominator?no_esc)!""}</pre>
                     </div>
                 </td>
             </tr>
@@ -241,7 +241,7 @@
                 <th scope="row" class="row-header"><span class="td_label">Denominator Exclusions</span></th>
                 <td style="width:80%" colspan="3">
                     <div style="width:660px;">
-                        <pre>${model.measureInformation.denominatorExclusions!""}</pre>
+                        <pre>${(model.measureInformation.denominatorExclusions?no_esc)!""}</pre>
                     </div>
                 </td>
             </tr>
@@ -251,7 +251,7 @@
                 <th scope="row" class="row-header"><span class="td_label">Measure Population</span></th>
                 <td style="width:80%" colspan="3">
                     <div style="width:660px;">
-                        <pre>${model.measureInformation.measurePopulation!""}</pre>
+                        <pre>${(model.measureInformation.measurePopulation?no_esc)!""}</pre>
                     </div>
                 </td>
             </tr>
@@ -261,7 +261,7 @@
                 <th scope="row" class="row-header"><span class="td_label">Measure Population Exclusions</span></th>
                 <td style="width:80%" colspan="3">
                     <div style="width:660px;">
-                        <pre>${model.measureInformation.measurePopulationExclusions!""}</pre>
+                        <pre>${(model.measureInformation.measurePopulationExclusions?no_esc)!""}</pre>
                     </div>
                 </td>
             </tr>
@@ -271,7 +271,7 @@
                 <th scope="row" class="row-header"><span class="td_label">Measure Observations</span></th>
                 <td style="width:80%" colspan="3">
                     <div style="width:660px;">
-                        <pre>${model.measureInformation.measureObservations!""}</pre>
+                        <pre>${(model.measureInformation.measureObservations?no_esc)!""}</pre>
                     </div>
                 </td>
             </tr>
@@ -281,7 +281,7 @@
                 <th scope="row" class="row-header"><span class="td_label">Numerator</span></th>
                 <td style="width:80%" colspan="3">
                     <div style="width:660px;">
-                        <pre>${model.measureInformation.numerator!""}</pre>
+                        <pre>${(model.measureInformation.numerator?no_esc)!""}</pre>
                     </div>
                 </td>
             </tr>
@@ -291,7 +291,7 @@
                 <th scope="row" class="row-header"><span class="td_label">Numerator Exclusions</span></th>
                 <td style="width:80%" colspan="3">
                     <div style="width:660px;">
-                        <pre>${model.measureInformation.numeratorExclusions!""}</pre>
+                        <pre>${(model.measureInformation.numeratorExclusions?no_esc)!""}</pre>
                     </div>
                 </td>
             </tr>
@@ -301,7 +301,7 @@
                 <th scope="row" class="row-header"><span class="td_label">Denominator Exceptions</span></th>
                 <td style="width:80%" colspan="3">
                     <div style="width:660px;">
-                        <pre>${model.measureInformation.denominatorExceptions!""}</pre>
+                        <pre>${(model.measureInformation.denominatorExceptions?no_esc)!""}</pre>
                     </div>
                 </td>
             </tr>
@@ -310,7 +310,7 @@
             <th scope="row" class="row-header"><span class="td_label">Supplemental Data Elements</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${model.measureInformation.supplementalDataElements!""}</pre>
+                    <pre>${(model.measureInformation.supplementalDataElements?no_esc)!""}</pre>
                 </div>
             </td>
         </tr>

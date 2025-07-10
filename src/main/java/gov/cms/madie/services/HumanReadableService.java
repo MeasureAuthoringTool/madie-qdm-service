@@ -20,6 +20,7 @@ import gov.cms.madie.models.measure.Population;
 import gov.cms.madie.models.measure.PopulationType;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.models.measure.Stratification;
+import gov.cms.madie.util.HtmlSanitizerUtil;
 import gov.cms.madie.util.HumanReadableDateUtil;
 import gov.cms.madie.util.HumanReadableUtil;
 import gov.cms.madie.util.MeasureUtils;
@@ -152,12 +153,13 @@ public class HumanReadableService {
                 DateFormat.getDateInstance(DateFormat.LONG, Locale.US)
                     .format(measure.getMeasurementPeriodEnd()))
             .measureScoring(measureScoring) // All groups expected to have same scoring
-            .description(measure.getMeasureMetaData().getDescription())
-            .copyright(measure.getMeasureMetaData().getCopyright())
-            .disclaimer(measure.getMeasureMetaData().getDisclaimer())
-            .rationale(measure.getMeasureMetaData().getRationale())
+            .description(HtmlSanitizerUtil.sanitize(measure.getMeasureMetaData().getDescription()))
+            .copyright(HtmlSanitizerUtil.sanitize(measure.getMeasureMetaData().getCopyright()))
+            .disclaimer(HtmlSanitizerUtil.sanitize(measure.getMeasureMetaData().getDisclaimer()))
+            .rationale(HtmlSanitizerUtil.sanitize(measure.getMeasureMetaData().getRationale()))
             .clinicalRecommendationStatement(
-                measure.getMeasureMetaData().getClinicalRecommendation())
+                HtmlSanitizerUtil.sanitize(
+                    measure.getMeasureMetaData().getClinicalRecommendation()))
             .measureDevelopers(HumanReadableUtil.getMeasureDevelopers(measure))
             .measureSteward(
                 measure.getMeasureMetaData().getSteward() != null
@@ -166,15 +168,21 @@ public class HumanReadableService {
             .measureTypes(HumanReadableUtil.getMeasureTypes(measure))
             .stratification(HumanReadableUtil.getStratification(measure))
             .measureObservations(HumanReadableUtil.getMeasureObservationDescriptions(measure))
-            .riskAdjustment(measure.getRiskAdjustmentDescription())
-            .supplementalDataElements(measure.getSupplementalDataDescription())
-            .rateAggregation(((QdmMeasure) measure).getRateAggregation())
-            .improvementNotation(MeasureUtils.getImprovementNotation((QdmMeasure) measure))
-            .guidance(measure.getMeasureMetaData().getGuidance())
-            .transmissionFormat(measure.getMeasureMetaData().getTransmissionFormat())
-            .definition(measure.getMeasureMetaData().getDefinition())
+            .riskAdjustment(HtmlSanitizerUtil.sanitize(measure.getRiskAdjustmentDescription()))
+            .supplementalDataElements(
+                HtmlSanitizerUtil.sanitize(measure.getSupplementalDataDescription()))
+            .rateAggregation(
+                HtmlSanitizerUtil.sanitize(((QdmMeasure) measure).getRateAggregation()))
+            .improvementNotation(
+                HtmlSanitizerUtil.sanitize(
+                    MeasureUtils.getImprovementNotation((QdmMeasure) measure)))
+            .guidance(HtmlSanitizerUtil.sanitize(measure.getMeasureMetaData().getGuidance()))
+            .transmissionFormat(
+                HtmlSanitizerUtil.sanitize(measure.getMeasureMetaData().getTransmissionFormat()))
+            .definition(HtmlSanitizerUtil.sanitize(measure.getMeasureMetaData().getDefinition()))
             .references(HumanReadableUtil.buildReferences(measure.getMeasureMetaData()))
-            .measureSet(measure.getMeasureMetaData().getMeasureSetTitle())
+            .measureSet(
+                HtmlSanitizerUtil.sanitize(measure.getMeasureMetaData().getMeasureSetTitle()))
             .build();
     generatePopulations(measure, modelTemp);
     return modelTemp;

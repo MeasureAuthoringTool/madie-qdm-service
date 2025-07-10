@@ -85,7 +85,7 @@ public class HumanReadableUtil {
         }
       }
       if (!StringUtils.isBlank(allDescriptions)) {
-        return HumanReadableUtil.escapeHtmlString(allDescriptions.toString().trim());
+        return HtmlSanitizerUtil.sanitize(allDescriptions.toString().trim());
       } else {
         return "None";
       }
@@ -140,7 +140,7 @@ public class HumanReadableUtil {
     if (StringUtils.isBlank(sb.toString())) {
       return "None";
     }
-    return sb.toString().trim();
+    return HtmlSanitizerUtil.sanitize(sb.toString().trim());
   }
 
   public static String getMeasureObservationDescriptions(Measure measure) {
