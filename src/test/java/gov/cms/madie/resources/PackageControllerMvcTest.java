@@ -4,7 +4,6 @@ import gov.cms.madie.dto.CqlLookups;
 import gov.cms.madie.dto.qrda.QrdaRequestDTO;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.services.*;
-import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.packaging.utils.ResourceFileUtil;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -43,7 +42,7 @@ class PackageControllerMvcTest implements ResourceFileUtil {
   @Test
   void testGetMeasurePackage() throws Exception {
     String measureJson = getStringFromTestResource("/measures/qdm-test-measure.json");
-    Mockito.when(packagingService.createMeasurePackage(new Measure(), TOKEN, true))
+    Mockito.when(packagingService.createMeasurePackage(new QdmMeasure(), TOKEN, true))
         .thenReturn("measure package".getBytes());
     mockMvc
         .perform(
@@ -57,7 +56,7 @@ class PackageControllerMvcTest implements ResourceFileUtil {
         .andReturn();
 
     verify(packagingService, times(1))
-        .createMeasurePackage(any(Measure.class), anyString(), anyBoolean());
+        .createMeasurePackage(any(QdmMeasure.class), anyString(), anyBoolean());
   }
 
   @Test

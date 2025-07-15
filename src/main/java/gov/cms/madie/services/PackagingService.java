@@ -5,7 +5,6 @@ import gov.cms.madie.dto.qrda.QrdaExportResponseDto;
 import gov.cms.madie.dto.qrda.QrdaReportDTO;
 import gov.cms.madie.dto.qrda.QrdaRequestDTO;
 import gov.cms.madie.models.dto.TranslatedLibrary;
-import gov.cms.madie.models.measure.Measure;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.packaging.utils.ZipUtility;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +27,8 @@ public class PackagingService {
   private final QrdaService qrdaService;
 
   public byte[] createMeasurePackage(
-      Measure measure, String accessToken, boolean includeElmWarnings) {
+      QdmMeasure measure, String accessToken, boolean includeElmWarnings) {
     log.info("Creating the measure package for measure [{}]", measure.getId());
-    QdmMeasure qdmMeasure = (QdmMeasure) measure;
     List<TranslatedLibrary> translatedLibraries =
         translationServiceClient.getTranslatedLibraries(
             measure.getCql(), accessToken, includeElmWarnings);
@@ -49,7 +47,7 @@ public class PackagingService {
           resourcesDir + entryName.trim() + ".xml", translatedLibrary.getElmXml().getBytes());
       entries.put(cqlDir + entryName.trim() + ".cql", translatedLibrary.getCql().getBytes());
     }
-    CqlLookups cqlLookups = translationServiceClient.getCqlLookups(qdmMeasure, accessToken);
+    CqlLookups cqlLookups = translationServiceClient.getCqlLookups(measure, accessToken);
     final String humanReadable = humanReadableService.generate(measure, cqlLookups);
 
     if (humanReadable != null) {
@@ -57,7 +55,7 @@ public class PackagingService {
           measure.getEcqmTitle().trim() + "-v" + measure.getVersion() + "-QDM" + ".html",
           humanReadable.getBytes());
     }
-    String hqmf = hqmfService.generateHqmf(qdmMeasure, cqlLookups);
+    String hqmf = hqmfService.generateHqmf(measure, cqlLookups);
     entries.put(
         measure.getEcqmTitle().trim() + "-v" + measure.getVersion() + "-QDM" + ".xml",
         hqmf.getBytes());
