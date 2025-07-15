@@ -7,19 +7,19 @@ import org.jsoup.safety.Safelist;
 import org.springframework.util.CollectionUtils;
 
 public class HtmlSanitizerUtil {
+  private static final Safelist SAFE_LIST =
+      Safelist.basic()
+          .addTags("s", "table", "tbody", "td", "tfoot", "th", "thead", "tr", "col", "colgroup")
+          .addAttributes("table", "style")
+          .addAttributes("th", "rowspan", "colspan", "style", "colwidth")
+          .addAttributes("td", "rowspan", "colspan", "style", "colwidth")
+          .addAttributes("col", "style");
+
   public static String sanitize(String html) {
     if (StringUtils.isBlank(html)) {
       return html;
     }
-    Safelist safelist =
-        Safelist.basic()
-            .addTags("s", "table", "tbody", "td", "tfoot", "th", "thead", "tr", "col", "colgroup")
-            .addAttributes("table", "style")
-            .addAttributes("th", "rowspan", "colspan", "style", "colwidth")
-            .addAttributes("td", "rowspan", "colspan", "style", "colwidth")
-            .addAttributes("col", "style");
-
-    return Jsoup.clean(html, safelist);
+    return Jsoup.clean(html, SAFE_LIST);
   }
 
   public static void sanitizeMeasure(QdmMeasure measure) {
