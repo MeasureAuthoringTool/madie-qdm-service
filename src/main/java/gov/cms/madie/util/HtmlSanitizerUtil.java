@@ -10,7 +10,7 @@ public class HtmlSanitizerUtil {
   private static final Safelist SAFE_LIST =
       Safelist.basic()
           .addTags("s", "table", "tbody", "td", "tfoot", "th", "thead", "tr", "col", "colgroup")
-          .addAttributes("table", "style")
+          .addAttributes("table", "style", "class", "id")
           .addAttributes("th", "rowspan", "colspan", "style", "colwidth")
           .addAttributes("td", "rowspan", "colspan", "style", "colwidth")
           .addAttributes("col", "style");
