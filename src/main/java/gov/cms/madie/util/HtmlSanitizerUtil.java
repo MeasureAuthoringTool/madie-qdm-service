@@ -19,7 +19,7 @@ public class HtmlSanitizerUtil {
     if (StringUtils.isBlank(html)) {
       return html;
     }
-    return Jsoup.clean(html, SAFE_LIST);
+    return Jsoup.clean(html, SAFE_LIST).replaceAll("<col ([^/>]*)>", "<col $1 />");
   }
 
   public static void sanitizeMeasure(QdmMeasure measure) {
