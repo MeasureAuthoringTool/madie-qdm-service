@@ -6,6 +6,7 @@ import gov.cms.madie.dto.qrda.QrdaRequestDTO;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.services.*;
 import gov.cms.madie.models.measure.Measure;
+import gov.cms.madie.util.HtmlSanitizerUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -37,7 +38,9 @@ public class PackageController {
       @RequestParam(defaultValue = "false") boolean includeElmWarnings) {
     // generate package if the model type is QDM
     if (measure.getModel() != null && measure.getModel().contains("QDM")) {
-      return packagingService.createMeasurePackage(measure, accessToken, includeElmWarnings);
+      QdmMeasure qdmMeasure = (QdmMeasure) measure;
+      HtmlSanitizerUtil.sanitizeMeasure(qdmMeasure);
+      return packagingService.createMeasurePackage(qdmMeasure, accessToken, includeElmWarnings);
     }
     throw new UnsupportedModelException("Unsupported model type: " + measure.getModel());
   }
@@ -70,6 +73,7 @@ public class PackageController {
       @RequestHeader("Authorization") String accessToken) {
     if (measure.getModel() != null && measure.getModel().contains("QDM")) {
       QdmMeasure qdmMeasure = (QdmMeasure) measure;
+      HtmlSanitizerUtil.sanitizeMeasure(qdmMeasure);
       CqlLookups cqlLookups = translationServiceClient.getCqlLookups(qdmMeasure, accessToken);
       return humanReadableService.generate(qdmMeasure, cqlLookups);
     }
@@ -86,6 +90,7 @@ public class PackageController {
     // generate HQMF if the model type is QDM
     if (measure != null && measure.getModel() != null && measure.getModel().contains("QDM")) {
       QdmMeasure qdmMeasure = (QdmMeasure) measure;
+      HtmlSanitizerUtil.sanitizeMeasure(qdmMeasure);
       CqlLookups cqlLookups = translationServiceClient.getCqlLookups(qdmMeasure, accessToken);
       return ResponseEntity.ok().body(hqmfService.generateHqmf((QdmMeasure) measure, cqlLookups));
     }

@@ -39,12 +39,12 @@ class PackageControllerTest {
   @InjectMocks private PackageController packageController;
 
   private static final String TOKEN = "test token";
-  private Measure measure;
+  private QdmMeasure measure;
 
   @BeforeEach
   void setup() {
     measure =
-        Measure.builder()
+        QdmMeasure.builder()
             .id("1")
             .ecqmTitle("test")
             .model(String.valueOf(ModelType.QDM_5_6))
@@ -203,7 +203,7 @@ class PackageControllerTest {
 
   @Test
   void testGenerateHumanReadableUnsupportedModel() {
-    measure =
+    Measure measure =
         FhirMeasure.builder()
             .id("1")
             .ecqmTitle("test")
