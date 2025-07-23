@@ -7,19 +7,22 @@ import org.jsoup.safety.Safelist;
 import org.springframework.util.CollectionUtils;
 
 public class HtmlSanitizerUtil {
-  private static final Safelist SAFE_LIST =
+  public static final String UNKNOWN = "UNKNOWN";
+  private static final Safelist RICH_TEXT_SAFE_LIST =
       Safelist.basic()
-          .addTags("s", "table", "tbody", "td", "tfoot", "th", "thead", "tr", "col", "colgroup")
+          .addTags("s", "br", "table", "tbody", "td", "th", "thead", "tr", "col", "colgroup")
           .addAttributes("table", "style", "class", "id")
           .addAttributes("th", "rowspan", "colspan", "style", "colwidth")
           .addAttributes("td", "rowspan", "colspan", "style", "colwidth")
           .addAttributes("col", "style");
 
-  public static String sanitize(String html) {
-    if (StringUtils.isBlank(html)) {
-      return html;
+  public static String sanitize(String val) {
+    if (StringUtils.isBlank(val)) {
+      return val;
     }
-    return Jsoup.clean(html, SAFE_LIST).replaceAll("<col ([^/>]*)>", "<col $1 />");
+    String safeHtml = Jsoup.clean(val, RICH_TEXT_SAFE_LIST);
+    // col tags are not self-closing in html, so we need to make them wel-formed
+    return safeHtml.replaceAll("<col ([^/>]*)>", "<col $1 />");
   }
 
   public static void sanitizeMeasure(QdmMeasure measure) {
