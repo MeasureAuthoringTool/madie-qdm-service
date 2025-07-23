@@ -610,4 +610,21 @@
         padding: 0.1cm 0.2cm;
         text-align: left;
     }
+
+    /*
+        ===============================
+        Rich text editor styling
+        ===============================
+        */
+    table.rich-text-table th,td {
+        border: 1px solid #9c9c9c;
+        box-sizing: border-box;
+        min-width: 1em;
+        padding: 6px 8px;
+        position: relative;
+        vertical-align: top;
+    }
+    table.rich-text-table th {
+        background-color: #3d25140d;
+    }
 </style>
