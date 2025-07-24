@@ -6,6 +6,15 @@
         font-size: 11px;
         overflow-y: auto;
     }
+
+    p, li {
+        font-size: 12px;
+        line-height: 1.4em;
+        font-family: verdana;
+        margin: 0 0 5px 0;
+        font-weight: normal;
+    }
+
     h1 {
         font-size: 12pt;
         font-weight: bold;
@@ -602,7 +611,7 @@
     }
 
     li {
-        padding-left: 15px;
+        margin: 0 0 5px 0;
     }
     .row-header {
         background-color:#656565;
@@ -626,5 +635,23 @@
     }
     table.rich-text-table th {
         background-color: #3d25140d;
+    }
+
+    ul, ol {
+        margin: 10px 0;
+        padding: 0 0 0 25px;
+        white-space: normal;
+    }
+
+    ul {
+        list-style: disc;
+    }
+
+    ol {
+        list-style: decimal;
+    }
+
+    p ~ ul, p ~ ol {
+        margin-top: 0;
     }
 </style>
