@@ -39,6 +39,11 @@ public class HtmlSanitizerUtil {
         measureMetaData.setTransmissionFormat(sanitize(measureMetaData.getTransmissionFormat()));
         measureMetaData.setDefinition(sanitize(measureMetaData.getDefinition()));
         measureMetaData.setMeasureSetTitle(sanitize(measureMetaData.getMeasureSetTitle()));
+        if (!CollectionUtils.isEmpty(measureMetaData.getReferences())) {
+          for (Reference reference : measureMetaData.getReferences()) {
+            reference.setReferenceText(sanitize(reference.getReferenceText()));
+          }
+        }
       }
       measure.setRiskAdjustmentDescription(sanitize(measure.getRiskAdjustmentDescription()));
       measure.setSupplementalDataDescription(sanitize(measure.getSupplementalDataDescription()));

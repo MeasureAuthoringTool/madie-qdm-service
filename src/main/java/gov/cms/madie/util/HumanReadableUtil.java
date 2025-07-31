@@ -108,7 +108,7 @@ public class HumanReadableUtil {
                   new Reference()
                       .toBuilder()
                           .id(reference.getId())
-                          .referenceText(escapeHtmlString(reference.getReferenceText()))
+                          .referenceText(reference.getReferenceText())
                           .referenceType(reference.getReferenceType())
                           .build())
           .collect(Collectors.toList());
