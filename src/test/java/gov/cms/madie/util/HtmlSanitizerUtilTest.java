@@ -72,6 +72,12 @@ class HtmlSanitizerUtilTest {
     metaData.setTransmissionFormat("<div>format</div>");
     metaData.setDefinition("<u>def</u>");
     metaData.setMeasureSetTitle("<i>title</i>");
+    metaData.setReferences(
+        List.of(
+            Reference.builder()
+                .referenceType("citation")
+                .referenceText("<div>This is Citation</div>")
+                .build()));
     measure.setMeasureMetaData(metaData);
 
     measure.setRiskAdjustmentDescription("This is <script>risky</script>");
@@ -104,6 +110,7 @@ class HtmlSanitizerUtilTest {
     assertEquals("format", metaData.getTransmissionFormat());
     assertEquals("<u>def</u>", metaData.getDefinition());
     assertEquals("<i>title</i>", metaData.getMeasureSetTitle());
+    assertEquals("This is Citation", metaData.getReferences().get(0).getReferenceText());
 
     assertEquals("This is", measure.getRiskAdjustmentDescription());
     assertEquals("<b>supp</b>", measure.getSupplementalDataDescription());

@@ -181,7 +181,7 @@
                             <pre>Reference Type: ${reference.referenceType!""}</pre>
                             <br/>
                             <#noautoesc>
-                            	<pre>Reference Text: '${reference.referenceText!""}'</pre>
+                            	<pre>Reference Text: ${(reference.referenceText?no_esc)!""}</pre>
                             </#noautoesc>
                         </div>
                     </td>

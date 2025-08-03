@@ -37,7 +37,6 @@ import java.util.Locale;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -394,7 +393,7 @@ class HumanReadableServiceTest {
     // assertNotEquals as the "<" will be escaped and replaced by &lt
     assertThat(
         measureInfoModel.getReferences().get(1),
-        is(not(equalTo(measure.getMeasureMetaData().getReferences().get(1)))));
+        is(equalTo(measure.getMeasureMetaData().getReferences().get(1))));
   }
 
   @Test
