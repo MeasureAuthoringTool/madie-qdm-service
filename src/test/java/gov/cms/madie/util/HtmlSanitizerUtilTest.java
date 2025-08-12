@@ -52,6 +52,20 @@ class HtmlSanitizerUtilTest {
   }
 
   @Test
+  void sanitizeTextHandlesEmptyBrTags() {
+    String html = "<p>Line 1<br>Line 2</p>";
+    String sanitized = HtmlSanitizerUtil.sanitize(html);
+    assertTrue(sanitized.contains("<br />"));
+  }
+
+  @Test
+  void sanitizeTextIgnoresAlreadySelfClosingBrTags() {
+    String html = "<p>Line 1<br />Line 2</p>";
+    String sanitized = HtmlSanitizerUtil.sanitize(html);
+    assertTrue(sanitized.contains("<br />"));
+  }
+
+  @Test
   void sanitizeHtmlWithDisallowedProtocols() {
     String html = "<a href=\"javascript:alert('XSS')\">Link</a>";
     String sanitized = HtmlSanitizerUtil.sanitize(html);
