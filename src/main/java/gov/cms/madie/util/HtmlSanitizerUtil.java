@@ -10,7 +10,7 @@ public class HtmlSanitizerUtil {
   public static final String UNKNOWN = "UNKNOWN";
   private static final Safelist RICH_TEXT_SAFE_LIST =
       Safelist.basic()
-          .addTags("s", "br", "table", "tbody", "td", "th", "thead", "tr", "col", "colgroup", "del")
+          .addTags("s", "table", "tbody", "td", "th", "thead", "tr", "col", "colgroup", "del")
           .addAttributes("table", "style", "class", "id")
           .addAttributes("th", "rowspan", "colspan", "style", "colwidth")
           .addAttributes("td", "rowspan", "colspan", "style", "colwidth")
@@ -21,8 +21,11 @@ public class HtmlSanitizerUtil {
       return val;
     }
     String safeHtml = Jsoup.clean(val, RICH_TEXT_SAFE_LIST);
-    // col tags are not self-closing in html, so we need to make them wel-formed
-    return safeHtml.replaceAll("<col ([^/>]*)>", "<col $1 />");
+    // br and col tags are not self-closing in html,
+    // so we need to close them to make them wel-formed
+    return safeHtml
+        .replaceAll("<col ([^/>]*)>", "<col $1 />")
+        .replaceAll("<br([^/>]*)>", "<br$1 />");
   }
 
   public static void sanitizeMeasure(QdmMeasure measure) {
