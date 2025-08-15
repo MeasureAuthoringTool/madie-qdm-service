@@ -249,7 +249,6 @@
         opacity: 1.0;
     }
 
-    /* Ensure triangles are visible in modal contexts */
     .modal-body .treeview input~label:before,
     div[data-testid="view-hr-modal"] .treeview input~label:before {
         opacity: 1.0 !important;
