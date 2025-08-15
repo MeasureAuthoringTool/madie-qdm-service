@@ -16,6 +16,28 @@
         margin: 8px 0 8px 0;
         font-weight: normal;
     }
+        table {
+        line-height: 1.4;
+        width: 100%;
+        font-size: 11px;
+        border-collapse: separate;
+        border-spacing: 1px;
+        background: white;
+    }
+    td, .content-container {
+        padding: 4px 6px;
+        vertical-align: top;
+        border: 1px solid #cccccc;
+        background: rgb(211,211,211);
+    }
+    .narr_th, .row-header {
+        background: #656565;
+        color: white;
+        border: 1px solid #cccccc;
+        padding: 4px 6px;
+        font-weight: bold;
+        text-align: left;
+    }
 
     h1 {
         font-size: 12pt;
@@ -56,14 +78,6 @@
         /*color: rgb(0, 0, 255);
       background-color: rgb(255,255,255);*/
     }
-
-    table {
-        line-height: 10pt;
-        width: 80%;
-        font-size: 11px;
-        margin-bottom: 15px;
-    }
-
     /*div {
     width: 80%;
 }*/
