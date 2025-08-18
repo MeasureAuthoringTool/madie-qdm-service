@@ -1,3 +1,4 @@
+<#--  Try to get close to packaging-utility/src/main/resources/templates/HumanReadable.liquid  -->
 <style type="text/css">
     body {
         color: rgb(0,0,0);
