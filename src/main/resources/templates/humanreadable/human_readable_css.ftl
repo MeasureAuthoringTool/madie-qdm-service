@@ -1,3 +1,4 @@
+<#--  Try to get close to packaging-utility/src/main/resources/templates/HumanReadable.liquid  -->
 <style type="text/css">
     body {
         color: rgb(0,0,0);
@@ -5,29 +6,59 @@
         font-family: Verdana, Tahoma, sans-serif;
         font-size: 11px;
         overflow-y: auto;
+        padding: 15px;
+        line-height: 1.4;
     }
 
     p, li {
         font-size: 12px;
-        line-height: 1.4em;
+        line-height: 1.5em;
         font-family: verdana;
-        margin: 0 0 5px 0;
+        margin: 8px 0 8px 0;
         font-weight: normal;
+    }
+        table {
+        line-height: 1.4;
+        width: 100%;
+        font-size: 11px;
+        border-collapse: separate;
+        border-spacing: 1px;
+        background: white;
+    }
+    td, .content-container {
+        padding: 4px 6px;
+        vertical-align: top;
+        border: 1px solid #cccccc;
+        background: rgb(211,211,211);
+    }
+    .narr_th, .row-header {
+        background: #656565;
+        color: white;
+        border: 1px solid #cccccc;
+        padding: 4px 6px;
+        font-weight: bold;
+        text-align: left;
     }
 
     h1 {
         font-size: 12pt;
         font-weight: bold;
+        margin-bottom: 15px;
+        margin-top: 10px;
     }
 
     h2 {
         font-size: 11pt;
         font-weight: bold;
+        margin-top: 20px;
+        margin-bottom: 10px;
     }
 
     h3 {
         font-size: 10pt;
         font-weight: bold;
+        margin-top: 15px;
+        margin-bottom: 8px;
     }
 
     h4 {
@@ -40,7 +71,7 @@
     }
 
     td {
-        padding: 0.1cm 0.2cm;
+        padding: 0.5em;
         vertical-align: top;
     }
 
@@ -48,13 +79,6 @@
         /*color: rgb(0, 0, 255);
       background-color: rgb(255,255,255);*/
     }
-
-    table {
-        line-height: 10pt;
-        width: 80%;
-        font-size: 11px;
-    }
-
     /*div {
     width: 80%;
 }*/
@@ -88,8 +112,8 @@
 
     .section {
         font-size: 10pt;
-        margin-top: 1em;
-        margin-bottom: 1em;
+        margin-top: 20px;
+        margin-bottom: 15px;
         margin-right: 0.5em;
         font-weight: 700;
     }
@@ -131,6 +155,7 @@
         height: 10px;
         border: 0;
         box-shadow: 0 10px 10px -10px #8c8b8b inset;
+        margin: 20px 0;
     }
 
     .treeview:hover input~label:before,
@@ -202,7 +227,7 @@
         border-right-color: rgb(0, 0, 238);
         border-bottom-color: rgb(0, 0, 238);
         border-left-color: transparent;
-        opacity: 0.0;
+        opacity: 1.0;
         -webkit-transition-property: opacity;
         -moz-transition-property: opacity;
         -ms-transition-property: opacity;
@@ -222,6 +247,17 @@
         border-right-color: transparent;
         border-bottom-color: transparent;
         border-left-color: rgb(0, 0, 238);
+        opacity: 1.0;
+    }
+
+    .modal-body .treeview input~label:before,
+    div[data-testid="view-hr-modal"] .treeview input~label:before {
+        opacity: 1.0 !important;
+    }
+
+    .modal-body .treeview input:checked~label:before,
+    div[data-testid="view-hr-modal"] .treeview input:checked~label:before {
+        opacity: 1.0 !important;
     }
 
     .h1center {
@@ -232,11 +268,13 @@
     }
 
     .header_table {
-        border: 1pt inset rgb(0, 0, 0);
+        border: 1pt solid rgb(0, 0, 0);
+        margin-bottom: 20px;
     }
 
     .narr_table {
         width: 100%;
+        border: 1px solid #ddd;
     }
 
     .narr_tr {
@@ -264,6 +302,8 @@
 
     .narr_th {
         background-color: rgb(201, 201, 201);
+        border-bottom: 2px solid #999;
+        padding: 8px 12px;
     }
 
     .td_label {
@@ -616,7 +656,7 @@
     .row-header {
         background-color:#656565;
         width:20%;
-        padding: 0.1cm 0.2cm;
+        padding: 0.5em;
         text-align: left;
     }
 
