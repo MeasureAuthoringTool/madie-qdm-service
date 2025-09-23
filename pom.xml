@@ -5,7 +5,7 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>3.4.7</version>
-    <relativePath/>
+    <relativePath></relativePath>
   </parent>
   <groupId>gov.cms.madie</groupId>
   <artifactId>madie-qdm-service</artifactId>
@@ -82,7 +82,7 @@
     <dependency>
       <groupId>gov.cms.madie.packaging</groupId>
       <artifactId>packaging-utility</artifactId>
-      <version>0.2.2</version>
+      <version>0.2.11-SNAPSHOT</version>
       <exclusions>
         <exclusion>
           <groupId>gov.cms.madie</groupId>
