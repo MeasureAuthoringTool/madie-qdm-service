@@ -17,7 +17,7 @@
         margin: 8px 0 8px 0;
         font-weight: normal;
     }
-        table {
+    table {
         line-height: 1.4;
         width: 100%;
         font-size: 11px;
@@ -693,5 +693,8 @@
 
     p ~ ul, p ~ ol {
         margin-top: 0;
+    }
+    strong {
+        font-weight: bold;
     }
 </style>
