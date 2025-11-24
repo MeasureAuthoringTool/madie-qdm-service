@@ -71,8 +71,13 @@
     }
 
     td {
+        font-family: Verdana, Tahoma, sans-serif;
+        font-size: 12px;
         padding: 0.5em;
         vertical-align: top;
+        pre {
+            font-size: 12px;
+        }
     }
 
     a {
