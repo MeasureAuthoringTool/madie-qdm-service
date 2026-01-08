@@ -47,6 +47,12 @@
         margin-top: 10px;
     }
 
+    .ecqm_title {
+        font-size: 10px;
+        line-height: 1.4;
+        overflow-wrap: anywhere;
+    }
+
     h2 {
         font-size: 11pt;
         font-weight: bold;
