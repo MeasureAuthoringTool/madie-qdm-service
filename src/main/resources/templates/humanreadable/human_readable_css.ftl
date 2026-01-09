@@ -47,7 +47,7 @@
         margin-top: 10px;
     }
 
-    .ecqm_title {
+    .ecqm-title {
         font-size: 10px;
         line-height: 1.4;
         overflow-wrap: anywhere;

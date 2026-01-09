@@ -3,7 +3,7 @@
     <tbody>
         <tr>
             <th scope="row" class="row-header"><span class="td_label">eCQM Title</span></th>
-            <td style="width:80%" colspan="3"><h1 class="ecqm_title">${model.measureInformation
+            <td style="width:80%" colspan="3"><h1 class="ecqm-title">${model.measureInformation
                     .ecqmTitle}</h1></td>
         </tr>
         <tr>
