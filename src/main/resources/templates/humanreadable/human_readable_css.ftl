@@ -14,8 +14,11 @@
         font-size: 12px;
         line-height: 1.5em;
         font-family: verdana;
-        margin: 8px 0 8px 0;
+        margin: 8px 0 0 0;
         font-weight: normal;
+    }
+    p:last-child, li:last-child {
+        margin-bottom: 8px;
     }
         table {
         line-height: 1.4;
