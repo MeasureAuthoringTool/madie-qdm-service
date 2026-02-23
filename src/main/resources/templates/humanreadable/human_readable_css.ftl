@@ -20,7 +20,8 @@
     p:last-child, li:last-child {
         margin-bottom: 8px;
     }
-        table {
+
+    table {
         line-height: 1.4;
         width: 100%;
         font-size: 11px;
@@ -50,6 +51,12 @@
         margin-top: 10px;
     }
 
+    .ecqm-title {
+        font-size: 10px;
+        line-height: 1.4;
+        overflow-wrap: anywhere;
+    }
+
     h2 {
         font-size: 11pt;
         font-weight: bold;
@@ -74,8 +81,13 @@
     }
 
     td {
+        font-family: Verdana, Tahoma, sans-serif;
+        font-size: 12px;
         padding: 0.5em;
         vertical-align: top;
+        pre {
+            font-size: 12px;
+        }
     }
 
     a {
@@ -696,5 +708,8 @@
 
     p ~ ul, p ~ ol {
         margin-top: 0;
+    }
+    strong {
+        font-weight: bold;
     }
 </style>
