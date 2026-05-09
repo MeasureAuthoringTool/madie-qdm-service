@@ -5,7 +5,7 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>3.5.14</version>
-    <relativePath></relativePath>
+    <relativePath/>
   </parent>
   <groupId>gov.cms.madie</groupId>
   <artifactId>madie-qdm-service</artifactId>
@@ -93,7 +93,7 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <version>3.18.0</version>
+      <version>3.20.0</version>
     </dependency>
 
     <dependency>
