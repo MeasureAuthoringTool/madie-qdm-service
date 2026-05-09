@@ -5,7 +5,7 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>3.5.14</version>
-    <relativePath></relativePath>
+    <relativePath/>
   </parent>
   <groupId>gov.cms.madie</groupId>
   <artifactId>madie-qdm-service</artifactId>
@@ -99,7 +99,7 @@
     <dependency>
       <groupId>net.sf.saxon</groupId>
       <artifactId>Saxon-HE</artifactId>
-      <version>12.6</version>
+      <version>12.9</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.mojo</groupId>
