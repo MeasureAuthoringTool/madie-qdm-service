@@ -5,7 +5,7 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>3.5.14</version>
-    <relativePath></relativePath>
+    <relativePath/>
   </parent>
   <groupId>gov.cms.madie</groupId>
   <artifactId>madie-qdm-service</artifactId>
@@ -27,7 +27,7 @@
     <mvnreports.version>3.2.2</mvnreports.version>
     <mvnsite.version>3.11.0</mvnsite.version>
     <okta.springboot.starter.version>3.0.7</okta.springboot.starter.version>
-    <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+    <org.mapstruct.version>1.6.3</org.mapstruct.version>
     <puppycrawl.checkstyle.version>10.1</puppycrawl.checkstyle.version>
     <spotify.fmt.version>2.21.1</spotify.fmt.version>
   </properties>
