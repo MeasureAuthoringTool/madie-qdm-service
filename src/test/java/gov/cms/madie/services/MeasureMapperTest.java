@@ -192,7 +192,7 @@ class MeasureMapperTest {
         output.getRecommendations(),
         is(equalTo(measure.getMeasureMetaData().getClinicalRecommendation())));
     assertThat(output.getCopyright(), is(equalTo(measure.getMeasureMetaData().getCopyright())));
-    assertThat(output.getEmeasureid(), is(equalTo("144")));
+    assertThat(output.getEmeasureid(), is(equalTo("0144")));
     assertThat(output.getCbeid(), is(equalTo("cbe13")));
     assertThat(output.getQualityMeasureSet().getUuid(), is(equalTo("1-1-1-1")));
     assertThat(output.getQualityMeasureSet().getValue(), is(equalTo("This is a test QDM measure")));

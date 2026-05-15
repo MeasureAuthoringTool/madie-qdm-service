@@ -314,7 +314,7 @@ class HumanReadableServiceTest {
     assertThat(
         measureInfoModel.getEcqmVersionNumber(),
         equalTo("Draft based on " + measure.getVersion().toString()));
-    assertThat(measureInfoModel.getCmsId(), is(equalTo("88")));
+    assertThat(measureInfoModel.getCmsId(), is(equalTo("0088")));
     assertThat(measureInfoModel.isCalendarYear(), equalTo(false));
     assertThat(measureInfoModel.getGuid(), equalTo(measure.getMeasureSetId()));
     assertThat(

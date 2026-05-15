@@ -9,12 +9,14 @@ import gov.cms.madie.models.cqm.*;
 import gov.cms.madie.models.cqm.datacriteria.basetypes.DataElement;
 import gov.cms.madie.models.cqm.datacriteria.*;
 import gov.cms.madie.models.measure.*;
+import gov.cms.madie.models.utils.CmsIdFormatter;
 import gov.cms.madie.util.ElmDependencyUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import org.mapstruct.Named;
 import org.springframework.util.CollectionUtils;
 
 import java.time.ZoneId;
@@ -28,7 +30,7 @@ public interface CqmMeasureMapper {
 
   @Mapping(target = "hqmf_set_id", source = "measure.measureSetId")
   @Mapping(target = "hqmf_version_number", source = "measure.versionId")
-  @Mapping(target = "cms_id", source = "measure.measureSet.cmsId")
+  @Mapping(target = "cms_id", source = "measure.measureSet.cmsId", qualifiedByName = "paddedCmsId")
   @Mapping(target = "title", source = "measure.measureName")
   @Mapping(target = "description", source = "measure.measureMetaData.description")
   @Mapping(
@@ -50,6 +52,12 @@ public interface CqmMeasureMapper {
 
   default String getCalculationMethod(QdmMeasure measure) {
     return measure.isPatientBasis() ? "PATIENT" : "EPISODE_OF_CARE";
+  }
+
+  // Zero-pad the integer CMS ID to four digits for CQM JSON output (MADIE-2364).
+  @Named("paddedCmsId")
+  default String paddedCmsId(Integer cmsId) {
+    return CmsIdFormatter.pad(cmsId);
   }
 
   default MeasurePeriod getMeasurePeriod(QdmMeasure measure) {
