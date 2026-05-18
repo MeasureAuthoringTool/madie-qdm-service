@@ -54,7 +54,6 @@ public interface CqmMeasureMapper {
     return measure.isPatientBasis() ? "PATIENT" : "EPISODE_OF_CARE";
   }
 
-  // Zero-pad the integer CMS ID to four digits for CQM JSON output (MADIE-2364).
   @Named("paddedCmsId")
   default String paddedCmsId(Integer cmsId) {
     return CmsIdFormatter.pad(cmsId);
