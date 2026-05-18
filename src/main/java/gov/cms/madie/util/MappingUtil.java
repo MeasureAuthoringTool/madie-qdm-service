@@ -20,6 +20,7 @@ public final class MappingUtil {
       case CONTINUOUS_VARIABLE -> MadieConstants.Scoring.CONTINUOUS_VARIABLE_ABBREVIATION;
       case PROPORTION -> MadieConstants.Scoring.PROPORTION_ABBREVIATION;
       case RATIO -> MadieConstants.Scoring.RATIO_ABBREVIATION;
+      case COMPOSITE -> null;
     };
   }
 
