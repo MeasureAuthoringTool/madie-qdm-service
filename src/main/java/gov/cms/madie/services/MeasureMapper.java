@@ -23,6 +23,7 @@ import gov.cms.madie.models.measure.Population;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.models.measure.Reference;
 import gov.cms.madie.models.measure.Stratification;
+import gov.cms.madie.models.utils.CmsIdFormatter;
 import gov.cms.madie.util.MadieConstants;
 import gov.cms.madie.util.MappingUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -67,7 +68,10 @@ public interface MeasureMapper {
   @Mapping(target = "title", source = "measureName")
   @Mapping(target = "measureModel", source = "model")
   @Mapping(target = "shortTitle", source = "ecqmTitle")
-  @Mapping(target = "emeasureid", source = "measure.measureSet.cmsId")
+  @Mapping(
+      target = "emeasureid",
+      source = "measure.measureSet.cmsId",
+      qualifiedByName = "paddedCmsId")
   @Mapping(target = "guid", source = "measureSetId")
   @Mapping(
       target = "cbeid",
@@ -411,6 +415,11 @@ public interface MeasureMapper {
                 .map(this::organizationToDeveloperType)
                 .toList());
     return developersType;
+  }
+
+  @Named("paddedCmsId")
+  default String paddedCmsId(Integer cmsId) {
+    return CmsIdFormatter.pad(cmsId);
   }
 
   // Map the list of endorsements from MADiE model to a single CBE ID.

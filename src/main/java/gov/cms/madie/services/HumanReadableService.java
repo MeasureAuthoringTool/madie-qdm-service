@@ -20,6 +20,7 @@ import gov.cms.madie.models.measure.Population;
 import gov.cms.madie.models.measure.PopulationType;
 import gov.cms.madie.models.measure.QdmMeasure;
 import gov.cms.madie.models.measure.Stratification;
+import gov.cms.madie.models.utils.CmsIdFormatter;
 import gov.cms.madie.util.HumanReadableDateUtil;
 import gov.cms.madie.util.HumanReadableUtil;
 import gov.cms.madie.util.MeasureUtils;
@@ -123,7 +124,7 @@ public class HumanReadableService {
             || measure.getMeasureSet().getCmsId() == null
             || measure.getMeasureSet().getCmsId() == 0
         ? null
-        : measure.getMeasureSet().getCmsId().toString();
+        : CmsIdFormatter.pad(measure.getMeasureSet().getCmsId());
   }
 
   HumanReadableMeasureInformationModel buildMeasureInfo(Measure measure) {
