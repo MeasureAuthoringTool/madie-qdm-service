@@ -6,18 +6,20 @@ import gov.cms.madie.packaging.utils.ResourceFileUtil;
 import gov.cms.madie.services.CqmConversionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import gov.cms.madie.config.SecurityConfig;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectWriter;
+import tools.jackson.databind.json.JsonMapper;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -30,8 +32,10 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest({CqmConversionController.class})
+@Import(SecurityConfig.class)
 public class CqmConversionControllerMvcTest implements ResourceFileUtil {
-  @MockBean private CqmConversionService cqmConversionService;
+  @MockitoBean private JwtDecoder jwtDecoder;
+  @MockitoBean private CqmConversionService cqmConversionService;
   @Autowired private MockMvc mockMvc;
 
   private static final String TEST_USER_ID = "john_doe";
@@ -41,18 +45,13 @@ public class CqmConversionControllerMvcTest implements ResourceFileUtil {
   void testConvertMadieMeasureToCqmMeasure() throws Exception {
     String measureJson = getStringFromTestResource("/measures/qdm-test-measure.json");
     // convert to a QdmMeasure
-    ObjectMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
+    ObjectMapper mapper = JsonMapper.builder().build();
     QdmMeasure qdmMeasure = mapper.readValue(measureJson, QdmMeasure.class);
     when(cqmConversionService.convertMadieMeasureToCqmMeasure(
             any(QdmMeasure.class), any(String.class)))
         .thenReturn(new CqmMeasure());
 
-    ObjectWriter ow =
-        JsonMapper.builder()
-            .addModule(new JavaTimeModule())
-            .build()
-            .writer()
-            .withDefaultPrettyPrinter();
+    ObjectWriter ow = JsonMapper.builder().build().writer().withDefaultPrettyPrinter();
     String json = ow.writeValueAsString(qdmMeasure);
     mockMvc
         .perform(
@@ -73,18 +72,13 @@ public class CqmConversionControllerMvcTest implements ResourceFileUtil {
   void testConvertMadieMeasureToCqmMeasureNoScoring() throws Exception {
     String measureJson = getStringFromTestResource("/measures/qdm-test-measure-noscoring.json");
     // convert to a QdmMeasure
-    ObjectMapper mapper = JsonMapper.builder().addModule(new JavaTimeModule()).build();
+    ObjectMapper mapper = JsonMapper.builder().build();
     QdmMeasure qdmMeasure = mapper.readValue(measureJson, QdmMeasure.class);
     when(cqmConversionService.convertMadieMeasureToCqmMeasure(
             any(QdmMeasure.class), any(String.class)))
         .thenReturn(new CqmMeasure());
 
-    ObjectWriter ow =
-        JsonMapper.builder()
-            .addModule(new JavaTimeModule())
-            .build()
-            .writer()
-            .withDefaultPrettyPrinter();
+    ObjectWriter ow = JsonMapper.builder().build().writer().withDefaultPrettyPrinter();
     String json = ow.writeValueAsString(qdmMeasure);
     mockMvc
         .perform(

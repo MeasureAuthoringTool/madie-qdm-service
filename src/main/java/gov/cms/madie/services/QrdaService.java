@@ -1,7 +1,7 @@
 package gov.cms.madie.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import gov.cms.madie.Exceptions.QrdaServiceException;
 import gov.cms.madie.dto.qrda.QrdaDTO;
 import gov.cms.madie.dto.qrda.QrdaExportResponseDto;
@@ -58,7 +58,7 @@ public class QrdaService {
               .options(buildOptions(measure))
               .groupDTOs(request.getGroupDTOs())
               .build();
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       throw new QrdaServiceException("Problem mapping the measure for QRDA generation", e);
     }
 

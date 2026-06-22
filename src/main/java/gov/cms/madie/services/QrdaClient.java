@@ -1,7 +1,7 @@
 package gov.cms.madie.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import gov.cms.madie.Exceptions.TranslationServiceException;
 import gov.cms.madie.config.QrdaClientConfig;
 import gov.cms.madie.dto.qrda.QrdaDTO;
@@ -35,7 +35,7 @@ public class QrdaClient {
     HttpEntity<String> entity = null;
     try {
       entity = new HttpEntity<>(mapper.writeValueAsString(dto), headers);
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       throw new RuntimeException(e);
     }
 

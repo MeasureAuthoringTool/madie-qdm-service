@@ -8,8 +8,11 @@ import gov.cms.madie.packaging.utils.ResourceFileUtil;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import gov.cms.madie.config.SecurityConfig;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -27,13 +30,15 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest({PackageController.class})
+@Import(SecurityConfig.class)
 class PackageControllerMvcTest implements ResourceFileUtil {
 
-  @MockBean private PackagingService packagingService;
-  @MockBean private SimpleXmlService simpleXmlService;
-  @MockBean private HqmfService hqmfService;
-  @MockBean private TranslationServiceClient translationServiceClient;
-  @MockBean private HumanReadableService humanReadableService;
+  @MockitoBean private JwtDecoder jwtDecoder;
+  @MockitoBean private PackagingService packagingService;
+  @MockitoBean private SimpleXmlService simpleXmlService;
+  @MockitoBean private HqmfService hqmfService;
+  @MockitoBean private TranslationServiceClient translationServiceClient;
+  @MockitoBean private HumanReadableService humanReadableService;
   @Autowired private MockMvc mockMvc;
 
   private static final String TEST_USER_ID = "john_doe";

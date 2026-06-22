@@ -1,8 +1,7 @@
 package gov.cms.madie.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 import gov.cms.madie.Exceptions.CqmConversionException;
 import gov.cms.madie.dto.SourceDataCriteria;
 import gov.cms.madie.models.cqm.CqmMeasure;
@@ -38,7 +37,7 @@ class CqmMeasureMapperTest implements ResourceFileUtil {
   ObjectMapper objectMapper = new ObjectMapper();
 
   @BeforeEach
-  void setUp() throws JsonProcessingException {
+  void setUp() throws JacksonException {
     mapper = new CqmMeasureMapperImpl();
     elm = getStringFromTestResource("/elm/libraryElm.json");
     elm2 = getStringFromTestResource("/elm/libraryElm2.json");
@@ -50,7 +49,6 @@ class CqmMeasureMapperTest implements ResourceFileUtil {
             .type("Diagnosis")
             .build();
 
-    objectMapper.registerModule(new JavaTimeModule());
     measure = objectMapper.readValue(measureString, QdmMeasure.class);
   }
 

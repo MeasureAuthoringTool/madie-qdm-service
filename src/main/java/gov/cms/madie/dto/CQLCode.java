@@ -1,5 +1,7 @@
 package gov.cms.madie.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.*;
 
 /** The Class CQLCode. */
@@ -17,9 +19,15 @@ public class CQLCode {
   private String codeOID;
   private String displayName;
   @EqualsAndHashCode.Exclude private String codeIdentifier;
+
+  @JsonProperty("used")
   private boolean isUsed;
+
   private boolean readOnly;
   private String suffix;
+
+  @JsonProperty("codeSystemVersionIncluded")
   private boolean isCodeSystemVersionIncluded;
+
   private String isValidatedWithVsac;
 }
