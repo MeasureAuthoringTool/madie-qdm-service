@@ -1,6 +1,5 @@
 package gov.cms.madie.services;
 
-import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 import gov.cms.madie.Exceptions.CqmConversionException;
 import gov.cms.madie.dto.SourceDataCriteria;
@@ -37,7 +36,7 @@ class CqmMeasureMapperTest implements ResourceFileUtil {
   ObjectMapper objectMapper = new ObjectMapper();
 
   @BeforeEach
-  void setUp() throws JacksonException {
+  void setUp() {
     mapper = new CqmMeasureMapperImpl();
     elm = getStringFromTestResource("/elm/libraryElm.json");
     elm2 = getStringFromTestResource("/elm/libraryElm2.json");
