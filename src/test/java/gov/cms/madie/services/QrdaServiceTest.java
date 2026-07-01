@@ -1,7 +1,8 @@
 package gov.cms.madie.services;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.databind.DatabindException;
+import tools.jackson.databind.ObjectMapper;
 import gov.cms.madie.Exceptions.QrdaServiceException;
 import gov.cms.madie.dto.qrda.QrdaDTO;
 import gov.cms.madie.dto.qrda.QrdaExportResponseDto;
@@ -115,7 +116,7 @@ class QrdaServiceTest {
         .thenReturn(cqmMeasure);
 
     when(objectMapper.writeValueAsString(any(CqmMeasure.class)))
-        .thenThrow(new JsonMappingException("error"));
+        .thenThrow(DatabindException.from((JsonGenerator) null, "error"));
 
     Exception ex =
         assertThrows(

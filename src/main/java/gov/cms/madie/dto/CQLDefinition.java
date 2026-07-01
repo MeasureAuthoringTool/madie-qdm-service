@@ -1,5 +1,7 @@
 package gov.cms.madie.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,7 +26,10 @@ public class CQLDefinition {
   private String parentLibrary;
   private String libraryDisplayName;
   private String libraryVersion;
+
+  @JsonProperty("function")
   private boolean isFunction;
+
   private List<CQLFunctionArgument> functionArguments;
 
   public String getLogic() {

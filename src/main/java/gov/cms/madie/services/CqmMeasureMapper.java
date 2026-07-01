@@ -1,8 +1,9 @@
 package gov.cms.madie.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.MapperFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import gov.cms.madie.Exceptions.CqmConversionException;
 import gov.cms.madie.dto.SourceDataCriteria;
 import gov.cms.madie.models.cqm.*;
@@ -342,8 +343,8 @@ public interface CqmMeasureMapper {
   }
 
   default PopulationMap determinePopulationType(Map<String, Object> acc, String measureScoring) {
-    ObjectMapper mapper = new ObjectMapper();
-    mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+    ObjectMapper mapper =
+        JsonMapper.builder().enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES).build();
     try {
       switch (measureScoring) {
         case "Cohort":
@@ -363,7 +364,7 @@ public interface CqmMeasureMapper {
           return null;
       }
 
-    } catch (JsonProcessingException e) {
+    } catch (JacksonException e) {
       throw new RuntimeException(e);
     }
   }

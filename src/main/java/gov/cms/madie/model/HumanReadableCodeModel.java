@@ -1,5 +1,7 @@
 package gov.cms.madie.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +18,10 @@ public class HumanReadableCodeModel implements HumanReadableTerminologyModel {
   private String oid;
   private String codesystemName;
   private String codesystemVersion;
+
+  @JsonProperty("codesystemVersionIncluded")
   private boolean isCodesystemVersionIncluded;
+
   private String datatype;
   private String terminologyDisplay;
   private String dataCriteriaDisplay;
