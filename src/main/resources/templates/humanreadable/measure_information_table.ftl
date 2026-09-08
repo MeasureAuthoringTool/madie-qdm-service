@@ -52,7 +52,7 @@
             <th scope="row" class="row-header"><span class="td_label">Description</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${(model.measureInformation.description?no_esc)!""}</pre>
+                    <div class="rich-text-content">${(model.measureInformation.description?no_esc)!""}</div>
                 </div>
             </td>
         </tr>
