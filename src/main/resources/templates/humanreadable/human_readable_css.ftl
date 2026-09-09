@@ -11,13 +11,10 @@
 
         & p, & li {
             font-size: 12px;
-            line-height: 1.5em;
+            line-height: 1.4em;
             font-family: verdana;
-            margin: 8px 0 0 0;
+            margin: 0 0 5px 0;
             font-weight: normal;
-        }
-        & p:last-child, & li:last-child {
-            margin-bottom: 8px;
         }
 
         & table {
@@ -407,6 +404,10 @@
         Rich text editor styling
         ===============================
         */
+        & .rich-text-content li > p:only-child {
+            display: contents;
+        }
+
         & table.rich-text-table {
             & th, & td {
                 border: 1px solid #9c9c9c;
