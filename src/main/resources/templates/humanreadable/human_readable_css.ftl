@@ -408,6 +408,13 @@
             display: contents;
         }
 
+        & .rich-text-content ul,
+        & .rich-text-content ol {
+            margin: 5px 0;
+            padding: 0 0 0 25px;
+            white-space: normal;
+        }
+
         & table.rich-text-table {
             & th, & td {
                 border: 1px solid #9c9c9c;
