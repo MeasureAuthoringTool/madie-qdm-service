@@ -1,5 +1,6 @@
 package gov.cms.madie.services;
 
+import freemarker.template.Configuration;
 import freemarker.template.Template;
 import gov.cms.madie.dto.CQLFunctionArgument;
 import gov.cms.madie.dto.CqlLookups;
@@ -8,6 +9,7 @@ import gov.cms.madie.models.common.ModelType;
 import gov.cms.madie.models.common.Organization;
 import gov.cms.madie.models.common.Version;
 import gov.cms.madie.models.measure.*;
+import gov.cms.madie.model.HumanReadable;
 import gov.cms.madie.model.HumanReadableCodeModel;
 import gov.cms.madie.model.HumanReadableExpressionModel;
 import gov.cms.madie.model.HumanReadableMeasureInformationModel;
@@ -26,6 +28,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.util.CollectionUtils;
 
+import java.io.StringWriter;
 import java.text.Collator;
 import java.text.DateFormat;
 import java.util.Arrays;
@@ -34,6 +37,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -271,9 +275,35 @@ class HumanReadableServiceTest {
                 .definitionLogic(
                     "[\"Encounter, Performed\"] E where E.relevantPeriod starts during day of \"Measurement Period\"")
                 .build());
-    CqlLookups cqlLookups = CqlLookups.builder().definitions(allDefinitions).build();
+    CqlLookups cqlLookups = CqlLookups.builder().definitions(defs).build();
     var result = humanReadableService.generate(measure, cqlLookups);
     assertNotNull(result);
+  }
+
+  @Test
+  void generateHumanReadableRendersRichTextListsOutsidePreformattedBlocks() throws Exception {
+    Configuration configuration = new Configuration(Configuration.VERSION_2_3_31);
+    configuration.setClassLoaderForTemplateLoading(
+        getClass().getClassLoader(), "templates/humanreadable");
+    measure
+        .getMeasureMetaData()
+        .setDescription("<p>Introduction</p><ul><li><p>First item</p></li></ul>");
+
+    HumanReadableMeasureInformationModel measureInformation =
+        humanReadableService.buildMeasureInfo(measure);
+    measureInformation.setMeasurementPeriod("January 1, 2024 - December 31, 2024");
+    HumanReadable model = HumanReadable.builder().measureInformation(measureInformation).build();
+    StringWriter writer = new StringWriter();
+    configuration
+        .getTemplate("human_readable_measuredetails.ftl")
+        .process(Map.of("model", model), writer);
+    String result = writer.toString();
+
+    assertTrue(
+        result.contains(
+            "<div class=\"rich-text-content\"><p>Introduction</p><ul><li><p>First item</p></li></ul></div>"));
+    assertTrue(result.contains("& .rich-text-content ul,"));
+    assertTrue(result.contains("margin: 5px 0;"));
   }
 
   @Test

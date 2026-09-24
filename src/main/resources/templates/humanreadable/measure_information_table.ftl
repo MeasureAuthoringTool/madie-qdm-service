@@ -52,7 +52,7 @@
             <th scope="row" class="row-header"><span class="td_label">Description</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${(model.measureInformation.description?no_esc)!""}</pre>
+                    <div class="rich-text-content">${(model.measureInformation.description?no_esc)!""}</div>
                 </div>
             </td>
         </tr>
@@ -60,7 +60,7 @@
             <th scope="row" class="row-header"><span class="td_label">Copyright</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${(model.measureInformation.copyright?no_esc)!""}</pre>
+                    <div class="rich-text-content">${(model.measureInformation.copyright?no_esc)!""}</div>
                 </div>
             </td>
         </tr>
@@ -68,7 +68,7 @@
             <th scope="row" class="row-header"><span class="td_label">Disclaimer</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${(model.measureInformation.disclaimer?no_esc)!""}</pre>
+                    <div class="rich-text-content">${(model.measureInformation.disclaimer?no_esc)!""}</div>
                 </div>
             </td>
         </tr>
@@ -124,9 +124,9 @@
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
                     <#if model.measureInformation.measureScoring?? && (model.measureInformation.measureScoring?lower_case != "ratio" || model.measureInformation.qdmVersion < 5.5)>
-                        <pre>${(model.measureInformation.stratification?no_esc)!""}</pre>
+                        <div class="rich-text-content">${(model.measureInformation.stratification?no_esc)!""}</div>
                     <#else>
-                        <pre>None</pre>
+                        <div class="rich-text-content">None</div>
                     </#if>
                 </div>
             </td>
@@ -136,7 +136,7 @@
             <th scope="row" class="row-header"><span class="td_label">Risk Adjustment</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${(model.measureInformation.riskAdjustment?no_esc)!""}</pre>
+                    <div class="rich-text-content">${(model.measureInformation.riskAdjustment?no_esc)!""}</div>
                 </div>
             </td>
         </tr>
@@ -144,7 +144,7 @@
             <th scope="row" class="row-header"><span class="td_label">Rate Aggregation</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${(model.measureInformation.rateAggregation?no_esc)!""}</pre>
+                    <div class="rich-text-content">${(model.measureInformation.rateAggregation?no_esc)!""}</div>
                 </div>
             </td>
         </tr>
@@ -152,7 +152,7 @@
             <th scope="row" class="row-header"><span class="td_label">Rationale</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${(model.measureInformation.rationale?no_esc)!""}</pre>
+                    <div class="rich-text-content">${(model.measureInformation.rationale?no_esc)!""}</div>
                 </div>
             </td>
         </tr>
@@ -160,7 +160,7 @@
             <th scope="row" class="row-header"><span class="td_label">Clinical Recommendation Statement</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${(model.measureInformation.clinicalRecommendationStatement?no_esc)!""}</pre>
+                    <div class="rich-text-content">${(model.measureInformation.clinicalRecommendationStatement?no_esc)!""}</div>
                 </div>
             </td>
         </tr>
@@ -168,7 +168,7 @@
             <th scope="row" class="row-header"><span class="td_label">Improvement Notation</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${(model.measureInformation.improvementNotation?no_esc)!""}</pre>
+                    <div class="rich-text-content">${(model.measureInformation.improvementNotation?no_esc)!""}</div>
                 </div>
             </td>
         </tr>
@@ -182,7 +182,8 @@
                             <pre>Reference Type: ${reference.referenceType!""}</pre>
                             <br/>
                             <#noautoesc>
-                            	<pre>Reference Text: ${(reference.referenceText?no_esc)!""}</pre>
+                                <div>Reference Text:</div>
+                                <div class="rich-text-content">${(reference.referenceText?no_esc)!""}</div>
                             </#noautoesc>
                         </div>
                     </td>
@@ -198,7 +199,7 @@
             <th scope="row" class="row-header"><span class="td_label">Definition</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${(model.measureInformation.definition?no_esc)!""}</pre>
+                    <div class="rich-text-content">${(model.measureInformation.definition?no_esc)!""}</div>
                 </div>
             </td>
         </tr>
@@ -206,7 +207,7 @@
             <th scope="row" class="row-header"><span class="td_label">Guidance</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${(model.measureInformation.guidance?no_esc)!""}</pre>
+                    <div class="rich-text-content">${(model.measureInformation.guidance?no_esc)!""}</div>
                 </div>
             </td>
         </tr>
@@ -214,7 +215,7 @@
             <th scope="row" class="row-header"><span class="td_label">Transmission Format</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${(model.measureInformation.transmissionFormat?no_esc)!""}</pre>
+                    <div class="rich-text-content">${(model.measureInformation.transmissionFormat?no_esc)!""}</div>
                 </div>
             </td>
         </tr>
@@ -223,7 +224,7 @@
             <th scope="row" class="row-header"><span class="td_label">Initial Population</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${(model.measureInformation.initialPopulation?no_esc)!""}</pre>
+                    <div class="rich-text-content">${(model.measureInformation.initialPopulation?no_esc)!""}</div>
                 </div>
             </td>
         </tr>
@@ -232,7 +233,7 @@
                 <th scope="row" class="row-header"><span class="td_label">Denominator</span></th>
                 <td style="width:80%" colspan="3">
                     <div style="width:660px;">
-                        <pre>${(model.measureInformation.denominator?no_esc)!""}</pre>
+                        <div class="rich-text-content">${(model.measureInformation.denominator?no_esc)!""}</div>
                     </div>
                 </td>
             </tr>
@@ -242,7 +243,7 @@
                 <th scope="row" class="row-header"><span class="td_label">Denominator Exclusions</span></th>
                 <td style="width:80%" colspan="3">
                     <div style="width:660px;">
-                        <pre>${(model.measureInformation.denominatorExclusions?no_esc)!""}</pre>
+                        <div class="rich-text-content">${(model.measureInformation.denominatorExclusions?no_esc)!""}</div>
                     </div>
                 </td>
             </tr>
@@ -252,7 +253,7 @@
                 <th scope="row" class="row-header"><span class="td_label">Measure Population</span></th>
                 <td style="width:80%" colspan="3">
                     <div style="width:660px;">
-                        <pre>${(model.measureInformation.measurePopulation?no_esc)!""}</pre>
+                        <div class="rich-text-content">${(model.measureInformation.measurePopulation?no_esc)!""}</div>
                     </div>
                 </td>
             </tr>
@@ -262,7 +263,7 @@
                 <th scope="row" class="row-header"><span class="td_label">Measure Population Exclusions</span></th>
                 <td style="width:80%" colspan="3">
                     <div style="width:660px;">
-                        <pre>${(model.measureInformation.measurePopulationExclusions?no_esc)!""}</pre>
+                        <div class="rich-text-content">${(model.measureInformation.measurePopulationExclusions?no_esc)!""}</div>
                     </div>
                 </td>
             </tr>
@@ -272,7 +273,7 @@
                 <th scope="row" class="row-header"><span class="td_label">Measure Observations</span></th>
                 <td style="width:80%" colspan="3">
                     <div style="width:660px;">
-                        <pre>${(model.measureInformation.measureObservations?no_esc)!""}</pre>
+                        <div class="rich-text-content">${(model.measureInformation.measureObservations?no_esc)!""}</div>
                     </div>
                 </td>
             </tr>
@@ -282,7 +283,7 @@
                 <th scope="row" class="row-header"><span class="td_label">Numerator</span></th>
                 <td style="width:80%" colspan="3">
                     <div style="width:660px;">
-                        <pre>${(model.measureInformation.numerator?no_esc)!""}</pre>
+                        <div class="rich-text-content">${(model.measureInformation.numerator?no_esc)!""}</div>
                     </div>
                 </td>
             </tr>
@@ -292,7 +293,7 @@
                 <th scope="row" class="row-header"><span class="td_label">Numerator Exclusions</span></th>
                 <td style="width:80%" colspan="3">
                     <div style="width:660px;">
-                        <pre>${(model.measureInformation.numeratorExclusions?no_esc)!""}</pre>
+                        <div class="rich-text-content">${(model.measureInformation.numeratorExclusions?no_esc)!""}</div>
                     </div>
                 </td>
             </tr>
@@ -302,7 +303,7 @@
                 <th scope="row" class="row-header"><span class="td_label">Denominator Exceptions</span></th>
                 <td style="width:80%" colspan="3">
                     <div style="width:660px;">
-                        <pre>${(model.measureInformation.denominatorExceptions?no_esc)!""}</pre>
+                        <div class="rich-text-content">${(model.measureInformation.denominatorExceptions?no_esc)!""}</div>
                     </div>
                 </td>
             </tr>
@@ -311,7 +312,7 @@
             <th scope="row" class="row-header"><span class="td_label">Supplemental Data Elements</span></th>
             <td style="width:80%" colspan="3">
                 <div style="width:660px;">
-                    <pre>${(model.measureInformation.supplementalDataElements?no_esc)!""}</pre>
+                    <div class="rich-text-content">${(model.measureInformation.supplementalDataElements?no_esc)!""}</div>
                 </div>
             </td>
         </tr>
